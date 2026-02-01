@@ -1,17 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using System.Xml.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 //A Map-pon belül az url-ben lévő értéket a {} közé írjuk. NEM ÖSSZEKEVERNI A QUERY STRING-GEL! Ez nem kulcs-érték pár, csak szimpla routing.
-app.Map("employee/{employeename}",async context =>
+//Itt jól látható a default paraméter. Ha érkezik paraméter, akkor figyelmen kívül hagyja a defaultot.
+//FONTOOOOOS: NE HAGYJ HELYET A DEFAULT ÉRTÉKNÉL! 
+//app.Map("employee/{employeename=Reka}", async context =>
+//{
+//    //Így szeded ki az útvonalból a változót, a paramétert, ami egy Dictionary, ezért kell stringre alakítani.
+//    //A string után a "?" azért kell, mert nem lehet tudni, hogy a RouteValues() vissza fog-e adni értéket vagy null lesz. Ezzel a jellel engedélyezzük a null értéket is, azaz ezzel tesszük nullable értékké a mezőt.
+//    string? name = context.Request.RouteValues["employeename"].ToString();
+//    await context.Response.WriteAsync($"The searched profile is: {name}");
+//});
+
+
+
+//A "name" paraméter utáni "?" jelzi az opcionális mivoltát. Gyakorlatban ezt leggyakrabban az adatbázissal történő kommunikációnál szoktuk alkalmazni. Van paraméter?!, ha van végrehajtuk, ha nem akkor nem terheljük a kapcsolatot. 
+app.Map("employee/{name?}", async context =>
 {
-    //Így szeded ki az útvonalból a változót, a paramétert, ami egy Dictionary, ezért kell stringre alakítani.
-    //A string után a "?" azért kell, mert nem lehet tudni, hogy a RouteValues() vissza fog-e adni értéket vagy null lesz. Ezzel a jellel engedélyezzük a null értéket is, azaz ezzel tesszük nullable értékké a mezőt.
-    string? name = context.Request.RouteValues["employeename"].ToString();
-    await context.Response.WriteAsync($"The searched profile is: {name}");
+    if (context.Request.RouteValues.ContainsKey("name"))
+    {
+        string name = context.Request.RouteValues["name"].ToString();
+        await context.Response.WriteAsync($"The name of the employee is: {name}");
+    }
+    else
+        await context.Response.WriteAsync("The name of the employee is: not supplied!");
 });
 
 
