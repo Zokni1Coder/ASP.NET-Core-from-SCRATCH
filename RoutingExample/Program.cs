@@ -31,6 +31,31 @@ app.Map("employee/{name?}", async context =>
         await context.Response.WriteAsync("The name of the employee is: not supplied!");
 });
 
+//Itt két megszorítást alkalmazunk: az id-re és a startingDate-re. Az egyik int típusú és az érték 0 vagy nagyobb lehet, a másik dátum típusú kell, hogy legyen. Mint ahogy láthatod egy paraméterre több megszorítást is alkalmazhatsz.
+//Sablon:     {mezőNév:típus}
+//Ha ezeknek nem tesz eleget a kérés, akkor nem fog lefutni ez az endpoint. PL: "employee/abc/2022-06-22" esetében nem fog match-elni, tehát nem fog lefutni, mert az id helyére az került, hogy "abc".
+//Fun-fact: ha nem megfelelően írod a dátumot, akkor sem fog matchelni. PL: "employee/abc/2022-20-22", mert nincs olyan, hogy 20. hónap!  
+app.Map("employee/{id:int:min(0)}/{startingDate:datetime}", async context =>
+{
+    DateTime startingDate = Convert.ToDateTime(context.Request.RouteValues["startingDate"]);
+    int id = Convert.ToInt32(context.Request.RouteValues["id"]);
+    await context.Response.WriteAsync($"The employee (ID: {id}) has/will started/starting on: {startingDate}");
+});
+
+//GUID létrehozása: Tools -> Create GUID -> én a 4. opciót választottam ({7FDC069B-AF10-46E5-B939-D57C750B50F3})
+//FONTOS: az url-be a kapcsos zárójeleket töröld ki, tehát: 7FDC069B-AF10-46E5-B939-D57C750B50F3
+app.Map("employee/{id:guid}", async context =>
+{
+    //Mivel a Guid.Parse egy stringet vár paraméterül, ezért először stringgé alakítjuk.
+    Guid guid = Guid.Parse(Convert.ToString(context.Request.RouteValues["id"])!);
+    await context.Response.WriteAsync($"The ID of the employee is: {guid}");
+});
+
+//Egy regex példa arra, hogy elfogadja a hónap rövidítéseit angolul írva. Nem mindig felsorolással működik és ajánlott. Nézz neten utána. Rengeteg van!
+app.Map("employee/{id:int:min(0)}/{month:regex(^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$)}", async context =>
+{
+    await context.Response.WriteAsync("This is the route with regex!");
+});
 
 //Első paraméter az útvonal, az úgynevezett "path", majd utána a lambda kifejezés. Tehát ezt az "endpointot" a "localhost:XXXX/home" url-lel tudod elérni bármilyen metódussal.
 app.Map("home", async (context) =>
@@ -52,6 +77,6 @@ app.MapPost("home", async (context) =>
 //Ez egy speciális endpoint, amely akkor fut le, ha egyik korábban definiált endpoint sem illeszkedik a kérésre. Úgy kell elképzelni, mint a try-catch blokkban az utolsó catch, ami általános éss minden error-t megfog. Ez minden kérést megfog.
 app.MapFallback(async (context) =>
 {
-    await context.Response.WriteAsync($"Request received on the \"{context.Request.Path}\" path!");
+    await context.Response.WriteAsync($"No route matched at: \"{context.Request.Path}\" path!");
 });
 app.Run();
