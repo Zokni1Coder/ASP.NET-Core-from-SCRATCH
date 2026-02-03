@@ -14,6 +14,9 @@ builder.Services.AddRouting(option =>
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
+
 //A Map-pon belül az url-ben lévő értéket a {} közé írjuk. NEM ÖSSZEKEVERNI A QUERY STRING-GEL! Ez nem kulcs-érték pár, csak szimpla routing.
 //Itt jól látható a default paraméter. Ha érkezik paraméter, akkor figyelmen kívül hagyja a defaultot.
 //FONTOOOOOS: NE HAGYJ HELYET A DEFAULT ÉRTÉKNÉL! 

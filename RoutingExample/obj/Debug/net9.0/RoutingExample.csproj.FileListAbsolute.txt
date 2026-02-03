@@ -27,3 +27,4 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\RoutingExample\obj\Debug\n
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\RoutingExample\obj\Debug\net9.0\RoutingExample.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\RoutingExample\obj\Debug\net9.0\RoutingExample.genruntimeconfig.cache
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\RoutingExample\obj\Debug\net9.0\ref\RoutingExample.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\RoutingExample\bin\Debug\net9.0\RoutingExample.staticwebassets.runtime.json
