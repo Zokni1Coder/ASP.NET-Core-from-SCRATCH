@@ -1,9 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using RoutingExample.CustomConstraints;
 using System.Xml.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Itt hozzá kell adni a service-hez, hoz később meg tudjuk hívni a routban.
+builder.Services.AddRouting(option =>
+{
+    option.ConstraintMap.Add("month", typeof(MonthsCustomConstraintClass));
+});
+
 var app = builder.Build();
 
 //A Map-pon belül az url-ben lévő értéket a {} közé írjuk. NEM ÖSSZEKEVERNI A QUERY STRING-GEL! Ez nem kulcs-érték pár, csak szimpla routing.
@@ -52,10 +60,18 @@ app.Map("employee/{id:guid}", async context =>
 });
 
 //Egy regex példa arra, hogy elfogadja a hónap rövidítéseit angolul írva. Nem mindig felsorolással működik és ajánlott. Nézz neten utána. Rengeteg van!
-app.Map("employee/{id:int:min(0)}/{month:regex(^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$)}", async context =>
+//app.Map("employee/{id:int:min(0)}/{month:regex(^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)$)}", async context =>
+//{
+//    await context.Response.WriteAsync("This is the route with regex!");
+//});
+
+
+//Mivel fent, amikor a service-be hozzáadtuk, azt a nevet adtuk neki, hogy "month" (1. paramétere az "Add" metódusnak), ezért azzal kell meghívni.
+app.Map("employee/{id:int:min(0)}/{month:month}", async context =>
 {
     await context.Response.WriteAsync("This is the route with regex!");
 });
+
 
 //Első paraméter az útvonal, az úgynevezett "path", majd utána a lambda kifejezés. Tehát ezt az "endpointot" a "localhost:XXXX/home" url-lel tudod elérni bármilyen metódussal.
 app.Map("home", async (context) =>
