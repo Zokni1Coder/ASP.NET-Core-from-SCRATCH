@@ -2,7 +2,7 @@
 
 namespace ControllersExample.Controllers
 {
-    public class HelloController
+    public class HelloController : Controller
     {
         [Route("/")]
         [Route("home")]
@@ -23,6 +23,26 @@ namespace ControllersExample.Controllers
         {
             return "Welcome from ContactUs method.";
         }
+
+        // A ContentResult objektumot adjuk vissza, amit az ASP.NET Core HTTP válasszá alakít.
+        [Route("CR")]
+        public ContentResult CR()
+        {
+            return new ContentResult()
+            {
+                Content = "Hello from ContentResult!",//response body-ba kerül
+                ContentType = "text/html",//response header-be kerül
+                StatusCode = 200 //response header-be kerül
+            };
+        }
+
+        //Ez ugyanaz, mint a CR megoldás ContentResult-tal, csak rövidebb. Ha így akarod használni, okvetlen meg kell jelölni a Class-nak a Controller-t, mint szülő!
+        [Route("CT")]        
+        public ContentResult CT()
+        {
+            return Content("Hello from Content!", "text/html");
+        }
+
 
         //[Route("sayhello")] //Ezzel adjuk meg az URL-ben az elérési útvonalát. Ezt hívjuk Routing attributumnak.
         //[Route("/")]
