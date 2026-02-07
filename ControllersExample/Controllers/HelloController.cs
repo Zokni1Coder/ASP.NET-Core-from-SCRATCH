@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ControllersExample.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ControllersExample.Controllers
 {
@@ -25,7 +26,7 @@ namespace ControllersExample.Controllers
         }
 
         // A ContentResult objektumot adjuk vissza, amit az ASP.NET Core HTTP válasszá alakít.
-        [Route("CR")]
+        [Route("cr")]
         public ContentResult CR()
         {
             return new ContentResult()
@@ -37,10 +38,24 @@ namespace ControllersExample.Controllers
         }
 
         //Ez ugyanaz, mint a CR megoldás ContentResult-tal, csak rövidebb. Ha így akarod használni, okvetlen meg kell jelölni a Class-nak a Controller-t, mint szülő!
-        [Route("CT")]        
+        [Route("ct")]
         public ContentResult CT()
         {
             return Content("Hello from Content!", "text/html");
+        }
+
+        [Route("personv1")]
+        public JsonResult PersonV1()
+        {
+            Person person = new Person { ID = Guid.NewGuid(), firstName = "Reka", lastName = "Granyak", age = 20 };
+            return new JsonResult(person);
+        }
+
+        [Route("personv2")]
+        public JsonResult PersonV2()
+        {
+            Person person = new Person { ID = Guid.NewGuid(), firstName = "Reka", lastName = "Granyak", age = 20 };
+            return Json(person); //itt különböznek. Ezt a változatot használják leggyakrabban, mert rövidebb és "clean".
         }
 
 
