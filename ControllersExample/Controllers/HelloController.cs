@@ -86,7 +86,15 @@ namespace ControllersExample.Controllers
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(@"C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\wwwroot\DPMunka.pdf");
             return File(fileBytes, "application/pdf");
-        }         
+        }
+
+        //Ez ugyanaz, mint a FileContentResult. Miért? Mert a FileContentResult is egy IActionResult, mert az IActionResult interface implementálva van benne, tehát a felületük közös. 
+        [Route("polymorph")]
+        public IActionResult Download4()
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(@"C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\wwwroot\DPMunka.pdf");
+            return File(fileBytes, "application/pdf");
+        }
 
         //[Route("download2s")]
         //public PhysicalFileResult DownloadV2Short()
