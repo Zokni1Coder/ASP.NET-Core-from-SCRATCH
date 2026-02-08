@@ -27,3 +27,4 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\obj\Deb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\obj\Debug\net9.0\ControllersExample.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\obj\Debug\net9.0\ControllersExample.genruntimeconfig.cache
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\obj\Debug\net9.0\ref\ControllersExample.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\bin\Debug\net9.0\ControllersExample.staticwebassets.runtime.json

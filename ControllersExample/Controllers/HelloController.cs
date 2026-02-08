@@ -58,6 +58,42 @@ namespace ControllersExample.Controllers
             return Json(person); //itt különböznek. Ezt a változatot használják leggyakrabban, mert rövidebb és "clean".
         }
 
+        //VirtualFileResult csak akkor működik, ha a wwwroot mappában van elhelyezve a statikus fájl. 
+        //Alapértelmezetten a wwwroot mappa tárol minden olyan statikus fájlt, amit szeretnénk online elérhetővé tenni.
+        //Itt a RELATÍV útvonalat kell megadni!
+        [Route("download1")]
+        public VirtualFileResult DownloadV1()
+        {
+            return new VirtualFileResult("/DPMunka.pdf", "application/pdf");
+        }
+        //Ez ugyanaz. mint a DownloadV1, csak rövidebben és "clean".
+        [Route("vdownload1s")]
+        public VirtualFileResult DownloadV1Short()
+        {
+            return File("/DPMunka.pdf", "application/pdf");
+        }
+         //Ez akkor is működik, amikor a file nem a wwwrootban van, hanem bárhol máshol. Ezért itt az ABSZOLÚT elérési útvonal kell.
+         //Gyakorlatban inkább a VirtualFileResult-ot alkalmazzák, biztonsági okok miatt.
+        [Route("download2")]
+        public PhysicalFileResult DownloadV2()
+        {
+            return new PhysicalFileResult(@"C:\Users\erikk\Downloads\DPMunka.pdf", "application/pdf");
+        }
+
+        //Ha fájlt adatbázisból (pl. PDF, kép) szeretnénk visszaadni, akkor azt byte[] formában kezeljük, és FileContentResult-et használunk.
+        [Route("download3")]
+        public FileContentResult Download3()
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(@"C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ControllersExample\wwwroot\DPMunka.pdf");
+            return File(fileBytes, "application/pdf");
+        }         
+
+        //[Route("download2s")]
+        //public PhysicalFileResult DownloadV2Short()
+        //{
+        //    return File(@"C:\Users\erikk\Downloads\DPMunka.pdf", "application/pdf");
+        //}
+
 
         //[Route("sayhello")] //Ezzel adjuk meg az URL-ben az elérési útvonalát. Ezt hívjuk Routing attributumnak.
         //[Route("/")]
