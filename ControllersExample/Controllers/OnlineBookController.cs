@@ -39,10 +39,22 @@ namespace ControllersExample.Controllers
                 //Response.StatusCode = 400;
                 //return Content("The Book id must be between 1 and 1000!");
                 return NotFound("The Book id must be between 1 and 1000!");
-            }                    
+            }
             else
             {
-                return File("/DPMunka.pdf", "application/pdf");
+                //return File("/DPMunka.pdf", "application/pdf");
+
+
+                //Maradva a könyves példánknál, ha minden querystring megfelelő, akkor most nem a .pdf fájlt nyitjuk meg, hanem átirányítjuk a requestet a HelloController PersonV1 metódusába, ami kiír egy rövid szöveget.
+
+                //Paraméterek:
+                //-PersonV1: A HelloControllerben lévő metódus/eljárás neve, amire szeretnénk átirányítani a kérést és futtatni.
+                //-Hello: A controller neve a "controller" szó nélkül.
+                //-new {}: mivel nem adunk most át/tovább semmilyen értéket sem, ezért csak egy üres objektum osztályt adunk át. Hülyeség ebben az esetben. Később itt fontos adatokat tudunk továbbítani ezzel a parammal. 
+                //return new RedirectToActionResult("PersonV1", "Hello", new { }); //302 - Found
+
+                return new RedirectToActionResult("PersonV1", "Hello", new { }, true); //Itt a true paraméterrel állítjuk be a 301-es állapotot. Jelentése benne van a füzetben. Ez az úgynevezett "permanent bool value". Tehát ez a 301 - Moved Permanently.
+
             }
 
         }
