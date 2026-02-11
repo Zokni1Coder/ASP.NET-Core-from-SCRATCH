@@ -52,9 +52,20 @@ namespace ControllersExample.Controllers
                 //-Hello: A controller neve a "controller" szó nélkül.
                 //-new {}: mivel nem adunk most át/tovább semmilyen értéket sem, ezért csak egy üres objektum osztályt adunk át. Hülyeség ebben az esetben. Később itt fontos adatokat tudunk továbbítani ezzel a parammal. 
                 //return new RedirectToActionResult("PersonV1", "Hello", new { }); //302 - Found
+                //Rövidítve:
+                //return RedirectToAction("PersonV1", "Hello", new { });
 
-                return new RedirectToActionResult("PersonV1", "Hello", new { }, true); //Itt a true paraméterrel állítjuk be a 301-es állapotot. Jelentése benne van a füzetben. Ez az úgynevezett "permanent bool value". Tehát ez a 301 - Moved Permanently.
+                //return new RedirectToActionResult("PersonV1", "Hello", new { }, true); //Itt a true paraméterrel állítjuk be a 301-es állapotot. Jelentése benne van a füzetben. Ez az úgynevezett "permanent bool value". Tehát ez a 301 - Moved Permanently.
 
+                //Itt most az Action-nel két paramétert is átadunk, mint RouteValues.
+                //Rövidítve:
+                //return RedirectToActionPermanent("PersonV1", "Hello", new { id = 1 });
+
+                //Ugyanez LocalRedirectResult-tal:
+                //return LocalRedirect("personv1");
+                //return LocalRedirectPermanent("personv1");
+
+                return Redirect($"ct/{bookId}");
             }
 
         }

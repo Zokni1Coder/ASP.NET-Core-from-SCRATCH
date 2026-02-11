@@ -39,12 +39,14 @@ namespace ControllersExample.Controllers
 
         //Ez ugyanaz, mint a CR megoldás ContentResult-tal, csak rövidebb. Ha így akarod használni, okvetlen meg kell jelölni a Class-nak a Controller-t, mint szülő!
         [Route("ct")]
+        [Route("ct/{id}")]
         public ContentResult CT()
         {
-            return Content("Hello from Content!", "text/html");
+            int id = Convert.ToInt32(Request.RouteValues["id"]);
+            return Content($"Hello from Content! <br> The id is: {id}", "text/html");
         }
 
-        [Route("personv1")]
+        [Route("personv1")]        
         public JsonResult PersonV1()
         {
             Person person = new Person { ID = Guid.NewGuid(), firstName = "Reka", lastName = "Granyak", age = 20 };
