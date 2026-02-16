@@ -39,11 +39,12 @@ namespace ControllersExample.Controllers
 
         //Ez ugyanaz, mint a CR megoldás ContentResult-tal, csak rövidebb. Ha így akarod használni, okvetlen meg kell jelölni a Class-nak a Controller-t, mint szülő!
         [Route("ct")]
-        [Route("ct/{id}")]
-        public ContentResult CT()
+        [Route("ct/{bookid}")]
+        //Írd be a megfelelő paramétert és legyen a routing paraméterrel megegyező.
+        public ContentResult CT(int bookid)
         {
-            int id = Convert.ToInt32(Request.RouteValues["id"]);
-            return Content($"Hello from Content! <br> The id is: {id}", "text/html");
+            //int id = Convert.ToInt32(Request.RouteValues["id"]);
+            return Content($"Hello from Content! <br> The id is: {bookid}", "text/html");
         }
 
         [Route("personv1")]        
