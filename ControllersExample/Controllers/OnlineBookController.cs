@@ -9,10 +9,15 @@ namespace ControllersExample.Controllers
     {
         //Példa a precedenciára: "localhost:xxx/book/10/true?bookid=5&isloggedin=false"
         //így adod meg a model bindinggal a route paramétert.
-        [Route("book/{bookid?}/{isloggedin?}")]
         //nullable bookid paraméter, amit a keretrendszer binding-olni fog.
         //Az alatta lévő if is ugyanazt csinálja. Inkább model bindingot használjunk!
-        public IActionResult Index(int? bookid, bool? isloggedin) 
+        [Route("book/{bookid?}/{isloggedin?}")]        
+        //Futtatva a: "http://localhost:5292/book/11/true?bookid=5&isloggedin=false" elemezd ki hogy miért fog lefutni.
+        //QueryString: bookid = 5; isloggedin = false;
+        //RouteParam: bookid = 11; isloggedin = true;
+
+        //Ha behelyettesíted: public IActionResult Index(5, true){}
+        public IActionResult Index([FromQuery]int? bookid, [FromRoute]bool? isloggedin) 
         {
             if (bookid == null)
             {
@@ -41,12 +46,12 @@ namespace ControllersExample.Controllers
 
             //bool isLoggedIn = Convert.ToBoolean(ControllerContext.HttpContext.Request.Query["isloggedin"]);
 
-            if (isloggedin == false)
-            {
-                //Response.StatusCode = 401;
-                return Unauthorized("You must be logged in if you want to reach the book!");
-                //return StatusCode(401);//Ezt pedig akkor használjuk, amikor nem az említett gyakori státuszokat szeretnénk használni, hanem olyat ami még nincs "beépítve", mint az Unauthorized. Ezzel a response body üres lesz, de a státusz kód 401 és sokkal elegánsabb mint felül.
-            }
+            //if (isloggedin == false)
+            //{
+            //    //Response.StatusCode = 401;
+            //    return Unauthorized("You must be logged in if you want to reach the book!");
+            //    //return StatusCode(401);//Ezt pedig akkor használjuk, amikor nem az említett gyakori státuszokat szeretnénk használni, hanem olyat ami még nincs "beépítve", mint az Unauthorized. Ezzel a response body üres lesz, de a státusz kód 401 és sokkal elegánsabb mint felül.
+            //}
 
             //Ha a bookid kissebb mint 1 vagy nagyobb mint 1000 vagy null az értéke.
             //int bookId = Convert.ToInt32(Request.Query["bookid"]);
