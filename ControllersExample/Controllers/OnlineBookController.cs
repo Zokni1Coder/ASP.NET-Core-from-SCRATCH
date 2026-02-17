@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ControllersExample.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 
@@ -11,13 +12,15 @@ namespace ControllersExample.Controllers
         //így adod meg a model bindinggal a route paramétert.
         //nullable bookid paraméter, amit a keretrendszer binding-olni fog.
         //Az alatta lévő if is ugyanazt csinálja. Inkább model bindingot használjunk!
-        [Route("book/{bookid?}/{isloggedin?}")]        
+        [Route("book/{bookid?}/{author?}/{isloggedin?}/")]        
         //Futtatva a: "http://localhost:5292/book/11/true?bookid=5&isloggedin=false" elemezd ki hogy miért fog lefutni.
         //QueryString: bookid = 5; isloggedin = false;
         //RouteParam: bookid = 11; isloggedin = true;
 
         //Ha behelyettesíted: public IActionResult Index(5, true){}
-        public IActionResult Index([FromQuery]int? bookid, [FromRoute]bool? isloggedin) 
+
+        //Beállítottuk, hogy a Book paraméterpéldány adatai, kizárólag a QueryStringből vegyen adatokat a propertykhez. 
+        public IActionResult Index([FromQuery]int? bookid, [FromRoute] string? author, [FromRoute]bool? isloggedin, [FromQuery] Book book) 
         {
             if (bookid == null)
             {
@@ -90,7 +93,10 @@ namespace ControllersExample.Controllers
                 //Fontos, hogy a route-ot egy "/" jellel kezd, különben a meglévő aktív URL-hez appendolja ezt az útvonalat. Az aktív URL-ünk most a "localhost:xxx/book/10/true", mivel a routing parameter-ek előrébbre van, mint a query string. 
 
                 //Ha nincs ott a "/" jel akkor a következő URL-re akar továbbítani: localhost:xxx/book/x/ct/x, viszont nekünk a localhost:xxx/book/ct/x kell.
-                return Redirect($"/ct/{bookid}");
+                //return Redirect($"/ct/{bookid}");
+
+                //Kiíratom a book objektumot. Azért tudom ToString-gel, mert felülírtuk az osztályon belül("override ToString()"). 
+                return Content(book.ToString());
             }
 
         }
