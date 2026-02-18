@@ -19,8 +19,12 @@ namespace ControllersExample.Controllers
 
         //Ha behelyettesíted: public IActionResult Index(5, true){}
 
-        //Beállítottuk, hogy a Book paraméterpéldány adatai, kizárólag a QueryStringből vegyen adatokat a propertykhez. 
-        public IActionResult Index([FromQuery]int? bookid, [FromRoute] string? author, [FromRoute]bool? isloggedin, [FromQuery] Book book) 
+        //Beállítottuk, hogy a Book paraméterpéldány adatai, kizárólag a QueryStringből vegyen adatokat a propertykhez.
+        
+        //0. lépés: Állítsd ebbe a helyzetbe a metódusparamétereket. Nem jelöljük ki a paramok source-át, ahonnan érkezni fognak az adatok.
+        //1. lépés: nyisd meg a Postman-t és állítsd be az 5B.kep szerint.
+        //2. lépés: futtasd és legyen ott a breakpoint ahol nekem és ellenőrizd a pillanatnyi értékeket. Miért lesz a bookid, az authornak az az értéke ami?! Precedencia! Emlékezz: 1. form-fieldek, 2. reques Body,... . 
+        public IActionResult Index(int? bookid, string? author, [FromRoute]bool? isloggedin, Book book) 
         {
             if (bookid == null)
             {

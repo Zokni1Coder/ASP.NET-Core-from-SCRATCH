@@ -5,7 +5,7 @@ namespace ControllersExample.Models
     public class Book
     {
         //Ezzel az attribútummal ("[FromRoute]"), azt érjük el, hogy a class kivételt csináljon a BookId propertyvel. Az nem a QueryStringből kapja az értékét, mint a többi, hanem a RoutParam-ból.
-        [FromRoute] 
+        //[FromRoute] 
         public int? BookId { get; set; }
         public string? Author { get; set; }
 
