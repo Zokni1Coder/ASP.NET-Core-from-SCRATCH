@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ControllersExample.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 
@@ -7,34 +8,61 @@ namespace ControllersExample.Controllers
     //A Feladat: Kezeld le a következő kérést: book?isloggedin=true&bookid=1. A bookid 1 és 1000 között kell hogy legyen, kezeld le azt is ha nincs bookid paraméter. Az isloggedin pedig true kell hogy legyen, hogy a könyvet elérd.
     public class OnlineBookController : Controller
     {
-        [Route("book")]
-        public IActionResult Index()
+        //Példa a precedenciára: "localhost:xxx/book/10/true?bookid=5&isloggedin=false"
+        //így adod meg a model bindinggal a route paramétert.
+        //nullable bookid paraméter, amit a keretrendszer binding-olni fog.
+        //Az alatta lévő if is ugyanazt csinálja. Inkább model bindingot használjunk!
+        [Route("book/{bookid?}/{author?}/{isloggedin?}/")]        
+        //Futtatva a: "http://localhost:5292/book/11/true?bookid=5&isloggedin=false" elemezd ki hogy miért fog lefutni.
+        //QueryString: bookid = 5; isloggedin = false;
+        //RouteParam: bookid = 11; isloggedin = true;
+
+        //Ha behelyettesíted: public IActionResult Index(5, true){}
+
+        //Beállítottuk, hogy a Book paraméterpéldány adatai, kizárólag a QueryStringből vegyen adatokat a propertykhez.
+        
+        //0. lépés: Állítsd ebbe a helyzetbe a metódusparamétereket. Nem jelöljük ki a paramok source-át, ahonnan érkezni fognak az adatok.
+        //1. lépés: nyisd meg a Postman-t és állítsd be az 5B.kep szerint.
+        //2. lépés: futtasd és legyen ott a breakpoint ahol nekem és ellenőrizd a pillanatnyi értékeket. Miért lesz a bookid, az authornak az az értéke ami?! Precedencia! Emlékezz: 1. form-fieldek, 2. reques Body,... . 
+        public IActionResult Index(int? bookid, string? author, [FromRoute]bool? isloggedin, Book book) 
         {
-            //Ha nincs isloggedin paraméter vagy az false.            
-            if (!Request.Query.ContainsKey("isloggedin"))
+            if (bookid == null)
             {
-                //Response.StatusCode = 401; //Ez a autentikáció hiányának kódja.
-                return Unauthorized("You must be logged in if you want to reach the book!");
+                return BadRequest("You must be logged in if you want to reach the book!");
             }
 
-            bool isLoggedIn = Convert.ToBoolean(ControllerContext.HttpContext.Request.Query["isloggedin"]);
-
-            if (isLoggedIn == false)
-            {
-                //Response.StatusCode = 401;
-                return Unauthorized("You must be logged in if you want to reach the book!");
-                //return StatusCode(401);//Ezt pedig akkor használjuk, amikor nem az említett gyakori státuszokat szeretnénk használni, hanem olyat ami még nincs "beépítve", mint az Unauthorized. Ezzel a response body üres lesz, de a státusz kód 401 és sokkal elegánsabb mint felül.
-            }
             //Ha a bookid paraméter nincs megadva az url-ben.
-            if (!Request.Query.ContainsKey("bookid"))
+            //if (!Request.Query.ContainsKey("bookid"))
+            //{
+            //    //Response.StatusCode = 400;
+            //    //return Content("The Book id is not supplied!");
+            //    return BadRequest("The Book id is not supplied!");   //Ebben az esetben alapból a StatusCode az 400 lesz, a válasz benne ugyanaz mint fent és sokkal szebb megoldás.
+            //}
+
+            //Ha nincs isloggedin paraméter vagy az false.
+            //
+            if ((bool)!isloggedin)
             {
-                //Response.StatusCode = 400;
-                //return Content("The Book id is not supplied!");
-                return BadRequest("The Book id is not supplied!");   //Ebben az esetben alapból a StatusCode az 400 lesz, a válasz benne ugyanaz mint fent és sokkal szebb megoldás.
+                return Unauthorized("You must be logged in if you want to reach the book!");
             }
+            //if (!Request.Query.ContainsKey("isloggedin"))
+            //{
+            //    //Response.StatusCode = 401; //Ez a autentikáció hiányának kódja.
+            //    return Unauthorized("You must be logged in if you want to reach the book!");
+            //}
+
+            //bool isLoggedIn = Convert.ToBoolean(ControllerContext.HttpContext.Request.Query["isloggedin"]);
+
+            //if (isloggedin == false)
+            //{
+            //    //Response.StatusCode = 401;
+            //    return Unauthorized("You must be logged in if you want to reach the book!");
+            //    //return StatusCode(401);//Ezt pedig akkor használjuk, amikor nem az említett gyakori státuszokat szeretnénk használni, hanem olyat ami még nincs "beépítve", mint az Unauthorized. Ezzel a response body üres lesz, de a státusz kód 401 és sokkal elegánsabb mint felül.
+            //}
+
             //Ha a bookid kissebb mint 1 vagy nagyobb mint 1000 vagy null az értéke.
-            int bookId = Convert.ToInt32(Request.Query["bookid"]);
-            if (bookId <= 0 || bookId > 1000)
+            //int bookId = Convert.ToInt32(Request.Query["bookid"]);
+            if (bookid <= 0 || bookid > 1000)
             {
                 //Response.StatusCode = 400;
                 //return Content("The Book id must be between 1 and 1000!");
@@ -65,7 +93,14 @@ namespace ControllersExample.Controllers
                 //return LocalRedirect("personv1");
                 //return LocalRedirectPermanent("personv1");
 
-                return Redirect($"ct/{bookId}");
+
+                //Fontos, hogy a route-ot egy "/" jellel kezd, különben a meglévő aktív URL-hez appendolja ezt az útvonalat. Az aktív URL-ünk most a "localhost:xxx/book/10/true", mivel a routing parameter-ek előrébbre van, mint a query string. 
+
+                //Ha nincs ott a "/" jel akkor a következő URL-re akar továbbítani: localhost:xxx/book/x/ct/x, viszont nekünk a localhost:xxx/book/ct/x kell.
+                //return Redirect($"/ct/{bookid}");
+
+                //Kiíratom a book objektumot. Azért tudom ToString-gel, mert felülírtuk az osztályon belül("override ToString()"). 
+                return Content(book.ToString());
             }
 
         }
