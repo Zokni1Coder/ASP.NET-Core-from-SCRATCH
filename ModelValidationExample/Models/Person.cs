@@ -25,7 +25,7 @@ namespace ModelValidationExample.Models
         [DisplayName("Confirm Password")]
         public string? ConfirmPassword { get; set; }
         
-        [Range(0, 999.99, ErrorMessage = "The Price must be between {1} and {2}.")] //Ebben az esetben az 1 az első paraméter értékre, a 2 a másodikra mutat. a 0, az minden esetben maga a property neve amit megszorítunk (ha DisplayName annotáció van rajta, akkor azt fogja megejeleníteni). 
+        [Range(0, 999.99, ErrorMessage = "The Price must be between {1} and {2}.")] //Ebben az esetben az {1} az első paraméter értékre, a {2} a másodikra mutat. a {0}, az minden esetben maga a property neve amit megszorítunk (ha DisplayName annotáció van rajta, akkor azt fogja megejeleníteni). 
         public double? Price { get; set; }
         public override string ToString()
         {
