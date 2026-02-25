@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using ModelValidationExample.CustomValidations;
+using ModelValidationExample.CustomValidators;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace ModelValidationExample.Models
 {
@@ -31,10 +33,15 @@ namespace ModelValidationExample.Models
 
         //[MinimumYearValidation]
         [MinimumYearValidation(2005, ErrorMessage = "The year should be less than {0}.")]
-        public DateTime? DateOfBirth { get; set; } 
+        public DateTime? DateOfBirth { get; set; }
+        [DisplayName("'To Date'")]
+        public DateTime? FromDate { get; set; }
+        [DateRangeValidation("FromDate")]
+        [DisplayName("'To Date'")]
+        public DateTime? ToDate { get; set; }
         public override string ToString()
         {
-            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}";
+            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}, From Date: {FromDate}, To Date: {ToDate}.";
         }
     }
 }
