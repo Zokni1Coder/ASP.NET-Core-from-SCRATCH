@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ModelValidationExample.CustomModelBinders;
 using ModelValidationExample.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -10,7 +11,7 @@ namespace ModelValidationExample.Controllers
         [Route("/register")]
         //Így tudjuk külön megadni a Bindingolni kívánt propertyket.
         //Ezeket a propertyket meg tudjuk név szerint is adni kézzel pl.: [Bind("PersonName")], de akkor ha megváltoztatjuk a property nevét, akkor az nem változik autómatikusan. Szebb és kényelmesebb "nameof()" funkciót használni.[Bind(nameof(Person.PersonName), nameof(Person.Email), nameof(Person.Password), nameof(Person.ConfirmPassword))]
-        public IActionResult Index(Person person)
+        public IActionResult Index([ModelBinder(BinderType = typeof(PersonModelBinder))]Person person)
         {
             if (!ModelState.IsValid)
             {
