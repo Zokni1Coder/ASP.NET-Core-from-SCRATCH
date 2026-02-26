@@ -8,6 +8,8 @@ namespace ModelValidationExample.Controllers
     public class HomeController : Controller
     {
         [Route("/register")]
+        //Így tudjuk külön megadni a Bindingolni kívánt propertyket.
+        //Ezeket a propertyket meg tudjuk név szerint is adni kézzel pl.: [Bind("PersonName")], de akkor ha megváltoztatjuk a property nevét, akkor az nem változik autómatikusan. Szebb és kényelmesebb "nameof()" funkciót használni.[Bind(nameof(Person.PersonName), nameof(Person.Email), nameof(Person.Password), nameof(Person.ConfirmPassword))]
         public IActionResult Index(Person person)
         {
             if (!ModelState.IsValid)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using ModelValidationExample.CustomValidations;
 using ModelValidationExample.CustomValidators;
 using System.ComponentModel;
@@ -16,6 +17,7 @@ namespace ModelValidationExample.Models
         public string? PersonName { get; set; }
 
         [EmailAddress]
+        [BindNever]
         public string? Email { get; set; }
 
         [Phone]
@@ -35,7 +37,7 @@ namespace ModelValidationExample.Models
         //[MinimumYearValidation]
         [MinimumYearValidation(2005, ErrorMessage = "The year should be less than {0}.")]
         public DateTime? DateOfBirth { get; set; }
-        [DisplayName("'To Date'")]
+        [DisplayName("'To Date'")]        
         public DateTime? FromDate { get; set; }
         [DateRangeValidation("FromDate")]
         [DisplayName("'To Date'")]
