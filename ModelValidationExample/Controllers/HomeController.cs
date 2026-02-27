@@ -16,7 +16,7 @@ namespace ModelValidationExample.Controllers
         //BinderType: ez azért kell, mert nem egy osztály konkrét példányát adunk át, hanem egy osztály típust és ezt a típust a framework  fogja létrehozni. Majd a PersonModelBinder példányban visszaadott Person típusú egyed kerül bele az itt lévő, paraméterként szereplő Person példányba. 
 
         //Amikor kész a Provider, akkor nem kell megadni hogy hogyan és mikhez kösse az adatokat, mivel a keretrendszer fogja felismerni a Person típust a metaadatokból. Ezért a "[ModelBinder(BinderType = typeof(PersonModelBinder))]" rész már nem kell nekünk.
-        public IActionResult Index(Person person)
+        public IActionResult Index([FromHeader (Name = "User-Agent")] string  userAgent, Person person)
         {
             if (!ModelState.IsValid)
             {
@@ -53,7 +53,7 @@ namespace ModelValidationExample.Controllers
                 //SelectMany után:
                 // [Error1, Error2, Error3]
             }
-            return Content($"{person}");
+            return Content($"{person} \n User-Agent: {userAgent}");
         }
     }
 }

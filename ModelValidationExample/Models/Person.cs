@@ -59,7 +59,7 @@ namespace ModelValidationExample.Models
         }
         public override string ToString()
         {
-            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}, From Date: {FromDate}, To Date: {ToDate}, Number of Tags: {Tags[0]}.";
+            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}, From Date: {FromDate}, To Date: {ToDate}, Number of Tags: {Tags.Count}.";
         }
     }
 }
