@@ -41,6 +41,11 @@ namespace ModelValidationExample.CustomModelBinders
                 this.person.DateOfBirth = Convert.ToDateTime(bindingContext.ValueProvider.GetValue("DateOfBirth").FirstValue);
             }
 
+            if (bindingContext.ValueProvider.GetValue("Tag").Length > 0)
+            {
+                this.person.Tags = bindingContext.ValueProvider.GetValue("Tag").ToList();
+            }
+
             // A binding eredményét sikeresnek jelöljük, és visszaadjuk a létrehozott Person objektumot.
             bindingContext.Result = ModelBindingResult.Success(person);
 

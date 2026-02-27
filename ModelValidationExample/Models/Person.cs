@@ -37,11 +37,13 @@ namespace ModelValidationExample.Models
         //[MinimumYearValidation]
         [MinimumYearValidation(2005, ErrorMessage = "The year should be less than {0}.")]
         public DateTime? DateOfBirth { get; set; }
-        [DisplayName("'To Date'")]        
+        [DisplayName("'To Date'")]
         public DateTime? FromDate { get; set; }
         [DateRangeValidation("FromDate")]
         [DisplayName("'To Date'")]
         public DateTime? ToDate { get; set; }
+
+        public List<string> Tags { get; set; } = new List<string>();
 
         //Feladat: Nem lehet egyszerre nul értékű az Age és a DattOfBirth property.
         //1.Lépés: Jelöld meg azIValidaableObject interfacet az osztály felületének.
@@ -52,12 +54,12 @@ namespace ModelValidationExample.Models
             if (!DateOfBirth.HasValue && !Age.HasValue)
             {
                 //A "yield" kulcsszó arra való, hogy egyszerre több return értékünk legyen. Ezt most azért kötelező használni, mert a visszatérési típus az IEnumerable, ami több értéket is vissza tud adni. 
-               yield return new ValidationResult("Date of birth and Age can not be null in the same time.");
+                yield return new ValidationResult("Date of birth and Age can not be null in the same time.");
             }
         }
         public override string ToString()
         {
-            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}, From Date: {FromDate}, To Date: {ToDate}.";
+            return $"Person object - Name: {PersonName}, Email: {Email}, Phone: {Phone}, Password: {Password}, ConfirmPassword: {ConfirmPassword}, Price: {Price}, Date of Birth: {DateOfBirth}, From Date: {FromDate}, To Date: {ToDate}, Number of Tags: {Tags[0]}.";
         }
     }
 }
