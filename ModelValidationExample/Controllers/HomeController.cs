@@ -11,7 +11,12 @@ namespace ModelValidationExample.Controllers
         [Route("/register")]
         //Így tudjuk külön megadni a Bindingolni kívánt propertyket.
         //Ezeket a propertyket meg tudjuk név szerint is adni kézzel pl.: [Bind("PersonName")], de akkor ha megváltoztatjuk a property nevét, akkor az nem változik autómatikusan. Szebb és kényelmesebb "nameof()" funkciót használni.[Bind(nameof(Person.PersonName), nameof(Person.Email), nameof(Person.Password), nameof(Person.ConfirmPassword))]
-        public IActionResult Index([ModelBinder(BinderType = typeof(PersonModelBinder))]Person person)
+
+        // A ModelBinder attribútummal megadjuk, hogy ehhez a paraméterhez a default binder helyett a PersonModelBinder osztályt használjuk. 
+        //BinderType: ez azért kell, mert nem egy osztály konkrét példányát adunk át, hanem egy osztály típust és ezt a típust a framework  fogja létrehozni. Majd a PersonModelBinder példányban visszaadott Person típusú egyed kerül bele az itt lévő, paraméterként szereplő Person példányba. 
+
+        //Amikor kész a Provider, akkor nem kell megadni hogy hogyan és mikhez kösse az adatokat, mivel a keretrendszer fogja felismerni a Person típust a metaadatokból. Ezért a "[ModelBinder(BinderType = typeof(PersonModelBinder))]" rész már nem kell nekünk.
+        public IActionResult Index(Person person)
         {
             if (!ModelState.IsValid)
             {
