@@ -10,10 +10,12 @@ namespace e_Commerce_Orders_App.Controllers
         {
             if (!ModelState.IsValid)
             {
-                string errorMessage = ModelState.Values.SelectMany(values => values.Errors).Select(err => err.ErrorMessage).ToString();
+                string errorMessage = string.Join("\n", ModelState.Values.SelectMany(values => values.Errors).Select(err => err.ErrorMessage));
                 return BadRequest(errorMessage);
             }
-            return Content(order.ToString());
+            Random rnd = new Random();
+            order.OrderNo = rnd.Next(1, 100000);
+            return new JsonResult(order.ToString());
         }
     }
 }
