@@ -6,7 +6,8 @@
     {
         DateOfBirth = null,
         //DateOfBirth = Convert.ToDateTime("2005-05-18"),
-        Name = "Réka"
+        Name = "Réka",
+        Gender = Gender.female //így adod meg az enumot.
     };
 }
 
@@ -33,6 +34,26 @@
         {
             <b>Unknown the age of @person.Name.</b>
         }
+    }
+    <br />
+    @switch (person.Gender)
+    {
+        case Gender.female:
+            if (person.Name == "Réka")
+            {
+                <b>Réka persze hogy nő.</b>
+            }
+            else
+            {
+                <b>@person.Name is a female.</b>
+            }
+            break;
+        case Gender.male:
+            <b>@person.Name is a male.</b>
+            break;
+        default:
+            <b>What is your Gender?</b>
+            break;
     }
     <h1>Magyarázat:</h1>
     <b>Namespace importálása:</b>
