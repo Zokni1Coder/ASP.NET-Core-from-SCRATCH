@@ -4,7 +4,8 @@
     string title = "Home - From c# block";
     Person person = new Person()
     {
-        DateOfBirth = Convert.ToDateTime("2005-05-18"),
+        DateOfBirth = null,
+        //DateOfBirth = Convert.ToDateTime("2005-05-18"),
         Name = "Réka"
     };
 }
@@ -19,20 +20,29 @@
     Welcome
     <br />
     <b>Person Object - Name: @person.Name, Birth date: @person.DateOfBirth</b>
-    @{
-        double age = Math.Round((DateTime.Now - person.DateOfBirth).TotalDays / 365);
-    }
     <br />
-    <b>@person.Name is @age year old.</b>
-
+    @{
+        if (person.DateOfBirth.HasValue)
+        {
+            //A Person osztály DatofBirth mezője nullable lett.
+            //Ezért kell a "Value.TotalDays" és nem csak a "TotalDays".
+            double age = Math.Round((DateTime.Now - person.DateOfBirth).Value.TotalDays / 365);
+            <b>@person.Name is @age year old.</b>
+        }
+        else
+        {
+            <b>Unknown the age of @person.Name.</b>
+        }
+    }
     <h1>Magyarázat:</h1>
     <b>Namespace importálása:</b>
     <a>
-        "@@using ViewsExample.Models</a>< br />
+        "@@using ViewsExample.Models
+    </a>< br />
     <b>A "@@" jel írása egyszerű szövegként dupla kukac.</b>
     <br />
     <br />
-    <b>A Kód blokkban található a kiírt Person Objektum.</b> 
+    <b>A Kód blokkban található a kiírt Person Objektum.</b>
     <br />
     <br />
     <b>A szöveg, ami kiírja az objektumunk értékeit, abban vannak az expression-ök. Pl: "@@person.Name"</b>
