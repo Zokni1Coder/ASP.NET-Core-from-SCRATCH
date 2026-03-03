@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ViewsExample.Models;
 
 namespace ViewsExample.Controllers
 {
     public class HomeController : Controller
     {
         [Route("/home")]
+        [Route("/")]
         public IActionResult Index()
         {
             //Hogyan kell a mappa-rendszert létrehozni?
