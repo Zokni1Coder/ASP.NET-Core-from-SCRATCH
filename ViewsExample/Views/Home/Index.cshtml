@@ -1,17 +1,21 @@
 ﻿@using ViewsExample.Models
 
 @{
-    string title = "Home - From c# block";
-    Person person = new Person()
-    {
-        //DateOfBirth = null,
-        DateOfBirth = Convert.ToDateTime("2005-05-18"),
-        Name = "Réka",
-        Gender = Gender.female, //így adod meg az enumot.
-        FavoriteCities = new List<string> { "Szabadka", "Salzburg", "Eger", "Rimini" }
-    };
+    //string title = "Home - From c# block";
+    // Person person = new Person()
+    // {
+    //     //DateOfBirth = null,
+    //     DateOfBirth = Convert.ToDateTime("2005-05-18"),
+    //     Name = "Réka",
+    //     Gender = Gender.female, //így adod meg az enumot.
+    //     FavoriteCities = new List<string> { "Szabadka", "Salzburg", "Eger", "Rimini" }
+    // };
 
-    string alertMessage = $"<script>alert('{person.Name}-nak/nek {person.FavoriteCities.Count} kedvenc városa van!')</script>";
+    //Mivel a ViewData egy key-value pár típusú, nekünk viszont objektum van átadva,
+    // ezért castolni kell.
+    Person person = (Person)ViewData["person"];
+
+    //string alertMessage = $"<script>alert('{person.Name}-nak/nek {person.FavoriteCities.Count} kedvenc városa van!')</script>";
 }
 
 @{
@@ -31,11 +35,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@title</title>
+    <title>@ViewData["title"]</title>
     <meta charset="utf-8" />
 </head>
 <body>
-    @Html.Raw(alertMessage)
+    @Html.Raw(ViewData["alertMessage"])
     Welcome
     <br />
     <b>Person Object - Name: @person.Name, Birth date: @person.DateOfBirth</b>
