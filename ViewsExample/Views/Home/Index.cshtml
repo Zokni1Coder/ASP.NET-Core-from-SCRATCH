@@ -4,10 +4,11 @@
     string title = "Home - From c# block";
     Person person = new Person()
     {
-        DateOfBirth = null,
-        //DateOfBirth = Convert.ToDateTime("2005-05-18"),
+        //DateOfBirth = null,
+        DateOfBirth = Convert.ToDateTime("2005-05-18"),
         Name = "Réka",
-        Gender = Gender.female //így adod meg az enumot.
+        Gender = Gender.female, //így adod meg az enumot.
+        FavoriteCities = new List<string> {"Szabadka", "Salzburg", "Eger", "Rimini"}
     };
 }
 
@@ -55,15 +56,26 @@
             <b>What is your Gender?</b>
             break;
     }
+    <br />
+    <p>A @person.Name kedvenc városai,ahol eddig volt:</p>
+    <ul>
+    @{       
+            foreach (var city in person.FavoriteCities)
+            {
+              <li>@city</li>
+            }                
+    }
+    </ul>
     <h1>Magyarázat:</h1>
     <b>Namespace importálása:</b>
     <a>
         "@@using ViewsExample.Models
-    </a>< br />
+    </a>
+    <br />
     <b>A "@@" jel írása egyszerű szövegként dupla kukac.</b>
     <br />
     <br />
-    <b>A Kód blokkban található a kiírt Person Objektum.</b>
+    <b>A Kód blokkban található a később kiírt Person Objektum.</b>
     <br />
     <br />
     <b>A szöveg, ami kiírja az objektumunk értékeit, abban vannak az expression-ök. Pl: "@@person.Name"</b>
