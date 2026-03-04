@@ -66,6 +66,13 @@
             }                
     }
     </ul>
+    <p>A @person.Name kedvenc városai,ahol eddig volt táblázattal megadva:</p>
+    <table>
+    @for (int i =0; i < 4; i++)
+    {
+        <tr><td>@i.)</td><td>@person.FavoriteCities[i]</td></tr>
+    }
+    </table>
     <h1>Magyarázat:</h1>
     <b>Namespace importálása:</b>
     <a>
