@@ -30,3 +30,4 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ViewsExample\obj\Debug\net
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ViewsExample\obj\Debug\net9.0\ViewsExample.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ViewsExample\obj\Debug\net9.0\ViewsExample.genruntimeconfig.cache
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ViewsExample\obj\Debug\net9.0\ref\ViewsExample.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\ViewsExample\obj\Debug\net9.0\compressed\p2tc8c39cg-xjwbanmyvq.gz
