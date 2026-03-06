@@ -12,7 +12,7 @@
     <div class="page-content">
         <h1>Welcome</h1>
         @{
-            //Vedd észre, hogy lent a beágyazott változóknál, mindig a "Model"-re 
+            //Vedd észre, hogy lent a beágyazott változóknál, mindig a "Model"-re
             //hivatkozom.
             foreach (Person person in Model)
             {
@@ -24,7 +24,12 @@
                             <tr><td>Date of Birth</td><td>@person.DateOfBirth</td></tr>
                         </tbody>
                     </table>
-                    <a href="/person/@person.Name">Details</a>
+                    <div>
+                        <a href="/person/@person.Name">Details</a>
+                    </div>
+                    <div>
+                        <a href="/person-and-product">Person with Product</a>
+                    </div>
                 </div>
             }
         }

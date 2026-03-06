@@ -95,5 +95,27 @@ namespace ViewsExample.Controllers
             Person? selectedPerson = people.Where(person => person.Name == name).FirstOrDefault();
             return View(selectedPerson);
         }
+
+        [Route("/person-and-product")]
+        public IActionResult PersonAndProduct()
+        {
+            Person person = new Person()
+            {
+                Name = "Reka",
+                DateOfBirth = Convert.ToDateTime("2005-05-18"),
+                Gender = Gender.female
+            };
+            Product product = new Product()
+            {
+              Id = 1,
+              Name = "Car"
+            };
+            PersonAndProductViewModel personAndProductViewModel = new PersonAndProductViewModel()
+            {
+              PersonData = person,
+              ProductData = product
+            };
+            return View(personAndProductViewModel);
+        }
     }
 }
