@@ -6,7 +6,6 @@ namespace ViewsExample.Controllers
     public class HomeController : Controller
     {
         [Route("/home")]
-        [Route("/")]
         public IActionResult Index()
         {
             //Hogyan kell a mappa-rendszert létrehozni?
@@ -24,13 +23,77 @@ namespace ViewsExample.Controllers
                 Gender = Gender.female,
                 FavoriteCities = new List<string> { "Szabadka", "Salzburg", "Eger", "Rimini" }
             };
-            ViewData["person"] = person;
+            //Ha Strongly Typed Views-t használunk, akkor nem kell megadni egy összekötő elemet sem, mint a ViewData vagy ViewBag.
+            //ViewData["person"] = person;
 
             ViewData["alertMessage"] = $"<script>alert('{person.Name}-nak/nek {person.FavoriteCities.Count} kedvenc városa van!')</script>";
 
-            return View(); //Ha nem adunk meg paraméterül View-t, akkor mindig ezt a sablont követi: "/View/Controller-név/Controller-metódusnév.cshtml". Tehát esetünkben nem kell most semmit sem kihangsúlyozni, mert a View útvonala és neve: "/Views/Home/Index.cshtml"
+
+            //Paraméterül adjuk át a Person objektumot.
+            return View(person); //Ha nem adunk meg paraméterül View-t, akkor mindig ezt a sablont követi: "/View/Controller-név/Controller-metódusnév.cshtml". Tehát esetünkben nem kell most semmit sem kihangsúlyozni, mert a View útvonala és neve: "/Views/Home/Index.cshtml"
 
             //return View(ABC); => /View/Home/ABC.cshtml
+        }
+
+        [Route("/")]//Az Index esetében persze el kell távolítani.
+        public IActionResult Persons()
+        {
+            List<Person> people = new List<Person>
+            {
+                new Person()
+                {
+                    Name = "Reka",
+                    DateOfBirth = Convert.ToDateTime("2005-05-18"),
+                    Gender = Gender.female
+                },
+                new Person()
+                {
+                    Name = "Erik",
+                    DateOfBirth = Convert.ToDateTime("2000-09-22"),
+                    Gender = Gender.male
+                },
+                new Person()
+                {
+                    Name = "Niki",
+                    DateOfBirth = Convert.ToDateTime("1996-09-17"),
+                    Gender = Gender.female
+                }
+            };
+
+            //Ha Strongly Typed Views-t használunk, akkor nem kell megadni egy összekötő elemet sem, mint a ViewData vagy ViewBag.
+            //Paraméterül adjuk át a Person objektumot.
+            return View(people);
+        }
+
+        [Route("/person/{name}")]
+        public IActionResult SelectedPerson(string name)
+        {
+            //Nem egy jó megoldás, de később megtanuljuk megfelelően az ilyen eseteket kikerülni.
+            List<Person> people = new List<Person>
+            {
+                new Person()
+                {
+                    Name = "Reka",
+                    DateOfBirth = Convert.ToDateTime("2005-05-18"),
+                    Gender = Gender.female
+                },
+                new Person()
+                {
+                    Name = "Erik",
+                    DateOfBirth = Convert.ToDateTime("2000-09-22"),
+                    Gender = Gender.male
+                },
+                new Person()
+                {
+                    Name = "Niki",
+                    DateOfBirth = Convert.ToDateTime("1996-09-17"),
+                    Gender = Gender.female
+                }
+            };
+
+            //Linq kifejezés
+            Person? selectedPerson = people.Where(person => person.Name == name).FirstOrDefault();
+            return View(selectedPerson);
         }
     }
 }

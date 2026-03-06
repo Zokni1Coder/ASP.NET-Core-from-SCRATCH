@@ -1,0 +1,27 @@
+﻿@using ViewsExample.Models
+@model Person
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Selected Person</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" />
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="page-content">
+        <h1>Person Details</h1>
+        <div class="box float-left w-50">
+            <h3>@Model.Name</h3>
+            <table class="table w-100">
+                <tbody>
+                    <tr><td>Gender</td><td>@Model.Gender</td></tr>
+                    <tr><td>Date of Birth</td><td>@Model.DateOfBirth</td></tr>
+                </tbody>
+            </table>
+            <a href="/">Back to the List</a>
+        </div>
+    </div>
+</body>
+</html>
+
