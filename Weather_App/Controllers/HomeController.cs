@@ -23,7 +23,7 @@ namespace Weather_App.Controllers
                 CityName = "New York",
                 DateAndTime = Convert.ToDateTime("2030-01-01 3:00"),
                 TemperatureFahrenheit = 60
-            },                             
+            },
             new City()
             {
                 CityUniqueCode = "PAR",
