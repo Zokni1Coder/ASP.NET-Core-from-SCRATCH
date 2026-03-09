@@ -1,0 +1,5 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Weather_App/obj/Debug/net9.0/Weather_App.AssemblyInfoInputs.cache
