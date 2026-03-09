@@ -35,3 +35,11 @@ build_metadata.AdditionalFiles.CssScope =
 [C:/Users/erikk/source/repos/ASP.NET-Core-from-SCRATCH/ViewsExample/Views/Home/SelectedPerson.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTZWxlY3RlZFBlcnNvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/erikk/source/repos/ASP.NET-Core-from-SCRATCH/ViewsExample/Views/Product/AllProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBbGxQcm9kdWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/erikk/source/repos/ASP.NET-Core-from-SCRATCH/ViewsExample/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
