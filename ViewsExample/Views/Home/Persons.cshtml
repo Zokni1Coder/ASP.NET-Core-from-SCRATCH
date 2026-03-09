@@ -1,0 +1,37 @@
+﻿@model List<Person>//Itt megjelöljük, hogy milyen típusú elemet kap a View a paraméterben.
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Persons</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" />
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div class="page-content">
+        <h1>Welcome</h1>
+        @{
+            //Vedd észre, hogy lent a beágyazott változóknál, mindig a "Model"-re
+            //hivatkozom.
+            foreach (Person person in Model)
+            {
+                <div class="box float-left w-50">
+                    <h3>@person.Name</h3>
+                    <table class="table w-100">
+                        <tbody>
+                            <tr><td>Gender</td><td>@person.Gender</td></tr>
+                            <tr><td>Date of Birth</td><td>@person.DateOfBirth</td></tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <a href="/person/@person.Name">Details</a>
+                    </div>
+                    <div>
+                        <a href="/person-and-product">Person with Product</a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</body>
+</html>

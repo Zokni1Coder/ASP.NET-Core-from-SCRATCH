@@ -1,0 +1,52 @@
+﻿@model PersonAndProductViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Person and Product</title>
+    <link href="~/StyleSheet.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="page-content">
+        <h1>Person and Product</h1>
+
+        <div class="box w-100">
+            <h3>Person</h3>
+            <table class="table w-50">
+                <tbody>
+                    <tr>
+                        <td>Person Name</td>
+                        <td>@Model.PersonData.Name</td>
+                    </tr>
+                    <tr>
+                        <td>Person Date of Birth</td>
+                        <td>@Model.PersonData.DateOfBirth</td>
+                    </tr>
+                    <tr>
+                        <td>Person Gender</td>
+                        <td>@Model.PersonData.Gender</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="box w-100">
+            <h3>Product</h3>
+            <table class="table w-50">
+                <tbody>
+                    <tr>
+                        <td>Product Number</td>
+                        <td>@Model.ProductData.Id</td>
+                    </tr>
+                    <tr>
+                        <td>Product Name</td>
+                        <td>@Model.ProductData.Name</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <a href="/">Back to the List</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
