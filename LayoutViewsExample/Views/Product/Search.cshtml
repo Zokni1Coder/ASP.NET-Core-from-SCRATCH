@@ -1,5 +1,10 @@
 ﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //Az elnevezési konvenció Layout/ViewStart/ViewImport esetén: "_"-vel kezdődik.
+
+    //Célunk az, hogy kizárólag a Search View-an legyen más a sablonunk.
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
     ViewBag.Title = "Search";
 }
 <h1>Search View</h1>
