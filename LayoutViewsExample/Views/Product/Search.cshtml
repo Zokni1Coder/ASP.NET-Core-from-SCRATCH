@@ -4,8 +4,15 @@
     //Az elnevezési konvenció Layout/ViewStart/ViewImport esetén: "_"-vel kezdődik.
 
     //Célunk az, hogy kizárólag a Search View-an legyen más a sablonunk.
-    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+
+    //Ha kapunk egy productID-t az urlben akkor az egyedi Layout fog lefutni, különben
+    //a Shared-ben lévő általános. 
+    if (ViewBag.ProductID != null)
+    {
+        Layout = "~/Views/Shared/_ProductLayout.cshtml";
+    }
     ViewBag.Title = "Search";
 }
+
 <h1>Search View</h1>
 <p>Welcome on the Search Page!</p>
