@@ -1,4 +1,24 @@
-﻿<h1>Welcome on the Home page!</h1>
+﻿<h1>Welcome on the Home (@ViewData["ListTitle"]) page!</h1>
+
 <div class="box">
-     <partial name="_ListPartialView"/>
+    <p>This is the ViewData what the Partial View copy from the View:</p>
+    <hr />
+    <partial name="_ListPartialView" />
+</div>
+
+@{
+    //Itt írom felül a ViewData elemet. Mivel fentről lefele fut a kód, ezért a 
+    // fenti még az eredetit mutatja, az alsó már a módosítottat. 
+    ViewData["ListItems"] = new List<string>
+    { "Subotica", "Kanjiza", "Kelebija", "Horgos", "Palic", "Hajdukovo" };
+}
+
+<div class="box">
+    <p>This is the ViewData what the Partial View copy from the View:</p>
+    <hr />
+    <partial name="_ListPartialView" />
+</div>
+
+<div class="box">
+<p>The "ListTitle" key-value after modification in the Partial View: @ViewData["ListTitle"]</p>
 </div>

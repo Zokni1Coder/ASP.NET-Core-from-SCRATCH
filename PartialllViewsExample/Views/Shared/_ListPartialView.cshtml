@@ -1,8 +1,16 @@
 ﻿<ul>
-    <li>Szabadka</li>
-    <li>Kanizsa</li>
-    <li>Kelebia</li>
-    <li>Horgos</li>
-    <li>Palics</li>
-    <li>Hajdujárás</li>
+    @{
+        //itt felülírjuk a Partialban szereplő ListTitle elemet és csak itt fog 
+        // módosulni, a Viewban nem. Ugyanaz meg van hívva ott is a Partial View
+        //lefutása után.
+        ViewBag.ListTitle = "NewTitle";
+        List<string>? listItems = ViewBag.ListItems;
+        foreach (var item in listItems)
+        {
+            <li>@item</li>
+        }
+    }
 </ul>
+<div class="box">
+<p>The modified "ListTitle" key-value in the Partial View: @ViewData["ListTitle"]</p>
+</div>
