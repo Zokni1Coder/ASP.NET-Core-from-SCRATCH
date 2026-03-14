@@ -20,9 +20,9 @@
 <p>This is the result of Strongly Typed Model:</p>
 <ul>
     @{
-        //FONTOS!!! Mivel a Partial View egy modellt kér, ezért minden helyen ahol beillesztjük kötelesek vagyunk egyet
-        //megadni, különben NullREferenceErrort kapunk. Esetünkben kötelesek vagyunk modellt átadni a Home és az
-        //Aboutban is.
+        //FONTOS!!! Mivel a Partial View egy modellt kér, ezért minden helyen ahol 
+        //beillesztjük kötelesek vagyunk egyet megadni, különben NullReferenceErrort 
+        //kapunk. Esetünkben kötelesek vagyunk modellt átadni a Home és az Aboutban is.
         if (Model != null)
         {
             foreach (var item in Model.Items)

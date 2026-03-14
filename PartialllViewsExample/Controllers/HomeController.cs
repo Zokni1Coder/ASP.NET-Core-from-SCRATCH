@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PartialllViewsExample.Models;
 
 namespace PartialllViewsExample.Controllers
 {
@@ -15,6 +16,21 @@ namespace PartialllViewsExample.Controllers
         public IActionResult About()
         {
             ViewData["ListTitle"] = "About";
+            return View();
+        }
+        [Route("/zastava-models")]
+        public IActionResult FetchingPartilView()
+        {
+            ListItems listItems = new ListItems()
+            {
+                Items = { "101", "Yugo", "128" }
+            };
+            return PartialView("_ListPartialView", listItems);
+        }
+        [Route("/zastavas")]
+        public IActionResult Zastavas()
+        {
+            ViewData["ListTitle"] = "Zastava";
             return View();
         }
     }
