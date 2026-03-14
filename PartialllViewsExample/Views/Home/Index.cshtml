@@ -3,22 +3,29 @@
 <div class="box">
     <p>This is the ViewData what the Partial View copy from the View:</p>
     <hr />
-    <partial name="_ListPartialView" />
+    <partial name="_ListPartialView"/>
 </div>
 
 @{
-    //Itt írom felül a ViewData elemet. Mivel fentről lefele fut a kód, ezért a 
-    // fenti még az eredetit mutatja, az alsó már a módosítottat. 
+    //Itt írom felül a ViewData elemet. Mivel fentről lefele fut a kód, ezért a
+    // fenti még az eredetit mutatja, az alsó már a módosítottat.
     ViewData["ListItems"] = new List<string>
     { "Subotica", "Kanjiza", "Kelebija", "Horgos", "Palic", "Hajdukovo" };
+
+    //Mivel a Partial Viewnak szeretnénk átadni egy modelt (ListItems....elég rossz elnevezés....sry), itt létrehozzuk
+    //és a partial tagban átadjuk.
+    ListItems CarBrands = new ListItems()
+    {
+        Items = { "BMW", "Audi", "Zastava" }
+    };
 }
 
 <div class="box">
     <p>This is the ViewData what the Partial View copy from the View:</p>
     <hr />
-    <partial name="_ListPartialView" />
+    <partial name="_ListPartialView" model="CarBrands" />
 </div>
 
 <div class="box">
-<p>The "ListTitle" key-value after modification in the Partial View: @ViewData["ListTitle"]</p>
+    <p>The "ListTitle" key-value after modification in the Partial View: @ViewData["ListTitle"]</p>
 </div>

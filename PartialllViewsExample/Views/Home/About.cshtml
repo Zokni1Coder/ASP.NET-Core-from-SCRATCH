@@ -1,6 +1,13 @@
-﻿<h1>Welcome on the About (@ViewData["ListTitle"]) page!</h1>
+﻿@{
+    ListItems CodeLanguags = new ListItems()
+    {
+        Items = { "C#", "Java", "JavaScript", "C++" }
+    };
+}
+
+<h1>Welcome on the About (@ViewData["ListTitle"]) page!</h1>
 <div class="box">
     <div class="container">
-        <partial name="_ListPartialView"/>
+        <partial name="_ListPartialView" model="CodeLanguags" />
     </div>
 </div>
