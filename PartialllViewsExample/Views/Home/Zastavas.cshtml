@@ -1,0 +1,16 @@
+﻿<h1>Welcome on the About (@ViewData["ListTitle"]) page!</h1>
+<div class="box">
+    <button class="button blue-back" type="button" id="load">Show the models</button>
+    <div class="container">
+        <div class="container model-container">
+        
+    </div>
+</div>
+
+<script>
+    document.querySelector("#load").addEventListener("click", async function(){
+        var response = await fetch("zastava-models");
+        var models = await response.text();
+        document.querySelector(".model-container").innerHTML = models;
+    });
+</script>

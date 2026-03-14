@@ -1,0 +1,37 @@
+﻿@model ListItems //itt vesszük át a Strongly Typed Modelt
+<ul>
+    @{
+        //itt felülírjuk a Partialban szereplő ListTitle elemet és csak itt fog
+        // módosulni, a Viewban nem. Ugyanaz meg van hívva ott is a Partial View
+        //lefutása után.
+        ViewBag.ListTitle = "NewTitle";
+        List<string>? listItems = ViewBag.ListItems;
+        if (listItems is not null)
+        {
+            foreach (var item in listItems)
+            {
+                <li>@item</li>
+            }
+        }
+    }
+</ul>
+<hr />
+<br />
+<p>This is the result of Strongly Typed Model:</p>
+<ul>
+    @{
+        //FONTOS!!! Mivel a Partial View egy modellt kér, ezért minden helyen ahol 
+        //beillesztjük kötelesek vagyunk egyet megadni, különben NullReferenceErrort 
+        //kapunk. Esetünkben kötelesek vagyunk modellt átadni a Home és az Aboutban is.
+        if (Model != null)
+        {
+            foreach (var item in Model.Items)
+            {
+                <li>@item</li>
+            }
+        }
+    }
+</ul>
+<div class="box">
+    <p>The modified "ListTitle" key-value in the Partial View: @ViewData["ListTitle"]</p>
+</div>
