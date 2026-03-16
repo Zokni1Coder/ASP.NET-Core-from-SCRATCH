@@ -1,4 +1,29 @@
-﻿@{
+﻿@model Manufacturer
+@{
     ViewBag.Title = "Home";
+
+    Manufacturer manufacturer = new Manufacturer()
+    {
+        Brand = "Audi",
+        Models = new List<CarModel>()
+                {
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "A4"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.hothatch,
+                        Model = "A3"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "A6"
+                    }
+                }
+    };
 }
 <h1>Home</h1>
+@await Component.InvokeAsync("Grid", new { manufacturer })

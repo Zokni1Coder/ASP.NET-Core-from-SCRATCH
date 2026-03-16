@@ -16,30 +16,30 @@ namespace ViewComponentsExample.ViewComponents
         /*
          Azért használunk Task-ot, hogy ne terheljük le a szervert, ne raboljuk az idejét. A többi előnyét konkrétabban a füzetben kerest. 
          */
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(Manufacturer manufacturer)
         {
-            Manufacturer manufacturer = new Manufacturer()
-            {
-                Brand = "Zastava",
-                Models = new List<CarModel>()
-                {
-                    new CarModel()
-                    {
-                        Chassie = Chassis.limousine,
-                        Model = "101"
-                    },
-                    new CarModel()
-                    {
-                        Chassie = Chassis.hothatch,
-                        Model = "Yugo"
-                    },
-                    new CarModel()
-                    {
-                        Chassie = Chassis.limousine,
-                        Model = "128"
-                    }
-                }
-            };
+            //Manufacturer manufacturer1 = new Manufacturer()
+            //{
+            //    Brand = "Zastava",
+            //    Models = new List<CarModel>()
+            //    {
+            //        new CarModel()
+            //        {
+            //            Chassie = Chassis.limousine,
+            //            Model = "101"
+            //        },
+            //        new CarModel()
+            //        {
+            //            Chassie = Chassis.hothatch,
+            //            Model = "Yugo"
+            //        },
+            //        new CarModel()
+            //        {
+            //            Chassie = Chassis.limousine,
+            //            Model = "128"
+            //        }
+            //    }
+            //};
 
             ViewData["Manufacturer"] = manufacturer;
 
