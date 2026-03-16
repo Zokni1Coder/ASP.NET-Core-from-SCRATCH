@@ -1,4 +1,4 @@
-﻿@ViewBag.Manufacturer
+﻿@model Manufacturer //ugyanúgy fogadjuk a modellt.
 <div class="box">
     <h3>Grid</h3>
     <table class="table w-100">
@@ -15,6 +15,29 @@
         }
     </table>
 </div>
+<hr />
+<div class="box">
+    <h3>Strongly Typed Grid</h3>
+    <h3>Cars</h3>
+    <table class="table w-100">
+        <tr><td>Model</td><td>Chassie</td></tr>
+        @foreach (CarModel car in Model.Models)
+        {
+            <tr><td>@Model.Brand @car.Model</td><td>@car.Chassie</td></tr>
+        }
+    </table>
+</div>
+
+@{
+    /*
+     Elfelejtettem az első képsoroknál:
+
+     A ViewComponent View részére a Mapparendszert így hozod létre:
+     Views/Shared/Components/ViewComponentnév "ViewComponent" suffix nélkül/név.cshtml
+
+     Ezért lesz a GridViewComponent-ből csak Grid a mappa neve!
+     */
+}
 
 
 

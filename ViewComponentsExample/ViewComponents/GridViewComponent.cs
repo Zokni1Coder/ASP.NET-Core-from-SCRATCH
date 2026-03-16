@@ -46,7 +46,9 @@ namespace ViewComponentsExample.ViewComponents
             /*
               Ha csak "return View();" akkor a defaul útvonal és fájl: Views/Shared/Components/Grid/Default.cshtml
              */
-            return View("sample");
+
+            //Ugyanúgy adjuk át az objektumot mint eddig a többi View típusoknál.
+            return View("sample", manufacturer);
         }
     }
 }
