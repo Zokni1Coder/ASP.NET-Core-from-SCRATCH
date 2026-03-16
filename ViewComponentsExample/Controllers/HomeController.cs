@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ViewComponentsExample.Models;
 
 namespace ViewComponentsExample.Controllers
 {
@@ -27,6 +28,34 @@ namespace ViewComponentsExample.Controllers
         public IActionResult About()
         {
             return View();
+        }
+        [Route("load-cars")]
+        public IActionResult LoadCars()
+        {
+            Manufacturer manufacturer = new Manufacturer()
+            {
+                Brand = "Audi",
+                Models = new List<CarModel>()
+                {
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "A4"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.hothatch,
+                        Model = "A3"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "A6"
+                    }
+                }
+            };
+
+            return ViewComponent("Grid", new { manufacturer });
         }
     }
 }

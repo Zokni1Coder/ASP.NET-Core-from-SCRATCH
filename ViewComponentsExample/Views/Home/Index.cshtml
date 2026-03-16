@@ -27,3 +27,11 @@
 }
 <h1>Home</h1>
 @await Component.InvokeAsync("Grid", new { manufacturer })
+
+<button class="blue-back" id="load-cars-button">Load Cars</button>
+
+<div id="list"></div>
+
+<script src="~/cars.js">
+</script>
+
