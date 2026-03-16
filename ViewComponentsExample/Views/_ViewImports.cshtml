@@ -1,9 +1,12 @@
 ﻿@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @addTagHelper "*, ViewComponentsExample"
+@using ViewComponentsExample.Models
 
 @{
     //Ezt a két sort azért kell importolni, hogy meg tudjuk hívni a ViewComponentot
     // több helyről.  A TagHelperekről később lesz egy külön fejezet.
+    //A TagHelpers névtérre azért lesz szükségünk mert a "<vc:grid></vc:grid>" részt
+    //taghelpernek nevezzük.
 
     //A 2. sorban lévő azért kell hogy el tudjuk érni a ViewComponents mappát (is).
     //Ebben az esetben a meghívás ezzel történik: <vc:grid></vc:grid>. A nevet "csiga"

@@ -1,8 +1,20 @@
-﻿<div class="box">
+﻿@ViewBag.Manufacturer
+<div class="box">
     <h3>Grid</h3>
     <table class="table w-100">
         <tr><td>Sl. No</td><td>Name</td></tr>
         <tr><td>1</td><td>One</td></tr>
         <tr><td>2</td><td>Two</td></tr>
     </table>
+    <h3>Cars</h3>
+    <table class="table w-100">
+        <tr><td>Model</td><td>Chassie</td></tr>
+        @foreach (CarModel car in ViewBag.Manufacturer.Models)
+        {
+            <tr><td>@ViewBag.Manufacturer.Brand @car.Model</td><td>@car.Chassie</td></tr>
+        }
+    </table>
 </div>
+
+
+

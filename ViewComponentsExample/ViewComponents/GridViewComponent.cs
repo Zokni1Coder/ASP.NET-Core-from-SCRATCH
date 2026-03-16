@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using ViewComponentsExample.Models;
 
 namespace ViewComponentsExample.ViewComponents
 {
@@ -17,10 +18,35 @@ namespace ViewComponentsExample.ViewComponents
          */
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            Manufacturer manufacturer = new Manufacturer()
+            {
+                Brand = "Zastava",
+                Models = new List<CarModel>()
+                {
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "101"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.hothatch,
+                        Model = "Yugo"
+                    },
+                    new CarModel()
+                    {
+                        Chassie = Chassis.limousine,
+                        Model = "128"
+                    }
+                }
+            };
+
+            ViewData["Manufacturer"] = manufacturer;
+
             /*
               Ha csak "return View();" akkor a defaul útvonal és fájl: Views/Shared/Components/Grid/Default.cshtml
              */
-             return View("sample");
+            return View("sample");
         }
     }
 }
