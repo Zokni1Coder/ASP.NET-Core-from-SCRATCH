@@ -1,0 +1,13 @@
+﻿@model City
+﻿﻿
+@if (Model != null)
+{
+    City city = Model;
+    @await Component.InvokeAsync("Weather", new {city});
+}
+else
+{
+    <div class="margin-auto">
+        <h1>Please select proper city!</h1>
+    </div>
+}
