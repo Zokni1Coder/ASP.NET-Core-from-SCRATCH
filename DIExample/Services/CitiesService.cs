@@ -1,4 +1,6 @@
-﻿namespace Services
+﻿using ServiceContracts;
+
+namespace Services
 {
     //Amikor egy Service-szel működő programot hozol létre, akkor mindig a 
     //Service résszel illik kezdeni.
@@ -7,17 +9,9 @@
     //meg kell adni a Service referencáját a DIExample-nek. Fontos az irány!
     //Referencia megadása: DIExample/Dependencies->Add Project Reference -> 
     //Kipipálod a Services-t és így el fogod tudni érni a metódusokat a másik projektből is.
-    public class CitiesService
+    public class CitiesService : ICitiesService
     {
         private List<string> _cities { get; set; }
-
-        public List<string> GetCities
-        {
-            get
-            {
-                return _cities;
-            }
-        }
         public CitiesService()
         {
             _cities = new List<string>()
@@ -28,6 +22,11 @@
                  "Tokyo",
                  "Rome"
              };
+        }
+
+        List<string> ICitiesService.GetCities()
+        {
+            return _cities;
         }
     }
 }
