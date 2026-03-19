@@ -9,10 +9,12 @@ namespace DIExample.Controllers
         //Létrehozol egy readonly mezőt a Service-ből.
         //DIP-et betartva, a mező, az egy Interface lesz, amit a Service implementál. Ahhoz, hogy ez működjön, állítsd be a DIExmaple-nek a a ServiceContracts-ot mint Dependency. 
         private readonly ICitiesService _citiesService;
-        public HomeController()
+        //Paraméterül kap egy ICitiesService-t, de a IoC Container egy CitiesService egyedet fog küldeni és az kerül bele a mezőbe.
+        public HomeController(ICitiesService citiesService)
         {
-            //A mezőnek létrehozol egy egyedet. Ez nem DI, de ezzel majd később foglalkozunk.            
-            this._citiesService = new CitiesService();
+            //A mezőnek létrehozol egy egyedet. Ez nem DI, de ezzel majd később foglalkozunk.
+            //new CitiesService();
+            this._citiesService = citiesService; 
         }
         [Route("/")]
         public IActionResult Index()
