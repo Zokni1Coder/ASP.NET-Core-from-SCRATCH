@@ -16,12 +16,16 @@ namespace DIExample.Controllers
             //new CitiesService();
             this._citiesService = citiesService; 
         }
+
+        //Megjelöljük a paramétert a "[FromServices]" attribútummal, hogy az ASP.Net Core tudja hogy az IoC Container-nek ide egy objekttumot kell hogy szolgáltassson. Alapessetben csak a konstruktorokat figyeli.
         [Route("/")]
-        public IActionResult Index()
+        public IActionResult Index([FromServices] ICitiesService citiesService)
         {
             //Így el tudjuk érni a Service metódusát és értéket fogunk kapni.
             //Mivel módosítottuk a CitiesService-t és nem gett property van, hanem metódus, ezért itt metódusként fogjuk meghívni.
-            List<string> cities = _citiesService.GetCities();
+
+            //Meghívjük a paraméterként kapott Service osztály metódusát.
+            List<string> cities = citiesService.GetCities();
             return View(cities);
         }
     }
