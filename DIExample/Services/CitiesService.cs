@@ -9,8 +9,10 @@ namespace Services
     //meg kell adni a Service referencáját a DIExample-nek. Fontos az irány!
     //Referencia megadása: DIExample/Dependencies->Add Project Reference -> 
     //Kipipálod a Services-t és így el fogod tudni érni a metódusokat a másik projektből is.
-    public class CitiesService : ICitiesService
+    //Hogy "child-scope"-okat tudjunk létrehozni oda minden abban használt objektumot el kell hogy tudjuk dobni (dispose) a using végén. Ezért kell implementálni az IDisposable felületet és annak a Dispose() metódusát.
+    public class CitiesService : ICitiesService, IDisposable
     {
+        private Guid _id { get; set; }
         private List<string> _cities { get; set; }
         public CitiesService()
         {
@@ -22,11 +24,22 @@ namespace Services
                  "Tokyo",
                  "Rome"
              };
+            _id = Guid.NewGuid();
         }
 
         List<string> ICitiesService.GetCities()
         {
             return _cities;
+        }
+        //Itt az implementált metódusa.
+        public void Dispose()
+        {
+           //Hagyd most üresen.
+        }
+
+        public Guid GetGuid()
+        {
+            return _id;
         }
     }
 }

@@ -8,7 +8,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.Add(new ServiceDescriptor(
     typeof(ICitiesService),
     typeof(CitiesService),
-    ServiceLifetime.Transient    //Transient/Scoped/Singleton
+    //ServiceLifetime.Transient    //Transient/Scoped/Singleton
+    //Itt állítsd át az életciklusát Scoped-ra.
+    ServiceLifetime.Scoped
     ));
 
 var app = builder.Build();
