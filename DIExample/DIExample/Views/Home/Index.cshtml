@@ -1,5 +1,5 @@
 ﻿@model IEnumerable<string>
-
+@inject ICitiesService citiesService   //nevet is kell neki adni, mivel ez egy objektum
 <h1>Home</h1>
 <ul>
     @foreach (string city in Model)
@@ -10,3 +10,11 @@
 <hr />
 <p>GUID from parent scope: @ViewBag.InstanceID_CitiesService_InScope</p>
 <p>GUID from child scope @ViewBag.InstanceID_CitiesService_InChildScope</p>
+<hr />
+<h1>Cities from directly injected object to the View</h1>
+<ul>
+    @foreach (string city in citiesService.GetCities())
+    {
+        <li>@city</li>
+    }
+</ul>
