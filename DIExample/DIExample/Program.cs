@@ -19,6 +19,7 @@ builder.Services.AddControllersWithViews();
     builder.Services.AddSingleton<ICitiesService, CitiesService>();
 */
 builder.Services.AddScoped<ICitiesService, CitiesService>();
+//builder.Services.AddSingleton<ICitiesService, CitiesService>();
 
 
 var app = builder.Build();
