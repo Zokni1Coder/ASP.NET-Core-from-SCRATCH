@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public class City
+    public class CityWeather
     {
         public string CityUniqueCode { get; set; }
         public string CityName { get; set; }

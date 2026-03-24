@@ -4,8 +4,8 @@ namespace ServiceContracts
 {
     public interface IWeatherService
     {
-        List<City> GetCities();
+        List<CityWeather> GetWeatherDetails();
 
-        City GetCity(string cityIdCityUniqueCode);
+        CityWeather GetCity(string cityIdCityUniqueCode);
     }
 }
