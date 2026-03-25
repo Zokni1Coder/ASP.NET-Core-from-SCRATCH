@@ -2,3 +2,10 @@
 
 <p>Hello World!</p>
 <div class="box">Current Environment: @ViewBag.Environment</div>
+
+<environment include="Development">
+         <button>Shows up if Environment is "Development"</button>
+</environment>
+<environment exclude="Development">
+    <button>Shows up everytime when Environment is not "Development"</button>
+</environment>
