@@ -14,11 +14,12 @@ namespace ConfigurationExamples.Controllers
         [Route("/")]
         public IActionResult Index()
         {
-            IConfigurationSection section = _configuration.GetSection("MasterKey");
+            ApiOptions? options = _configuration.GetSection("MasterKey").Get<ApiOptions>();
+            //IConfigurationSection section = _configuration.GetSection("MasterKey");
 
-            ViewBag.Configuration = this._configuration["MyKey"];
-            ViewBag.ClientID = section["ClientID"];
-            ViewBag.ClientSecret = section["ClientSecret"];
+            //ViewBag.Configuration = this._configuration["MyKey"];
+            ViewBag.ClientID = options.ClientID;
+            ViewBag.ClientSecret = options.ClientSecret;
             return View();
         }
     }
