@@ -10,4 +10,8 @@
     <None Include="wwwroot\StyleSheet.css" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.5" />
+  </ItemGroup>
+
 </Project>

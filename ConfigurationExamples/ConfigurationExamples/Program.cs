@@ -1,5 +1,10 @@
+using ConfigurationExamples;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+
+//itt hozzáadjuk a konténerhez az Options Patternt alkalmazó osztályt, ami megfelel a konfiguráció szekciónak.
+builder.Services.Configure<ApiOptions>(builder.Configuration.GetSection("MasterKey"));
 
 var app = builder.Build();
 
