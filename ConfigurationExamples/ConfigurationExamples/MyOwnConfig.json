@@ -1,0 +1,6 @@
+{
+  "MasterKey": {
+    "ClientID": "ClinetID from MyOwnConfig.json",
+    "ClientSecret": "ClientSecret from MyOwnConfig.json"
+  }
+}

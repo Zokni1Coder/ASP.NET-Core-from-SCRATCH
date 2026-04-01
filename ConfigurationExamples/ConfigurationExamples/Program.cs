@@ -1,10 +1,18 @@
-using ConfigurationExamples;
+﻿using ConfigurationExamples;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-//itt hozz�adjuk a kont�nerhez az Options Patternt alkalmaz� oszt�lyt, ami megfelel a konfigur�ci� szekci�nak.
+//itt hozzáadjuk a konténerhez az Options Patternt alkalmazó osztályt, ami megfelel a konfiguráció szekciónak.
 builder.Services.Configure<ApiOptions>(builder.Configuration.GetSection("MasterKey"));
+
+//Adjuk hozzá az új config  fájlt a builderhez
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    //Optional = ha nem találja akkor sem fog hibát dobni, mert opcionális, nem kötelező 
+    //reloadOnChange = ha bármit változtatunk a custom configban újraindul az alkalmazás
+    config.AddJsonFile("MyOwnConfig.json", optional: true, reloadOnChange: true);
+});
 
 var app = builder.Build();
 
@@ -17,7 +25,7 @@ app.MapControllers();
 
 //    await context.Response.WriteAsync(app.Configuration.GetValue<string>("MyKey") + "\n");
 
-//    //Ha nem tal�lja a "Z" key-t, akkor defaultk�nt a m�sodik param�ter jelenik meg.
+//    //Ha nem találja a "Z" key-t, akkor defaultként a második paraméter jelenik meg.
 //    await context.Response.WriteAsync(app.Configuration.GetValue<string>("Z", "Key Z not found!") + "\n");
 
 //});
