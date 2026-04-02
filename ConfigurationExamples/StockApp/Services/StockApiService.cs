@@ -8,6 +8,7 @@ namespace StockApp.Services
 {
     public class StockApiService : IStockApiService
     {
+        //DIP-et betartva a két mező típusa a felületük lesz.
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
 
@@ -34,16 +35,20 @@ namespace StockApp.Services
                     Method = HttpMethod.Get
                 };
 
+                //Elküldjük a külső RESTApi szolgáltatónak a kérésünket a választ pedig elmentjük a httpResponseMessage objektumba.
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-                string? a = this._configuration.GetSection("StockAPI")["quoteSymbol"];
+                //string? a = this._configuration.GetSection("StockAPI")["quoteSymbol"];
                 //string? b = this._configuration.GetValue<string>("FinnHubToken");
 
+                //Stream-ként kiolvassul a response tartalmát.
                 Stream responseStream = httpResponseMessage.Content.ReadAsStream();
                 StreamReader streamReader = new StreamReader(responseStream);
                 string response = streamReader.ReadToEnd();
                 
+                //Mivel a response mező egy JSON struktúrájú string, ezért hogy értelmet nyerjen, átalakítjuk (Deserialize)(másik irányba Serialize) és értelmezve lementjük kulcs-érték párként.
                 Dictionary<string, object>? responseDictionary = JsonSerializer.Deserialize<Dictionary<string, object>>(response);
+
                 return responseDictionary;
             }
         }
