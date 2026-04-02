@@ -1,5 +1,13 @@
-﻿@{
+﻿@model Stock
+@{
     ViewBag.Title = "Home";
 }
-
-<h1>Home</h1>
+<div class="box">
+    <h1>Home</h1>
+    <hr />
+    <h1>@Model.StockSymbol</h1>
+    <table>
+        <tr><td>Current Price</td><td>Highest price</td><td>Lowest price</td><td>Open price</td></tr>
+        <tr><td><small>$</small>@Model.CurrentPrice</td><td><small>$</small>@Model.HighPriceOfDay</td><td><small>$</small>@Model.LowPriceOfDay</td><td><small>$</small>@Model.OpenPrice</td></tr>
+    </table>
+</div>
