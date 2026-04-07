@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f399531f-d2a7-40fa-8580-2cf1b1553b63</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinnhubService\Services.csproj" />
+    <ProjectReference Include="..\IFinnhubService\ServiceContract.csproj" />
+  </ItemGroup>
+
+</Project>
