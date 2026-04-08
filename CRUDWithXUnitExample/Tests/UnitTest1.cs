@@ -22,6 +22,6 @@
             //Assert:
             //Mindig a várt érték az első param és az kapott a második.
             Assert.Equal(expected, actual);
-        }
+        }        
     }
 }
