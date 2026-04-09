@@ -11,6 +11,22 @@ namespace ServiceContract.DTOs
     {
         public Guid CountryID { get; set; }
         public string? Name { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not CountryResponse || obj is null)
+            {
+                return false;
+            }
+            CountryResponse? nextCountry = obj as CountryResponse;
+            return this.CountryID == nextCountry.CountryID && this.Name == nextCountry.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            //nekünk erre most nics szükség, ezért nem módosítjuk, csak "implementáljuk".
+            throw new NotImplementedException();
+        }
     }
 
 

@@ -23,11 +23,11 @@ namespace Services
             if (countryRequest.Name is null)
             {
                 throw new ArgumentException();
-            }                        
+            }
 
             if (this._countries.Where(x => x.Name == countryRequest.Name).Count() > 0)
             {
-                 throw new Exception("The given Country name is already exists!");
+                throw new Exception("The given Country name is already exists!");
             }
 
             //Ahogyláthatod a "Extension" metódus sikeresen hozzá lett addva a Country Entity-hez.
@@ -39,6 +39,30 @@ namespace Services
             this._countries.Add(country);
 
             //Azért célszerű nem a Country egyedet visszaadni és inkább csak a Service-en belül hagyni, hogy kívülről ne legyen látható, csak amit engedünk a CountryResponse-zal.            
+            return country.ToCountryResponse();
+        }
+
+        public List<CountryResponse> GetAllCountries()
+        {
+            return (List<CountryResponse>)this._countries.Select(x => x.ToCountryResponse()).ToList();
+        }
+
+        public CountryResponse? GetCountryById(Guid? countryId)
+        {
+            if (countryId is null)
+            {
+                return null;
+            }
+
+            //Előbb kiszűri a megfelelő elemeket és uttána kiválasztja az elsőt. 
+            //return this._countries.Where(country => country.Guid == countryId).FirstOrDefault().ToCountryResponse();
+
+            //Amint megtalál egy megfelelő elemet, visszaadja.
+            Country? country = this._countries.FirstOrDefault(country => country.Guid == countryId);
+            if (country is null)
+            {
+                return null;
+            }
             return country.ToCountryResponse();
         }
     }
