@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
 using ServiceContract.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace ServiceContract.DTOs
 {
@@ -13,7 +14,7 @@ namespace ServiceContract.DTOs
     /// DTO ami a legtöbb Person Service metódus visszatérési típusa lesz.
     /// </summary>
     public class PersonResponse
-    {
+    {        
         public Guid PersonId { get; set; }
         public string? PersonName { get; set; }
         public string? Email { get; set; }
@@ -23,6 +24,7 @@ namespace ServiceContract.DTOs
         public string? Address { get; set; }
         public bool ReceiveNewsLetter { get; set; }
         public double? Age { get; set; }
+        public string? Country { get; set; }
 
         /// <summary>
         /// Ezzel a metódussal tudjuk ellenőrizni, hogy két Person objektum azonos-e vagy sem.

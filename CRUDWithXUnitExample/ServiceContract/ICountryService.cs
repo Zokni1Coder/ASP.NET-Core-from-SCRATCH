@@ -22,7 +22,5 @@ namespace ServiceContract
         /// <param name="countryId">Ez alapján keresünk Counrty-t</param>
         /// <returns>Vissza ad egy Country egyedet a megfelelő ID-vel</returns>
         public CountryResponse? GetCountryById(Guid? countryId);
-
-        public PersonResponse AddPerson(PersonAddRequest? personRequest);
     }
 }

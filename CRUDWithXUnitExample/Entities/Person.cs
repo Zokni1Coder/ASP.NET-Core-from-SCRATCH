@@ -20,5 +20,5 @@ namespace Entities
         public Guid? CountryId { get; set; }
         public string? Address { get; set; }
         public bool ReceiveNewsLetter { get; set; }
-    }    
+    }
 }
