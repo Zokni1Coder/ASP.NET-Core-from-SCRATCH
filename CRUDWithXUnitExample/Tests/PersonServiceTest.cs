@@ -13,10 +13,12 @@ namespace Tests
     public class PersonServiceTest
     {
         private readonly IPersonService _personService;
+        private readonly ICountryService _countryService;
 
         public PersonServiceTest()
         {
             this._personService = new PersonService();
+            this._countryService = new CountryService();
         }
 
         #region AddPerson
@@ -107,8 +109,7 @@ namespace Tests
         public void GetPersonById_EmptyArgument()
         {
             //Arrange
-            Guid guid = Guid.Empty;
-
+            Guid? guid = null;
             //Assert
             Assert.Throws<ArgumentNullException>(() =>
             {
@@ -117,26 +118,31 @@ namespace Tests
             });
         }
 
-
         //Ha megfelelő guid-t adunk át, akkor megtalálja és visszaadja PersonResponse objektumként
         [Fact]
-        public void GetPersonById()
+        public void GetPersonById_ProperArgument()
         {
             //Arrange
+            CountryAddRequest countryAddRequest = new CountryAddRequest()
+            {
+                Name = "Hungary",
+            };
+            CountryResponse countryResponse_from_AddCountry = this._countryService.AddCountry(countryAddRequest);
+
             PersonAddRequest request = new PersonAddRequest()
             {
                 PersonName = "Reka",
                 Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
+                DateOfBirth = DateTime.Parse("2005-05-18"),
                 Gender = Gender.Male,
                 Address = "asd 11.",
                 ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
+                CountryId = countryResponse_from_AddCountry.CountryID
             };
 
             //Act:
             PersonResponse person_from_AddPerson = this._personService.AddPerson(request);
-            PersonResponse person_from_GetPersonById = this._personService.GetPersonById(person_from_AddPerson.PersonId);
+            PersonResponse? person_from_GetPersonById = this._personService.GetPersonById(person_from_AddPerson.PersonId);
 
             //Assert
             Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
@@ -144,7 +150,7 @@ namespace Tests
 
         //Ha olyan id-t adunk meg, ami nem létezik, akkor a visszatérési objektum null lesz.
         [Fact]
-        public void GetPersonByName_DoesntExistingGuidInTheListArgument()
+        public void GetPersonById_DoesntExistingGuidInTheListArgument()
         {
             //Arrange
             PersonAddRequest request = new PersonAddRequest()
@@ -159,7 +165,8 @@ namespace Tests
             };
             //Act:
             PersonResponse person_from_AddPerson = this._personService.AddPerson(request);
-            PersonResponse person_from_GetPersonById = this._personService.GetPersonById(person_from_AddPerson.PersonId);
+            PersonResponse? person_from_GetPersonById = new PersonResponse();
+            person_from_GetPersonById = this._personService.GetPersonById(Guid.NewGuid());
 
             //Assert
             Assert.Null(person_from_GetPersonById);

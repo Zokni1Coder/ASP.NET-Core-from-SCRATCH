@@ -36,7 +36,7 @@ namespace Services
 
             //Validációs rész:
             ValidationHelper.PersonServiceValidations(personRequest);
-            
+
 
             Person tempPerson = personRequest.ToPerson();
             tempPerson.PersonId = Guid.NewGuid();
@@ -44,7 +44,7 @@ namespace Services
             this._persons?.Add(tempPerson);
 
             return tempPerson.ToPersonResponse();
-        }        
+        }
 
         private PersonResponse ToPersonResponseWithCountry(Person person)
         {
@@ -54,13 +54,25 @@ namespace Services
             return personResponse;
         }
 
-        public List<PersonResponse> GetAllPersons()
+        public List<PersonResponse>? GetAllPersons()
         {
-            return (List<PersonResponse>)this._persons.Select(person => person.ToPersonResponse()).ToList();
+            return (List<PersonResponse>)this._persons.Select(person => ToPersonResponseWithCountry(person)).ToList();
         }
-        public PersonResponse GetPersonById(Guid id)
+        public PersonResponse? GetPersonById(Guid? id)
         {
-            throw new NotImplementedException();
+            if (id is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Person? person = this._persons.FirstOrDefault(p => p.PersonId == id);
+
+            if (person == null)
+            {
+                return null;
+            }
+
+            return person.ToPersonResponse();
         }
     }
 }
