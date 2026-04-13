@@ -173,5 +173,72 @@ namespace Tests
         }
 
         #endregion
+
+        #region GetAllPerson
+
+        //Az elején üres listát kell hogy visszaadjon.
+        [Fact]
+        public void GetAllPersons_EmptyList()
+        {
+            //Act
+            List<PersonResponse>? persons = new List<PersonResponse>();
+            persons = this._personService.GetAllPersons();
+
+            //Assert
+            Assert.Empty(persons);
+        }
+
+        //Megfelelő elemeket ad vissza a lekérdezés.
+        [Fact]
+        public void GetAllPersons_ProperElements()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "Hungary"
+            };
+            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            {
+                Name = "Austria"
+            };
+
+            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(2000, 09, 22),
+                Gender = Gender.Male,
+                Address = "asd 22.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+
+            //Act
+            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+            List<PersonResponse> person_From_AddPerson = new List<PersonResponse>() { personResponse1, personResponse2 };
+            List<PersonResponse>? persons_from_GetAllPersons = this._personService.GetAllPersons();
+
+            //Asssert
+            foreach (PersonResponse person in person_From_AddPerson)
+            {
+                Assert.Contains(person, persons_from_GetAllPersons);
+            }
+        }
+
+        #endregion
     }
 }

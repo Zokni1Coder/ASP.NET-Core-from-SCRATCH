@@ -21,6 +21,14 @@ namespace Services
             this._persons = new List<Person>();
             this._countryService = new CountryService();
         }
+        private PersonResponse ToPersonResponseWithCountry(Person person)
+        {
+            PersonResponse personResponse = person.ToPersonResponse();
+            personResponse.Country = this._countryService.GetCountryById(personResponse.CountryId)?.Name;
+
+            return personResponse;
+        }
+
         public PersonResponse AddPerson(PersonAddRequest? personRequest)
         {
             //Ha null paramétert kap, akkor ArgumentNullException
@@ -43,20 +51,17 @@ namespace Services
 
             this._persons?.Add(tempPerson);
 
-            return tempPerson.ToPersonResponse();
-        }
-
-        private PersonResponse ToPersonResponseWithCountry(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = this._countryService.GetCountryById(personResponse.CountryId)?.Name;
-
-            return personResponse;
+            return ToPersonResponseWithCountry(tempPerson);
         }
 
         public List<PersonResponse>? GetAllPersons()
         {
-            return (List<PersonResponse>)this._persons.Select(person => ToPersonResponseWithCountry(person)).ToList();
+            List<PersonResponse>? persons = new List<PersonResponse>();
+            foreach (Person person in this._persons)
+            {
+                persons.Add(ToPersonResponseWithCountry(person));
+            }
+            return persons;
         }
         public PersonResponse? GetPersonById(Guid? id)
         {
