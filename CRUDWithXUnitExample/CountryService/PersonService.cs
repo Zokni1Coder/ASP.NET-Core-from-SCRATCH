@@ -43,9 +43,7 @@ namespace Services
 
             this._persons?.Add(tempPerson);
 
-            PersonResponse personResponse = ToPersonResponseWithCountry(tempPerson);
-
-            return personResponse;
+            return tempPerson.ToPersonResponse();
         }        
 
         private PersonResponse ToPersonResponseWithCountry(Person person)
@@ -59,6 +57,10 @@ namespace Services
         public List<PersonResponse> GetAllPersons()
         {
             return (List<PersonResponse>)this._persons.Select(person => person.ToPersonResponse()).ToList();
+        }
+        public PersonResponse GetPersonById(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

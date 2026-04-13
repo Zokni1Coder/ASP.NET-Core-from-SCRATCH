@@ -16,5 +16,12 @@ namespace ServiceContract
         /// </summary>
         /// <returns>PersonResponse típusú listát ad vissza</returns>
         public List<PersonResponse> GetAllPersons();
+
+        /// <summary>
+        /// Kikeresi a listából Id awlapján a Person objektumot
+        /// </summary>
+        /// <param name="id">ez a Guid típusú paraméter alapján keresünk</param>
+        /// <returns>Visszaadja a talált Person objektumot PersonResponse-á alakítva</returns>
+        public PersonResponse GetPersonById(Guid id);
     }
 }

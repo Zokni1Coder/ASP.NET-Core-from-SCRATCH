@@ -34,9 +34,9 @@ namespace ServiceContract.DTOs
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
-            if (obj is Person)
+            if (obj is PersonResponse)
             {
-                Person temp = (Person)obj;
+                PersonResponse temp = (PersonResponse)obj;
                 return (temp.PersonId == this.PersonId && temp.Email == this.Email && temp.PersonName == this.PersonName && temp.DateOfBirth == this.DateOfBirth && temp.CountryId == this.CountryId && temp.Address == this.Address && temp.ReceiveNewsLetter == this.ReceiveNewsLetter && temp.Gender == this.Gender);
             }
             return false;
