@@ -3,10 +3,7 @@ using ServiceContract.DTOs;
 using ServiceContract.Enums;
 using Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace Tests
 {
@@ -14,11 +11,14 @@ namespace Tests
     {
         private readonly IPersonService _personService;
         private readonly ICountryService _countryService;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public PersonServiceTest()
+        //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
+        public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
             this._personService = new PersonService();
             this._countryService = new CountryService();
+            this._testOutputHelper = testOutputHelper;
         }
 
         #region AddPerson
@@ -229,8 +229,26 @@ namespace Tests
             //Act
             PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+
+            //Pont ugyanúgy kell kiíratni a számunkra fontos adatokat, mint Console projektekben.
+            //Expected:
+            this._testOutputHelper.WriteLine("Expected:");
             List<PersonResponse> person_From_AddPerson = new List<PersonResponse>() { personResponse1, personResponse2 };
+
+            foreach (PersonResponse person in person_From_AddPerson)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+
+            //Actual:
+            this._testOutputHelper.WriteLine("Actual:");
             List<PersonResponse>? persons_from_GetAllPersons = this._personService.GetAllPersons();
+
+            foreach (PersonResponse person in persons_from_GetAllPersons)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
 
             //Asssert
             foreach (PersonResponse person in person_From_AddPerson)

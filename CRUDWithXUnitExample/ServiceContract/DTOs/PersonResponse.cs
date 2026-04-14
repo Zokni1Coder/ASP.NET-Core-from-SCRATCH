@@ -46,6 +46,12 @@ namespace ServiceContract.DTOs
         {
             throw new NotImplementedException();
         }
+
+        //Hogy ki tudjuk szépen íratni az objektumot. 
+        public override string ToString()
+        {
+            return $"Id: {this.PersonId}, Email: {this.Email}, Name: {this.PersonName}, Date of birth: {this.DateOfBirth.ToString()}, CountryId: {this.CountryId}, Country: {this.Country} Address: {this.Address}, ReceivesNewsLetter: {this.ReceiveNewsLetter}";
+        }
     }
 
     /// <summary>
