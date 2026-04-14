@@ -258,5 +258,252 @@ namespace Tests
         }
 
         #endregion
+
+        #region GetFileteredPerson
+
+        //Ha null argumentumokat adunk át keresési értéknek, akkor adja vissza az összeset 
+        [Fact]
+        public void GetFilteredPerson_EmptyArgument()
+        {
+            //Arrange
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "Hungary"
+            };
+            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            {
+                Name = "Austria"
+            };
+
+            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(2000, 09, 22),
+                Gender = Gender.Male,
+                Address = "asd 22.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            {
+                PersonName = "Reka3",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1996, 09, 17),
+                Gender = Gender.Female,
+                Address = "asd 30.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            {
+                PersonName = "Reka4",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1971, 12, 05),
+                Gender = Gender.Male,
+                Address = "asd 50.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+
+            //Act
+            List<PersonResponse>? person_from_GetAll = this._personService.GetAllPersons();
+            this._testOutputHelper.WriteLine("Expected:");
+            foreach (PersonResponse person in person_from_GetAll)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            List<PersonResponse>? persons_from_GetFiltered = this._personService.GetFilteredPerson("CountryId", null);
+            this._testOutputHelper.WriteLine("Actual:");
+            foreach (PersonResponse person in persons_from_GetFiltered)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            //Assert
+            Assert.Equal(person_from_GetAll, persons_from_GetFiltered);
+        }
+
+
+        //Ha megfelelő paramétereket adunk át, akkor visszaadja a megfelelő Objektumokat.
+        [Fact]
+        public void GetFilteredPerson_ProperArguments()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "Hungary"
+            };
+            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            {
+                Name = "Austria"
+            };
+
+            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(2000, 09, 22),
+                Gender = Gender.Male,
+                Address = "asd 22.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            {
+                PersonName = "Reka3",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1996, 09, 17),
+                Gender = Gender.Female,
+                Address = "asd 30.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            {
+                PersonName = "Reka4",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1971, 12, 05),
+                Gender = Gender.Male,
+                Address = "asd 50.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+
+            //Act
+            List<PersonResponse> person_from_GetFiltered = this._personService.GetFilteredPerson("CountryId", countryResponse1.CountryID.ToString());
+            this._testOutputHelper.WriteLine("Actual");
+            foreach (PersonResponse person in person_from_GetFiltered)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+            List<PersonResponse>? filtered_from_AddPerson = this._personService.GetAllPersons().Where(person => person.CountryId == countryResponse1.CountryID).ToList();
+            this._testOutputHelper.WriteLine("Expected:");
+            foreach (PersonResponse person in filtered_from_AddPerson)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            //Assert
+            Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+        }
+
+        //Ha megfelelő paramétereket adunk át, akkor visszaadja a megfelelő Objektumokat.
+        [Fact]
+        public void GetFilteredPerson_ProperArgumentsName()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "Hungary"
+            };
+            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            {
+                Name = "Austria"
+            };
+
+            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(2000, 09, 22),
+                Gender = Gender.Male,
+                Address = "asd 22.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            {
+                PersonName = "Reka3",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1996, 09, 17),
+                Gender = Gender.Female,
+                Address = "asd 30.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse2.CountryID
+            };
+            PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            {
+                PersonName = "Reka4",
+                Email = "asd2@gmail.com",
+                DateOfBirth = new DateTime(1971, 12, 05),
+                Gender = Gender.Male,
+                Address = "asd 50.",
+                ReceiveNewsLetter = false,
+                CountryId = countryResponse1.CountryID
+            };
+            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+
+            //Act
+            List<PersonResponse> person_from_GetFiltered = this._personService.GetFilteredPerson("PersonName", "2");
+            this._testOutputHelper.WriteLine("Actual");
+            foreach (PersonResponse person in person_from_GetFiltered)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+            List<PersonResponse>? filtered_from_AddPerson = this._personService.GetAllPersons().Where(person => person.PersonName.Contains("2")).ToList();
+            this._testOutputHelper.WriteLine("Expected:");
+            foreach (PersonResponse person in filtered_from_AddPerson)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            //Assert
+            Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+        }
+
+        #endregion
     }
 }

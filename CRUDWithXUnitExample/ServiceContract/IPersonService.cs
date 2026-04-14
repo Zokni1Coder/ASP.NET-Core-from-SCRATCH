@@ -24,5 +24,13 @@ namespace ServiceContract
         /// <param name="id">ez a Guid típusú paraméter alapján keresünk</param>
         /// <returns>Visszaadja a talált Person objektumot PersonResponse-á alakítva</returns>
         public PersonResponse? GetPersonById(Guid? id);
+
+        /// <summary>
+        /// Vissza kell hogy adja a paraméterül kapott feltételeeknek megfelelő Person objektumokat
+        /// </summary>
+        /// <param name="searchBy">A mező(taljdonság pl.: Name, Id) neve, ami alapján keresünk</param>
+        /// <param name="searchString">A kiválasztott mezőben ezt az adatot fogjuk keresni</param>
+        /// <returns>Egy PersonResponse listát, amiben a megfelelő Person objektumok lesznek</returns>
+        public List<PersonResponse> GetFilteredPerson(string searchBy, string? searchString);
     }
 }

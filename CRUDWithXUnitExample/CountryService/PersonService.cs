@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,6 +79,40 @@ namespace Services
             }
 
             return person.ToPersonResponse();
+        }
+
+        public List<PersonResponse> GetFilteredPerson(string searchBy, string? searchString)
+        {
+            List<PersonResponse>? persons_from_GetAll = GetAllPersons();
+            List<PersonResponse>? filtered_persons = new List<PersonResponse>();
+
+            if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
+                return persons_from_GetAll;
+
+            switch (searchBy)
+            {
+                case nameof(Person.PersonName):
+                    filtered_persons = persons_from_GetAll.Where(person => person.PersonName.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case nameof(Person.Email):
+                    filtered_persons = persons_from_GetAll.Where(person => person.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case nameof(Person.DateOfBirth):
+                    filtered_persons = persons_from_GetAll.Where(person => person.DateOfBirth.Value.ToString("dd MMMM yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case nameof(Person.Gender):
+                    filtered_persons = persons_from_GetAll.Where(person => person.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case nameof(Person.CountryId):
+                    filtered_persons = persons_from_GetAll.Where(person => person.CountryId.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                case nameof(Person.Address):
+                    filtered_persons = persons_from_GetAll.Where(person => person.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase)).ToList();
+                    break;
+                default:
+                    break;
+            }
+            return filtered_persons;
         }
     }
 }
