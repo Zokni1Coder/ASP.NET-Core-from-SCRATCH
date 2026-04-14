@@ -1,5 +1,6 @@
 ﻿using Entities;
 using ServiceContract.DTOs;
+using ServiceContract.Enums;
 
 namespace ServiceContract
 {
@@ -32,5 +33,14 @@ namespace ServiceContract
         /// <param name="searchString">A kiválasztott mezőben ezt az adatot fogjuk keresni</param>
         /// <returns>Egy PersonResponse listát, amiben a megfelelő Person objektumok lesznek</returns>
         public List<PersonResponse> GetFilteredPerson(string searchBy, string? searchString);
+
+        /// <summary>
+        /// Sorbarendezi a Persons listát a megadott attribútum szerint.
+        /// </summary>
+        /// <param name="persons">Ezt fogja rendezni</param>
+        /// <param name="sortBy">Ez szerint fogjuk sorbarendezni a listát</param>
+        /// <param name="sortingoption">Megadja hogy csökkenő vagy növekvő sorrendbe rendezze.</param>
+        /// <returns>Visszaadja a rendezet listát.</returns>
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> persons, string sortBy, SortingOptions sortingoption);
     }
 }

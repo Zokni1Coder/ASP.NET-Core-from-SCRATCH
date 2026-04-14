@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContract;
 using ServiceContract.DTOs;
+using ServiceContract.Enums;
 using Services.Helpers;
 using System;
 using System.Collections.Generic;
@@ -113,6 +114,29 @@ namespace Services
                     break;
             }
             return filtered_persons;
+        }
+
+        public List<PersonResponse> GetSortedPersons(List<PersonResponse> persons, string sortBy, SortingOptions sortingoption)
+        {
+            if (string.IsNullOrEmpty(sortBy))
+            {
+                return persons;
+            }
+            //Lekérjük a típus (objektum típus) metaadatait.
+            Type objectType = typeof(PersonResponse);
+            //Megkeresi az adott nevű (sortBy) property-t
+            //A PropertyInfo egy propertyleíró objektum. Tartalmazza pl.: property neve, típusa, getter/setter, érték lekérése/beállítása
+            PropertyInfo searchByProperty = objectType.GetProperty(sortBy)!;
+
+            switch (sortingoption)
+            {
+                case SortingOptions.ASC:
+                    return persons.OrderBy(person => searchByProperty.GetValue(person)).ToList();
+                case SortingOptions.DESC:
+                    return persons.OrderByDescending(person => searchByProperty.GetValue(person)).ToList();
+                default:
+                    return persons;
+            }
         }
     }
 }
