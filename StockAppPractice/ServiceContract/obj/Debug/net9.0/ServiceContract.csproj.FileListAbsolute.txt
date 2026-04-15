@@ -1,0 +1,12 @@
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\bin\Debug\net9.0\ServiceContract.deps.json
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\bin\Debug\net9.0\ServiceContract.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\bin\Debug\net9.0\ServiceContract.pdb
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.AssemblyInfoInputs.cache
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.AssemblyInfo.cs
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.csproj.CoreCompileInputs.cache
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.sourcelink.json
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\refint\ServiceContract.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ServiceContract.pdb
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppPractice\ServiceContract\obj\Debug\net9.0\ref\ServiceContract.dll
