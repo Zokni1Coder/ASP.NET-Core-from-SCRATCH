@@ -683,5 +683,210 @@ namespace Tests
             }
         }
         #endregion
+
+        #region PersonUpdateRequest
+
+        //Ha megfelelő objektumot adunk át frissítésre, akkor visszaadja a megfelelő értékekkel.
+        [Fact]
+        public void PeresonUpdateRequest_ProperPerson()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            {
+                Name = "Hungary"
+            };
+
+            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse1.CountryID
+            };
+            //Act
+            PersonResponse person_from_AddRequest = this._personService.AddPerson(personAddRequest1);
+            this._testOutputHelper.WriteLine($"Original\n{person_from_AddRequest.ToString()}");
+
+            person_from_AddRequest.PersonName = "Reka22";
+            person_from_AddRequest.Address = "asd Road 22.";
+            this._testOutputHelper.WriteLine($"Expected\n{person_from_AddRequest.ToString()}");
+
+
+            PersonResponse person_from_UpdateRequest = this._personService.UpdatePerson(person_from_AddRequest.ToPersonUpdateRequest());
+            this._testOutputHelper.WriteLine($"Actual\n{person_from_UpdateRequest.ToString()}");
+
+            //Assert
+            Assert.Equal(person_from_AddRequest, person_from_UpdateRequest);
+        }
+
+        //Ha null-t adunk paraméterül, akkor ArgumentNullException
+        [Fact]
+        public void PeresonUpdateRequest_NullArgument()
+        {
+            //Assert
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                //Act
+                this._personService.UpdatePerson(null);
+            });
+        }
+
+        //Ha rossz Id adatot adunk paraméterül, akkor ArgumentException
+        [Fact]
+        public void PeresonUpdateRequest_WrongPersonId()
+        {
+            //Arrange
+            PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
+            {
+                PersonId = new Guid()
+            };
+
+            //Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                //Act
+                this._personService.UpdatePerson(personUpdateRequest);
+            });
+        }
+
+        //Ha a PersonName null, akkor ArgumentException
+        [Fact]
+        public void PeresonUpdateRequest_NullPersonName()
+        {
+            //Arrange
+            CountryAddRequest countryAddRequest = new CountryAddRequest() { Name = "Hu" };
+            CountryResponse countryResponse = this._countryService.AddCountry(countryAddRequest);
+
+            PersonResponse personResponse = this._personService.AddPerson(new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Female,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = countryResponse.CountryID
+            });
+
+            //PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();
+            //personUpdateRequest.PersonName = string.Empty;
+            personResponse.PersonName = null;
+
+            //Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                //Act
+                this._personService.UpdatePerson(personResponse.ToPersonUpdateRequest());
+            });
+        }
+
+        #endregion
+
+        #region DeletePerson
+
+        //Megfelelő id-t átadva törli az elemet és 1 lesz az eredmény.
+        [Fact]
+        public void DeletePerson_ProperPersonId()
+        {
+            //Arrange
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Male,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = Guid.NewGuid()
+            };
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Male,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = Guid.NewGuid()
+            };
+            PersonResponse person_from_AddPerson = this._personService.AddPerson(personAddRequest);
+            PersonResponse person_from_AddPerson1 = this._personService.AddPerson(personAddRequest1);
+
+            //Act
+            List<PersonResponse>? persons_from_GetAllOriginal = this._personService.GetAllPersons();
+            this._testOutputHelper.WriteLine("Original");
+            foreach (PersonResponse person in persons_from_GetAllOriginal)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+            bool success = this._personService.DeletePerson(person_from_AddPerson.PersonId);
+            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = this._personService.GetAllPersons();
+            this._testOutputHelper.WriteLine("Modified");
+            foreach (PersonResponse person in persons_from_GetAll_aftere_Deleting)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            //Assert
+            Assert.True(success);
+            Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 1);
+            Assert.DoesNotContain(person_from_AddPerson, persons_from_GetAll_aftere_Deleting);
+        }
+
+        //Nem megfelelő id-t átadva nem töröl semmit és 0 lesz az eredményt
+        //Arrange
+        [Fact]
+        public void DeletePerson_WrongPersonId()
+        {
+            PersonAddRequest personAddRequest = new PersonAddRequest()
+            {
+                PersonName = "Reka",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Male,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = Guid.NewGuid()
+            };
+            PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            {
+                PersonName = "Reka2",
+                Email = "asd@gmail.com",
+                DateOfBirth = new DateTime(2005, 05, 18),
+                Gender = Gender.Male,
+                Address = "asd 11.",
+                ReceiveNewsLetter = true,
+                CountryId = Guid.NewGuid()
+            };
+            PersonResponse person_from_AddPerson = this._personService.AddPerson(personAddRequest);
+            PersonResponse person_from_AddPerson1 = this._personService.AddPerson(personAddRequest1);
+
+            //Act
+            List<PersonResponse>? persons_from_GetAllOriginal = this._personService.GetAllPersons();
+            this._testOutputHelper.WriteLine("Original");
+            foreach (PersonResponse person in persons_from_GetAllOriginal)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            bool success = this._personService.DeletePerson(new Guid());
+            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = this._personService.GetAllPersons();
+            this._testOutputHelper.WriteLine("Modified");
+            foreach (PersonResponse person in persons_from_GetAll_aftere_Deleting)
+            {
+                this._testOutputHelper.WriteLine(person.ToString());
+            }
+
+            //Assert
+            Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 2);
+            Assert.False(success);
+        }
+
+        #endregion
     }
 }

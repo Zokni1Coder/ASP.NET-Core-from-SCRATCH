@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Diagnostics.Contracts;
 using ServiceContract.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 
 namespace ServiceContract.DTOs
 {
@@ -14,7 +15,7 @@ namespace ServiceContract.DTOs
     /// DTO ami a legtöbb Person Service metódus visszatérési típusa lesz.
     /// </summary>
     public class PersonResponse
-    {        
+    {
         public Guid PersonId { get; set; }
         public string? PersonName { get; set; }
         public string? Email { get; set; }
@@ -52,6 +53,25 @@ namespace ServiceContract.DTOs
         {
             return $"Id: {this.PersonId}, Email: {this.Email}, Name: {this.PersonName}, Date of birth: {this.DateOfBirth.ToString()}, CountryId: {this.CountryId}, Country: {this.Country} Address: {this.Address}, ReceivesNewsLetter: {this.ReceiveNewsLetter}";
         }
+
+        /// <summary>
+        /// Mivel PersonResponse lesz amit kiválasztunk módosításra, ezért kell egy metódus ami azt átalakítja PersonUpdateRequest-re.
+        /// </summary>
+        /// <returns>Visszaadja a PersonUpdateRequest-é alakított PersonResponse objektumot.</returns>
+        public PersonUpdateRequest ToPersonUpdateRequest()
+        {
+            return new PersonUpdateRequest()
+            {
+                PersonId = this.PersonId,
+                Email = this.Email,
+                PersonName = this.PersonName,
+                DateOfBirth = this.DateOfBirth,
+                CountryId = this.CountryId,
+                Address = this.Address,
+                ReceiveNewsLetter = this.ReceiveNewsLetter,
+                Gender = (Gender)Enum.Parse(typeof(Gender), Gender, true)
+            };
+        }
     }
 
     /// <summary>
@@ -71,7 +91,7 @@ namespace ServiceContract.DTOs
                 CountryId = person.CountryId,
                 Address = person.Address,
                 ReceiveNewsLetter = person.ReceiveNewsLetter,
-                Age = (person.DateOfBirth is not null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null 
+                Age = (person.DateOfBirth is not null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null
             };
         }
     }

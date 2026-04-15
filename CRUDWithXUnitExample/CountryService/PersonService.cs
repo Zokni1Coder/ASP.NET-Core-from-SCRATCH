@@ -138,5 +138,34 @@ namespace Services
                     return persons;
             }
         }
+
+        public PersonResponse UpdatePerson(PersonUpdateRequest? requestPerson)
+        {
+            //if (requestPerson is null)
+            //{
+            //    throw new ArgumentNullException();
+            //}
+            //if (requestPerson.PersonName is null)
+            //{
+            //    throw new ArgumentException();
+            //}
+            //Validation
+            ValidationHelper.PersonServiceValidations(requestPerson);
+
+            Person? targetPerson = this._persons.FirstOrDefault(person => person.PersonId == requestPerson.PersonId);
+            targetPerson = requestPerson.ToPerson();
+
+            return targetPerson.ToPersonResponse();
+        }
+
+        public bool DeletePerson(Guid? personId)
+        {
+            Person? temp = this._persons?.FirstOrDefault(person => person.PersonId == personId);
+            if (temp == null)
+                return false;
+
+            this._persons?.Remove(temp);
+            return true;
+        }
     }
 }

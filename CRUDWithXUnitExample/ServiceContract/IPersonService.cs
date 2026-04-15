@@ -42,5 +42,19 @@ namespace ServiceContract
         /// <param name="sortingoption">Megadja hogy csökkenő vagy növekvő sorrendbe rendezze.</param>
         /// <returns>Visszaadja a rendezet listát.</returns>
         public List<PersonResponse> GetSortedPersons(List<PersonResponse> persons, string sortBy, SortingOptions sortingoption);
+
+        /// <summary>
+        /// A paraméterül kapott objektumot módosítja és elmenti.
+        /// </summary>
+        /// <param name="requestPerson">A módosítani kívánt objektum.</param>
+        /// <returns>Visszaadja PersonResponse-á alakítva a módosított objektumot.</returns>
+        public PersonResponse UpdatePerson(PersonUpdateRequest? requestPerson);
+
+        /// <summary>
+        /// A megadott paraméter alapján törlünk egy Person objektumot
+        /// </summary>
+        /// <param name="personId">Ez a paraméter alalpján fogjuk megtalálni a törölni kívánt Person ojektumot.</param>
+        /// <returns>Bool értéket ad vissza a törlés sikerességétől függően.</returns>
+        public bool DeletePerson(Guid? personId);
     }
 }
