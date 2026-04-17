@@ -1,0 +1,37 @@
+﻿using StocksAppWithxUnit.Entities;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ServiceContract.DTOs
+{
+    public class SellOrderRequest
+    {
+        [Required]
+        public string? StockSymbol { get; set; }
+        [Required]
+        public string? StockName { get; set; }
+
+        public DateTime DateAndTimeOfOrder { get; set; }
+        [Range(1, 100000)]
+        public uint Quantity { get; set; }
+        [Range(1, 10000)]
+        public double Price { get; set; }
+
+        public SellOrder ToSellOrder()
+        {
+            return new SellOrder()
+            {
+                SellOrderID = new Guid(),
+                StockSymbol = this.StockSymbol,
+                StockName = this.StockName,
+                Price = this.Price,
+                Quantity = this.Quantity,
+                DateAndTimeOfOrder = this.DateAndTimeOfOrder
+            };
+        }
+    }
+}
