@@ -164,7 +164,7 @@ namespace Services
             if (temp == null)
                 return false;
 
-            this._persons?.Remove(temp);
+            this._persons.Remove(temp);
             return true;
         }
     }
