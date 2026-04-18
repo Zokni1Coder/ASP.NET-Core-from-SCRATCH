@@ -22,7 +22,11 @@ namespace ServiceContract.DTOs
         [Range(1, 10000)]
         public double Price { get; set; }
         public double TradeAmount { get; set; }
-
+        /// <summary>
+        /// Két SellOrderResponse akkor azonos ha mind a kettőnek az Id-je azonos.
+        /// </summary>
+        /// <param name="obj">Az aktuális objektumot a paramétereül kapottal fogja összehasonlítani.</param>
+        /// <returns>Igaz vagy hamis értéket ad vissza.</returns>
         public override bool Equals(object? obj)
         {
             if (obj != null && obj is SellOrderResponse)
@@ -32,6 +36,10 @@ namespace ServiceContract.DTOs
             }
             return false;
         }
+        /// <summary>
+        /// Kiíratjuk az objektum összes paraméterét.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"BuyOrderId: {this.SellOrderId}, StockSymbol: {this.StockSymbol}, StockName: {this.StockName}, DateOfOrder: {this.DateAndTimeOfOrder}, Quantity {this.Quantity}, Price: {this.Price}, TradeAmount: {this.TradeAmount}";

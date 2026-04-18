@@ -5,26 +5,26 @@ namespace ServiceContract
     public interface IStocksService
     {
         /// <summary>
-        /// 
+        /// BuyOrder-okat készítünk egy mentjük el a listában.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? request);
+        /// <param name="request">Az elmentendő objektum</param>
+        /// <returns>BuyOrderResponse típust ad vissza.</returns>
+        public BuyOrderResponse CreateBuyOrder(BuyOrderRequest? request);
         /// <summary>
-        /// 
+        /// SellOrder-okat készítünk egy mentjük el a listában.
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? request);
+        /// <param name="request">Az elmentendő objektum</param>
+        /// <returns>SellOrderResponse típust ad vissza.</returns>
+        public SellOrderResponse CreateSellOrder(SellOrderRequest? request);
         /// <summary>
         /// Lekérjük az összes BuyOrder objektumot.
         /// </summary>
         /// <returns>BuyOrderResponse típusú listát ad vissza.</returns>
-        public Task<List<BuyOrderResponse>> GetBuyOrders();
+        public List<BuyOrderResponse> GetBuyOrders();
         /// <summary>
         /// Lekérjük az összes SellOrder objektumot.
         /// </summary>
-        /// <returns>BuyOrderResponse típusú listát ad vissza.</returns>
-        public Task<List<SellOrderResponse>> GetSellOrders();
+        /// <returns>SellOrderResponse típusú listát ad vissza.</returns>
+        public List<SellOrderResponse> GetSellOrders();
     }
 }

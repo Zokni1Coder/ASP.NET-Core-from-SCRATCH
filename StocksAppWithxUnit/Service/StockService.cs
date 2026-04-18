@@ -1,8 +1,10 @@
 ﻿using ServiceContract;
 using ServiceContract.DTOs;
+using ServiceContract.Helpers;
 using StocksAppWithxUnit.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,35 +16,42 @@ namespace Service
     {
         private readonly List<BuyOrder> _buyOrders;
         private readonly List<SellOrder> _sellOrders;
+        
         public StockService()
         {
             this._buyOrders = new List<BuyOrder>();
-            this._sellOrders = new List<SellOrder>();
+            this._sellOrders = new List<SellOrder>();            
         }
-        public Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? request)
+        public BuyOrderResponse CreateBuyOrder(BuyOrderRequest? request)
         {
+            if (request == null) throw new ArgumentNullException();
+            ValidatorHelper.StockServiceValidation(request);
+
             BuyOrder temp = request.ToBuyOrder();
             this._buyOrders.Add(temp);
 
-            return Task.FromResult(temp.ToBuyOrderResponse());
+            return temp.ToBuyOrderResponse();
         }
 
-        public Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? request)
+        public SellOrderResponse CreateSellOrder(SellOrderRequest? request)
         {
+            if (request == null) throw new ArgumentNullException();
+            ValidatorHelper.StockServiceValidation(request);
+
             SellOrder sellOrder = request.ToSellOrder();
             this._sellOrders.Add(sellOrder);
 
-            return Task.FromResult(sellOrder.ToSellOrderResponse());
+            return sellOrder.ToSellOrderResponse();
         }
 
-        public Task<List<BuyOrderResponse>> GetBuyOrders()
+        public List<BuyOrderResponse> GetBuyOrders()
         {
-            return Task.FromResult(this._buyOrders.Select(order => order.ToBuyOrderResponse()).ToList());
+            return this._buyOrders.Select(order => order.ToBuyOrderResponse()).ToList();
         }
 
-        public Task<List<SellOrderResponse>> GetSellOrders()
+        public List<SellOrderResponse> GetSellOrders()
         {
-            return Task.FromResult(this._sellOrders.Select(order => order.ToSellOrderResponse()).ToList());
+            return this._sellOrders.Select(order => order.ToSellOrderResponse()).ToList();
         }
     }
 }
