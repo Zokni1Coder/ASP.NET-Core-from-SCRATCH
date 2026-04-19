@@ -4,14 +4,16 @@ using ServiceContract.DTOs;
 
 namespace CRUDWithXUnitExample.Controllers
 {
-    public class HomeController : Controller
+    public class PersonsController : Controller
     {
         private readonly ICountryService _countryService;
 
-        public HomeController(ICountryService countryService)
+        public PersonsController(ICountryService countryService)
         {
             this._countryService = countryService;
         }
+        [Route("persons/index")]
+        [Route("/")]
         public IActionResult Index()
         {
             //CountryResponse countryResponse = this._countryService.AddCountry();
