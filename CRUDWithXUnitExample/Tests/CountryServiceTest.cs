@@ -12,7 +12,8 @@ namespace Tests
         //constructor
         public CountryServiceTest()
         {
-            this._countryService = new CountryService();
+            //Mive mi azokat az adatokat szeretnénk hasznáni, amit már itt meg is adtunk, ezért nem szeretnénk inicializálni a Mock-oltakat.
+            this._countryService = new CountryService(false);
         }
 
         #region AddCountry

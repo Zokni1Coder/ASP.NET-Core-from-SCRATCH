@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContract;
 using ServiceContract.DTOs;
+using System.Runtime.InteropServices;
 
 namespace Services
 {
@@ -8,9 +9,16 @@ namespace Services
     {
         private readonly List<Country> _countries;
 
-        public CountryService()
+        //Így tudsz paraméternek default értéket megadni.
+        public CountryService(bool initialization = true)
         {
             this._countries = new List<Country>();
+
+            //Ha a konstruktorban az érték 1, akkor lefutt az inicializáció és ezzel dolgozik. Ha a tesztben is hozzáadunk újabb objektumokat, akkor az is bele lesz téva a listába. A két helyen inicializált objektumok összeadódnak végén. 
+            if (initialization)
+            {
+                _countries.AddRange(new List<Country> { new Country() { Guid = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), Name = "Hungary" }, new Country() { Guid = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), Name = "Austria" }, new Country() { Guid = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), Name = "Serbia" }, new Country() { Guid = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), Name = "Germany" }, new Country() { Guid = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), Name = "Italy" }, new Country() { Guid = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), Name = "England" } });
+            }
         }
         public CountryResponse AddCountry(CountryAddRequest? countryRequest)
         {

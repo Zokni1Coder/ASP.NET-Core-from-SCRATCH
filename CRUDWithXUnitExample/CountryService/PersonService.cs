@@ -18,10 +18,41 @@ namespace Services
         private readonly List<Person>? _persons;
         private readonly ICountryService _countryService;
 
-        public PersonService()
+        public PersonService(bool initialization = true)
         {
             this._persons = new List<Person>();
             this._countryService = new CountryService();
+
+            if (initialization)
+            {
+                this._persons.AddRange(new List<Person>()
+                {
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("7D71DA30-4D11-4895-8DE4-EB6C644B1BF0"), PersonName = "Pate", Email = "pdown0@craigslist.org", DateOfBirth = DateTime.Parse("2010-12-22"), Gender = "Male", ReceiveNewsLetter = false, CountryId = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"),
+                    },
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("AD5EE04E-87E2-4DAB-B967-3C25152877DA"), PersonName = "Delphine", Email = "dilymanov1@live.com", DateOfBirth = DateTime.Parse("2009-5-9"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"),
+                    },
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("B5C12E51-C168-44E9-87C3-3DB7574DE928"), PersonName = "Sharron", Email = "spiscopiello3@zimbio.com", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"),
+                    },
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("680AAC5E-AAB0-4603-B836-A0209C3B6D17"), PersonName = "Duffie", Email = "dloades4@house.gov", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"),
+                    },
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("F14082CC-6819-4344-AC77-F17CB3263316"), PersonName = "Buffie", Email = "dcores4@story.rod", DateOfBirth = DateTime.Parse("1993-1-31"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"),
+                    },
+                    new Person()
+                    {
+                        PersonId = Guid.Parse("6ADA3393-F132-4422-B121-3A5ECAF7B277"), PersonName = "Corenda", Email = "cblakeborough5@cbsnews.com", DateOfBirth = DateTime.Parse("2022-3-16"), Gender = "Male", ReceiveNewsLetter = false, CountryId = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"),
+                    }
+                });
+            }
         }
         private PersonResponse ToPersonResponseWithCountry(Person person)
         {

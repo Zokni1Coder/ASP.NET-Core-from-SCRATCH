@@ -16,8 +16,8 @@ namespace Tests
         //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            this._personService = new PersonService();
-            this._countryService = new CountryService();
+            this._personService = new PersonService(false);
+            this._countryService = new CountryService(false);
             this._testOutputHelper = testOutputHelper;
         }
 
@@ -177,6 +177,7 @@ namespace Tests
         #region GetAllPerson
 
         //Az elején üres listát kell hogy visszaadjon.
+        //Itt a Mock inicializálás miatt nem fog sikeres lenni.
         [Fact]
         public void GetAllPersons_EmptyList()
         {
