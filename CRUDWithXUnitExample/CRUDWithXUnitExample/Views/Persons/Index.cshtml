@@ -1,5 +1,66 @@
-﻿@{
+﻿@model IEnumerable<PersonResponse>
+@{
     ViewBag.Title = "Persons";
+    ViewBag.activeSorting = ViewBag.activeSorting == SortingOptions.ASC ? SortingOptions.DESC : SortingOptions.ASC;
+
+    //string activeProperty = ViewBag.activeSorting;
+    // string SortingIndex(string propertyName)
+    // {
+    //     if (propertyName == activeProperty)
+    //     {
+
+    //     }
+    //     return null;
+    // }
 }
 
-<h1>Persons</h1>
+<form action="~/persons/index" method="get">
+    <h1>Persons</h1>
+    <div class="box flex">
+        <select class="form-input" name="searchBy">
+            @foreach (var option in ViewBag.searchByOptions)
+            {
+                if (ViewBag.activeSearchKey == option.Key)
+                {
+                    <option value="@option.Key" selected="selected">@option.Value</option>
+                }
+                else
+                {
+                    <option value="@option.Key">@option.Value</option>
+                }
+            }
+        </select>
+        <input type="search" name="searchString" placeholder="@ViewBag.activeOptionValue" class="form-input" />
+        <button type="submit" class="button blue-back">Search</button>
+        <a href="/" class="link-hover">Clear all</a>
+    </div>
+    <table class="table w-100 margin-top">
+        <thead>
+            <tr>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.PersonName)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Person Name</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Email)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Email</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.DateOfBirth)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Date of Birth</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Age)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Age</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Email)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Gender</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Country)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Country</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Address)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Address</a></th>
+                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.ReceiveNewsLetter)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Receive News Letters</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (PersonResponse person in Model)
+            {
+                <tr>
+                    <td>@person.PersonName</td>
+                    <td>@person.Email</td>
+                    <td>@person.DateOfBirth?.ToString("dd MMM yyyy")</td>
+                    <td>@person.Age</td>
+                    <td>@person.Gender</td>
+                    <td>@person.Country</td>
+                    <td>@person.Address</td>
+                    <td>@person.ReceiveNewsLetter</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>

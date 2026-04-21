@@ -4,6 +4,25 @@
     background-color: #f7f7f7;
 }
 
+.form-input {
+    padding: 8px 10px;
+    font-size: 105%;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+    width: 100%;
+    transition: box-shadow 0.2s;
+}
+
+.flex-1 {
+    flex: 1 auto;
+}
+
+a.link-hover:link {
+    padding: 5px;
+    border-radius: 9px;
+    transition: background-color 0.2s;
+}
+
 * {
     margin: 0px;
     padding: 0px;

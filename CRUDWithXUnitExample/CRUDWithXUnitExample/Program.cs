@@ -4,7 +4,8 @@ using ServiceContract;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddSingleton<ICountryService, CountryService>();
+builder.Services.AddSingleton<IPersonService, PersonService>();
 
 var app = builder.Build();
 
