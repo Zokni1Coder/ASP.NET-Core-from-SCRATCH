@@ -23,6 +23,8 @@ namespace CRUDWithXUnitExample.Controllers
             ViewBag.activeSearchKey = searchBy;
             ViewBag.activeSearchValue = searchString;
             ViewBag.activeSortBy = sortBy;
+            List<(string, string)> tableColumnHeaders = new List<(string, string)>() { (nameof(PersonResponse.PersonName), "Person Name"), (nameof(PersonResponse.Email), nameof(PersonResponse.Email)), (nameof(PersonResponse.DateOfBirth), "Date of Birth"), (nameof(PersonResponse.Age), nameof(PersonResponse.Age)), (nameof(PersonResponse.Gender), nameof(PersonResponse.Gender)), (nameof(PersonResponse.Country), nameof(PersonResponse.Country)), (nameof(PersonResponse.Address), nameof(PersonResponse.Address)), (nameof(PersonResponse.ReceiveNewsLetter), "Receive News Letter") };
+            ViewBag.TableColumnHeaders = tableColumnHeaders;
             //A keresési opciók, a legördülő menühöz az UI-en.
             Dictionary<string, string> searchByOptions = new Dictionary<string, string>()
             {

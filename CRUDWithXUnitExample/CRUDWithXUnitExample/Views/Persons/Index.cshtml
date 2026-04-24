@@ -1,17 +1,6 @@
 ﻿@model IEnumerable<PersonResponse>
 @{
     ViewBag.Title = "Persons";
-    ViewBag.activeSorting = ViewBag.activeSorting == SortingOptions.ASC ? SortingOptions.DESC : SortingOptions.ASC;
-
-    //string activeProperty = ViewBag.activeSorting;
-    // string SortingIndex(string propertyName)
-    // {
-    //     if (propertyName == activeProperty)
-    //     {
-
-    //     }
-    //     return null;
-    // }
 }
 
 <form action="~/persons/index" method="get">
@@ -37,14 +26,10 @@
     <table class="table w-100 margin-top">
         <thead>
             <tr>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.PersonName)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Person Name</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Email)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Email</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.DateOfBirth)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Date of Birth</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Age)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Age</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Email)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Gender</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Country)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Country</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.Address)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Address</a></th>
-                <th><a href="~/persons/index?sortBy=@nameof(PersonResponse.ReceiveNewsLetter)&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">Receive News Letters</a></th>
+                @foreach (var item in ViewBag.TableColumnHeaders)
+                {
+                    <partial name="_TableColumnHeader" model="item" />
+                }
             </tr>
         </thead>
         <tbody>
