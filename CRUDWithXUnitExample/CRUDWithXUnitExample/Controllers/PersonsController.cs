@@ -1,21 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entities;
+using Microsoft.AspNetCore.Mvc;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
 
 namespace CRUDWithXUnitExample.Controllers
 {
+    [Route("persons")]
     public class PersonsController : Controller
     {
         private readonly ICountryService _countryService;
-        private readonly IPersonService _personService;
-
+        private readonly IPersonService _personService;        
         public PersonsController(ICountryService countryService, IPersonService personService)
         {
             this._countryService = countryService;
             this._personService = personService;
         }
-        [Route("persons/index")]
+        [Route("index")]
         [Route("/")]
         public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortingOptions sortingOptions = SortingOptions.ASC)
         {
@@ -42,6 +43,34 @@ namespace CRUDWithXUnitExample.Controllers
             temp_persons = this._personService.GetSortedPersons(temp_persons, sortBy, sortingOptions);
 
             return View(temp_persons);
+        }
+
+        [Route("create")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+            ViewBag.Countries = countries_to_View;
+            return View();
+        }
+
+        [HttpPost]
+        [Route("create")]
+        //Efféle model binding esetén fontos hogy a html-ben szereplő elem "name" azonos legyen az objektum property nevével. Pl: <input name="PersonName"/> DTO prop: string PersonName.
+        public IActionResult Create(PersonAddRequest personAddRequest)
+        {
+            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();
+            ViewBag.Countries = countries_to_View;
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            PersonResponse personRespons = this._personService.AddPerson(personAddRequest);
+
+            return RedirectToAction("Index", "persons"); 
         }
     }
 }

@@ -13,6 +13,33 @@
     transition: box-shadow 0.2s;
 }
 
+.form-label {
+    display: inline-block;
+}
+
+.form-field > div:first-child {
+    flex: 1;
+    width: auto;
+}
+
+.form-field > div:nth-child(2) {
+    flex: 1;
+    width: auto;
+}
+
+.form-field {
+    flex-direction: column;
+    margin-bottom: 6px;
+}
+
+.pt {
+    padding-top: 10px;
+}
+
+.ml {
+    margin-left: 20px;
+}
+
 .flex-1 {
     flex: 1 auto;
 }
@@ -266,16 +293,12 @@ a:hover {
 .flex {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 20px;
     align-content: stretch;
     align-items: stretch;
 }
 
     .flex > div {
-        padding: 15px;
-        border-radius: 8px;
-        border: 2px solid #d3d1d1;
-        box-shadow: 0px 0px 3px 2px #ffffff;
+        padding: 4px;
     }
 
 .flex-borderless {
