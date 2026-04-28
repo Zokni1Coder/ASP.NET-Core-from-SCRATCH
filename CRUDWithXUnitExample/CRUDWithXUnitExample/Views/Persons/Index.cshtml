@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PersonResponse>
+@{
+    ViewBag.Title = "Persons";
+}
+<form action="~/persons/index" method="get">
+    <h1>Persons</h1>
+    <div class="box flex">
+        <select class="form-input" name="searchBy">
+            @foreach (var option in ViewBag.searchByOptions)
+            {
+                if (ViewBag.activeSearchKey == option.Key)
+                {
+                    <option value="@option.Key" selected="selected">@option.Value</option>
+                }
+                else
+                {
+                    <option value="@option.Key">@option.Value</option>
+                }
+            }
+        </select>
+        <input type="search" name="searchString" placeholder="@ViewBag.activeOptionValue" class="form-input" />
+        <button type="submit" class="button blue-back">Search</button>
+        <a href="/" class="link-hover">Clear all</a>
+    </div>
+</form>
+<table class="table w-100 margin-top">
+    <thead>
+        <tr>
+            @foreach (var item in ViewBag.TableColumnHeaders)
+            {
+                <partial name="_TableColumnHeader" model="item" />
+            }
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (PersonResponse person in Model)
+        {
+            <tr>
+                <td>@person.PersonName</td>
+                <td>@person.Email</td>
+                <td>@person.DateOfBirth?.ToString("dd MMM yyyy")</td>
+                <td>@person.Age</td>
+                <td>@person.Gender</td>
+                <td>@person.Country</td>
+                <td>@person.Address</td>
+                <td>@person.ReceiveNewsLetter</td>
+                <td>
+                    <form method="post" action="~/persons/delete">
+                        <button type="submit" class="button button-green-back" value="@person.PersonId" name="personId">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

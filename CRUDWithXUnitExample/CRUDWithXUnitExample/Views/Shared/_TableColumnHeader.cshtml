@@ -1,0 +1,16 @@
+﻿@model (string, string)
+
+@if (ViewBag.activeSorting == SortingOptions.ASC && ViewBag.activeSortBy == Model.Item1)
+{
+    <th><a href="~/persons/index?sortBy=@Model.Item1&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@SortingOptions.DESC">@Model.Item2 &#8593;</a></th>
+}
+else if (ViewBag.activeSorting == SortingOptions.DESC && ViewBag.activeSortBy == Model.Item1)
+{
+    <th><a href="~/persons/index?sortBy=@Model.Item1&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@SortingOptions.ASC">@Model.Item2 &#8595;</a></th>
+}
+else
+{
+    <th><a href="~/persons/index?sortBy=@Model.Item1&searchBy=@ViewBag.activeSearchKey&searchString=@ViewBag.activeSearchValue&sortingOptions=@ViewBag.activeSorting">@Model.Item2</a></th>
+}
+
+
