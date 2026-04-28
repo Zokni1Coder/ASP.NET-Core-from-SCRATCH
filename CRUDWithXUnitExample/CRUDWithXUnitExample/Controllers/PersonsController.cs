@@ -6,7 +6,8 @@ using ServiceContract.Enums;
 
 namespace CRUDWithXUnitExample.Controllers
 {
-    [Route("persons")]
+    //[Route("persons")] //prefix-ként funkcionál.
+    [Route("[controller]")]
     public class PersonsController : Controller
     {
         private readonly ICountryService _countryService;
@@ -16,8 +17,9 @@ namespace CRUDWithXUnitExample.Controllers
             this._countryService = countryService;
             this._personService = personService;
         }
-        [Route("index")]
-        [Route("/")]
+        //[Route("index")] //url: "persons/index"
+        [HttpGet("[action]")]
+        [Route("/")]   //url: "persons"
         public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortingOptions sortingOptions = SortingOptions.ASC)
         {
             ViewBag.activeSorting = sortingOptions;
@@ -45,8 +47,8 @@ namespace CRUDWithXUnitExample.Controllers
             return View(temp_persons);
         }
 
-        [Route("create")]
-        [HttpGet]
+        //[Route("create")] //url: "persons/create"
+        [HttpGet("[action]")]
         public IActionResult Create()
         {
             List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
@@ -54,8 +56,8 @@ namespace CRUDWithXUnitExample.Controllers
             return View();
         }
 
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("[action]")]
+        //[Route("create")]
         //Efféle model binding esetén fontos hogy a html-ben szereplő elem "name" azonos legyen az objektum property nevével. Pl: <input name="PersonName"/> DTO prop: string PersonName.
         public IActionResult Create(PersonAddRequest personAddRequest)
         {
@@ -71,6 +73,13 @@ namespace CRUDWithXUnitExample.Controllers
             PersonResponse personRespons = this._personService.AddPerson(personAddRequest);
 
             return RedirectToAction("Index", "persons"); 
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult Delete(Guid personId)
+        {
+            bool isSuccess = this._personService.DeletePerson(personId);
+            return RedirectToAction("index", "persons");
         }
     }
 }
