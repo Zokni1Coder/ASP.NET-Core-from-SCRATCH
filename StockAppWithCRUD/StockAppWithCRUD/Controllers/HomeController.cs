@@ -21,7 +21,10 @@ namespace StockAppWithCRUD.Controllers
             
             Dictionary<string, object>? profile = await this._finnhubService.GetProfile();
 
+            ViewBag.quotes = quotes;
+            ViewBag.profile = profile;
+
             return View();
-        }
+         }
     }
 }

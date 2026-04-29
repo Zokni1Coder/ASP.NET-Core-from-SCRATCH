@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Entities/1.0.0": {
+      "type": "project",
+      "path": "../Entities/Entities.csproj",
+      "msbuildProject": "../Entities/Entities.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "Entities >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\erikk\\.nuget\\packages\\": {},
@@ -39,7 +58,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockAppWithCRUD\\Entities\\Entities.csproj": {
+              "projectPath": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockAppWithCRUD\\Entities\\Entities.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -47,3 +47,7 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppW
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\StockAppWithCRUD.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\StockAppWithCRUD.genruntimeconfig.cache
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\ref\StockAppWithCRUD.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\bin\Debug\net9.0\StockAppWithCRUD.staticwebassets.runtime.json
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\StockAppWithCRUD.RazorAssemblyInfo.cache
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\StockAppWithCRUD.RazorAssemblyInfo.cs
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\StockAppWithCRUD\obj\Debug\net9.0\compressed\70bn5qn1kt-3eh7s3shgc.gz
