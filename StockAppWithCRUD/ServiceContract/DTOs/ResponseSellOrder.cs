@@ -13,8 +13,28 @@ namespace ServiceContract.DTOs
         public string? companyName { get; set; }
         public int shares { get; set; }
         public double price { get; set; }
-        public DateTime date { get; set; }
+        public string? date { get; set; }
         public double tradeAmount { get; set; }
+
+        public override string ToString()
+        {
+            return $"RBuyOrder: id: {this.id}, companyName: {this.companyName}, shares: {this.shares}, price: {this.price}, date: {this.date}, tradeAmount: {this.tradeAmount}";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj != null && obj is ResponseSellOrder)
+            {
+                ResponseSellOrder temp = (ResponseSellOrder)obj;
+                return (this.id == temp.id);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class SellOrderExtension
@@ -24,11 +44,11 @@ namespace ServiceContract.DTOs
             return new ResponseSellOrder()
             {
                 shares = sellOrder.shares,
-                price = sellOrder.price,
-                date = sellOrder.date,
+                price = Math.Round(sellOrder.price, 2),
+                date = sellOrder.date.ToString("MM/dd/yyyy hh:mm tt"),
                 companyName = sellOrder.companyName,
                 id = sellOrder.Id,
-                tradeAmount = sellOrder.price * sellOrder.shares
+                tradeAmount = Math.Round(sellOrder.price * sellOrder.shares,2 )
             };
         }
     }

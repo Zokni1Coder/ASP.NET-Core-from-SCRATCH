@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using ServiceContract;
+using StockAppWithCRUD.Option_Pattern;
 using System.Net.Http;
 using System.Text.Json;
 
@@ -7,19 +9,21 @@ namespace Services
 {
     public class FinnhubService : IFinnhubService
     {
+        private readonly Config_OptionPattern _options;
         private readonly IHttpClientFactory _httpClienFactory;
         private readonly IConfiguration _configuration;
 
-        public FinnhubService(IConfiguration _configuration, IHttpClientFactory httpClientFactory)
+        public FinnhubService(IOptions<Config_OptionPattern> options, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
-            this._configuration = _configuration;
+            this._options = options.Value;
             this._httpClienFactory = httpClientFactory;
+            this._configuration = configuration;
         }
         public async Task<Dictionary<string, object>?> GetProfile()
         {
             using (HttpClient httpClient = this._httpClienFactory.CreateClient())
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/stock/profile2?symbol={this._configuration.GetSection("FinnhubService").GetValue<string>("symbol")}&token={this._configuration.GetValue<string>("token")}");
+                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/stock/profile2?symbol={this._options.symbol}&token={this._configuration.GetValue<string>("token")}");
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
@@ -39,7 +43,7 @@ namespace Services
         {
             using (HttpClient httpClient = this._httpClienFactory.CreateClient())
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={this._configuration.GetSection("FinnhubService").GetValue<string>("symbol")}&token={this._configuration.GetValue<string>("token")}");
+                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={this._options.symbol}&token={this._configuration.GetValue<string>("token")}");
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 

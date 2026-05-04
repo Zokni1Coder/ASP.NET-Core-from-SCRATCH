@@ -14,3 +14,5 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\obj\Debug\net9.0\refint\Services.dll
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\obj\Debug\net9.0\Services.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\obj\Debug\net9.0\ref\Services.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\bin\Debug\net9.0\Entities.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\Services\bin\Debug\net9.0\Entities.pdb

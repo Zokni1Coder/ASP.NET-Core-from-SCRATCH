@@ -1,6 +1,7 @@
 ﻿using Entities;
 using ServiceContract;
 using ServiceContract.DTOs;
+using Services.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Services
         }
         public ResponseBuyOrder AddBuyOrder(AddRequestBuyOrder addRequestBuyOrder)
         {
+            ValidationHelper.AddRequestValidator(addRequestBuyOrder);
             BuyOrder newBuyOrder = addRequestBuyOrder.toBuyOrder();
             this._buyOrders.Add(newBuyOrder);
             return newBuyOrder.toBuyOrderResponse();
@@ -27,7 +29,10 @@ namespace Services
 
         public ResponseSellOrder AddSellOrder(AddRequestSellOrder addRequestSellOrder)
         {
-            throw new NotImplementedException();
+            ValidationHelper.AddRequestValidator(addRequestSellOrder);
+            SellOrder newSellOrder = addRequestSellOrder.toSellOrder();
+            this._sellOrders.Add(newSellOrder);
+            return newSellOrder.toResponseSellOrder();
         }
 
         public List<ResponseBuyOrder> GetBuyOrders()

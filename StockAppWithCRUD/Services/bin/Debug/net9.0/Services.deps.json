@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v9.0": {
       "Services/1.0.0": {
         "dependencies": {
+          "Entities": "1.0.0",
           "Microsoft.Extensions.Http": "10.0.7",
           "ServiceContract": "1.0.0"
         },
@@ -179,7 +180,18 @@
           }
         }
       },
+      "Entities/1.0.0": {
+        "runtime": {
+          "Entities.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
       "ServiceContract/1.0.0": {
+        "dependencies": {
+          "Entities": "1.0.0"
+        },
         "runtime": {
           "ServiceContract.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -292,6 +304,11 @@
       "sha512": "sha512-Fu6AxFf9bHz/Q7DQmxKC0o+UgFes8bs2Xh+PH/x31yExRAOASTwlzjZsISTtqVU5gQshKHLZopxEBTaIyfv0wg==",
       "path": "system.diagnostics.diagnosticsource/10.0.7",
       "hashPath": "system.diagnostics.diagnosticsource.10.0.7.nupkg.sha512"
+    },
+    "Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "ServiceContract/1.0.0": {
       "type": "project",

@@ -10,3 +10,7 @@ C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceCo
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\obj\Debug\net9.0\refint\ServiceContract.dll
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\obj\Debug\net9.0\ServiceContract.pdb
 C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\obj\Debug\net9.0\ref\ServiceContract.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\bin\Debug\net9.0\Entities.dll
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\bin\Debug\net9.0\Entities.pdb
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\obj\Debug\net9.0\ServiceContract.csproj.AssemblyReference.cache
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockAppWithCRUD\ServiceContract\obj\Debug\net9.0\ServiceC.C92B70ED.Up2Date
