@@ -122,6 +122,26 @@ namespace StockTest
             Assert.NotNull(responseBuyOrder);
         }
 
+        [Fact]
+        public void TooOldDate_AddBuyOrder()
+        {
+            //Arrange
+            AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100,
+                date = Convert.ToDateTime("1999-12-12")
+            };
+
+            //Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                //Act
+                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+            });
+        }
+
         #endregion
 
         #region AddSellOrder
@@ -227,6 +247,26 @@ namespace StockTest
             //Assert
             this._testOutputHelper.WriteLine(addRequestSellOrder.ToString());
             Assert.NotNull(addRequestSellOrder);
+        }
+
+        [Fact]
+        public void TooOldDate_AddSellOrder()
+        {
+            //Arrange
+            AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100,
+                date = Convert.ToDateTime("1999-12-12")
+            };
+
+            //Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                //Act
+                this._tradeService.AddSellOrder(addRequestSellOrder);
+            });
         }
 
         #endregion

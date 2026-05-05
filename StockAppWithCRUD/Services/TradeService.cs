@@ -1,12 +1,12 @@
 ﻿using Entities;
 using ServiceContract;
 using ServiceContract.DTOs;
-using Services.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceContract.Helper;
 
 namespace Services
 {

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Helper
+namespace ServiceContract.Helper
 {
     public class ValidationHelper
     {
-        internal static void AddRequestValidator(object? ObjectAddRequest)
+        public static void AddRequestValidator(object? ObjectAddRequest)
         {
             ValidationContext validationContext = new ValidationContext(ObjectAddRequest);
 

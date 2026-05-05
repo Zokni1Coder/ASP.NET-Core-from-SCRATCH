@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceContract.Helper;
+using ServiceContract.Helper.CustomValidators;
 
 namespace ServiceContract.DTOs
 {
@@ -16,7 +18,7 @@ namespace ServiceContract.DTOs
         public int shares { get; set; } = 0;
         [Range(1, 10000, ErrorMessage = "A price should be between 1 and 10000")]
         public double price { get; set; } = 0;
-        
+        [DateValidation]
         public DateTime date { get; set; } = DateTime.Now;
 
         public BuyOrder toBuyOrder()

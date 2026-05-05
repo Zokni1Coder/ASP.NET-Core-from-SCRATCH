@@ -1,4 +1,5 @@
 ﻿using Entities;
+using ServiceContract.Helper.CustomValidators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,6 +16,7 @@ namespace ServiceContract.DTOs
         public int shares { get; set; }
         [Range(1, 10000, ErrorMessage = "A price should be between 1 and 10000")]
         public double price { get; set; } = 0;
+        [DateValidation]
         public DateTime date { get; set; } = DateTime.Now;
 
         public SellOrder toSellOrder()
