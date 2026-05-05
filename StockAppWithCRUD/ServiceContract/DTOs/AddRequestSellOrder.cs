@@ -11,9 +11,9 @@ namespace ServiceContract.DTOs
     public class AddRequestSellOrder
     {
         public string? companyName { get; set; }
-        [Range(0, 100000, ErrorMessage = "A quantity (share) should be between 1 and 100000")]
-        public int shares { get; set; } = 0;
-        [Range(0, int.MaxValue, ErrorMessage = "A price should be between 1 and 10000")]
+        [Range(1, 100000, ErrorMessage = "A quantity (share) should be between 1 and 100000")]
+        public int shares { get; set; }
+        [Range(1, 10000, ErrorMessage = "A price should be between 1 and 10000")]
         public double price { get; set; } = 0;
         public DateTime date { get; set; } = DateTime.Now;
 

@@ -6,5 +6,7 @@ namespace StockAppWithCRUD.Option_Pattern
     {
         [Required(ErrorMessage = "The symbol can't be blank.")]
         public string? symbol { get; set; }
+        [Required(ErrorMessage = "The Token can't be blank.")]
+        public string? token { get; set; }
     }
 }

@@ -11,12 +11,10 @@ namespace StockTest
     {
         private readonly ITradeService _tradeService;
         private readonly ITestOutputHelper _testOutputHelper;
-        //private readonly Config_OptionPattern _options;
         public StockUnitTest(ITestOutputHelper testOutputHelper)
         {
             this._tradeService = new TradeService();
             this._testOutputHelper = testOutputHelper;
-            //this._options = new Config_OptionPattern();
         }
 
         #region AddBuyOrder

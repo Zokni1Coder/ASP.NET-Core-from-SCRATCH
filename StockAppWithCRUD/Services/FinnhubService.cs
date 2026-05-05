@@ -23,7 +23,7 @@ namespace Services
         {
             using (HttpClient httpClient = this._httpClienFactory.CreateClient())
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/stock/profile2?symbol={this._options.symbol}&token={this._configuration.GetValue<string>("token")}");
+                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/stock/profile2?symbol={this._options.symbol}&token={this._options.token}");
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
@@ -43,7 +43,7 @@ namespace Services
         {
             using (HttpClient httpClient = this._httpClienFactory.CreateClient())
             {
-                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={this._options.symbol}&token={this._configuration.GetValue<string>("token")}");
+                HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, $"https://finnhub.io/api/v1/quote?symbol={this._options.symbol}&token={this._options.token}");
 
                 HttpResponseMessage httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
