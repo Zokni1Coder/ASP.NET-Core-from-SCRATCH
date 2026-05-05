@@ -142,6 +142,59 @@ namespace StockTest
             });
         }
 
+        [Fact]
+        public void GetAllBuyOrder()
+        {
+            //Arrange
+            AddRequestBuyOrder addRequestBuyOrder1 = new AddRequestBuyOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+            AddRequestBuyOrder addRequestBuyOrder4 = new AddRequestBuyOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+            AddRequestBuyOrder addRequestBuyOrder2 = new AddRequestBuyOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+            AddRequestBuyOrder addRequestBuyOrder3 = new AddRequestBuyOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+
+            List<ResponseBuyOrder> buyOrders_fromAdding = new List<ResponseBuyOrder>();
+
+            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder1));
+            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder2));
+            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder3));
+            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder4));
+
+            //Act
+            List<ResponseBuyOrder> buyOrders_form_GetAll = this._tradeService.GetBuyOrders();
+
+            this._testOutputHelper.WriteLine("Actual");
+            foreach (ResponseBuyOrder order in buyOrders_fromAdding)
+            {
+                this._testOutputHelper.WriteLine(order.ToString());
+                //Assert
+                Assert.Contains(order, buyOrders_form_GetAll);
+            }
+            this._testOutputHelper.WriteLine("Expected");
+            foreach (var item in buyOrders_form_GetAll)
+            {
+                this._testOutputHelper.WriteLine(item.ToString());
+            }
+        }
+
         #endregion
 
         #region AddSellOrder
@@ -269,6 +322,56 @@ namespace StockTest
             });
         }
 
+        [Fact]
+        public void GetAllSellOrder()
+        {
+            //Arrange
+            AddRequestSellOrder addRequestSellOrder1 = new AddRequestSellOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+            AddRequestSellOrder addRequestSellOrder2 = new AddRequestSellOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            }; AddRequestSellOrder addRequestSellOrder3 = new AddRequestSellOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            }; AddRequestSellOrder addRequestSellOrder4 = new AddRequestSellOrder()
+            {
+                companyName = "MSFT",
+                shares = 10000,
+                price = 100
+            };
+
+            List<ResponseSellOrder> sellOrders_fromAdding = new List<ResponseSellOrder>();
+
+            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder1));
+            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder2));
+            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder3));
+            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder4));
+
+            //Act
+            List<ResponseSellOrder> sellOrders_form_GetAll = this._tradeService.GetSellOrders();
+
+            this._testOutputHelper.WriteLine("Actual");
+            foreach (ResponseSellOrder order in sellOrders_fromAdding)
+            {
+                this._testOutputHelper.WriteLine(order.ToString());
+                //Assert
+                Assert.Contains(order, sellOrders_form_GetAll);
+            }
+            this._testOutputHelper.WriteLine("Expected");
+            foreach (var item in sellOrders_form_GetAll)
+            {
+                this._testOutputHelper.WriteLine(item.ToString());
+            }
+        }
         #endregion
     }
 }
