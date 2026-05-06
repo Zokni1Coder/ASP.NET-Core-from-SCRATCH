@@ -53,6 +53,7 @@ namespace CRUDWithXUnitExample.Controllers
         {
             List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
             ViewBag.Countries = countries_to_View;
+            ViewBag.Genders = Enum.GetValues(typeof(Gender));
             return View();
         }
 
