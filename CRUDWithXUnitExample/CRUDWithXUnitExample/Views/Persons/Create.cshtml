@@ -65,12 +65,19 @@
             <div class="w-25">
                 <label class="form-label pt" asp-for="CountryId"></label>
                 <div class="flex-1">
-                    <select class="form-input" asp-for="CountryId">
+                    @*Lásd meg a select tag-ben az asp-items attribútumot.
+                        Ott jelöljük meg az opciókat amit a Controllerben megadtunk.
+                    *@
+                    <select class="form-input" asp-for="CountryId"
+                            asp-items="@ViewBag.Countries">
                         <option value="">Please Select</option>
+                        @*
+                        //Foreach helyett csak megjelöljük a ViewBag-et.
+                        
                         @foreach (CountryResponse country in ViewBag.Countries)
                         {
                             <option value="@country.CountryID">@country.Name</option>
-                        }
+                        }*@
                     </select>
                 </div>
             </div>

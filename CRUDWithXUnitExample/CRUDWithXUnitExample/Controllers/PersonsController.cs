@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -11,7 +12,7 @@ namespace CRUDWithXUnitExample.Controllers
     public class PersonsController : Controller
     {
         private readonly ICountryService _countryService;
-        private readonly IPersonService _personService;        
+        private readonly IPersonService _personService;
         public PersonsController(ICountryService countryService, IPersonService personService)
         {
             this._countryService = countryService;
@@ -53,7 +54,23 @@ namespace CRUDWithXUnitExample.Controllers
         {
             List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
             ViewBag.Countries = countries_to_View;
-            ViewBag.Genders = Enum.GetValues(typeof(Gender));
+
+            //Ezzel a Linq lépéssel minden Country egyed egy SelectListItem lesz a megadott attribútumokkal.
+            //Az eredmény:
+            //<option value="country.CountryID">country.Name</option>
+            ViewBag.Countries = countries_to_View.Select(country => new SelectListItem() { Text = country.Name, Value = country.CountryID.ToString() });
+
+            //Egyszerű példa magyarázat helyett:
+            //SelectListItem items = new SelectListItem()
+            //{
+            //    Text = "Reka",
+            //    Value = "1"
+            //};
+            //Ez megjelenítve cshtml-ben:
+            //<option value="1">Reka</option>
+
+            ViewBag.Genders = Enum.GetNames(typeof(Gender));
+            //Itt nem kell megjelölni a strongly type modellt, mivel nem akarunk neki semmilyen adatát megjeleníteni.
             return View();
         }
 
@@ -62,8 +79,7 @@ namespace CRUDWithXUnitExample.Controllers
         //Efféle model binding esetén fontos hogy a html-ben szereplő elem "name" azonos legyen az objektum property nevével. Pl: <input name="PersonName"/> DTO prop: string PersonName.
         public IActionResult Create(PersonAddRequest personAddRequest)
         {
-            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();
-            ViewBag.Countries = countries_to_View;
+            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();            
 
             if (!ModelState.IsValid)
             {
@@ -73,7 +89,7 @@ namespace CRUDWithXUnitExample.Controllers
 
             PersonResponse personRespons = this._personService.AddPerson(personAddRequest);
 
-            return RedirectToAction("Index", "persons"); 
+            return RedirectToAction("Index", "persons");
         }
 
         [HttpPost("[action]")]
