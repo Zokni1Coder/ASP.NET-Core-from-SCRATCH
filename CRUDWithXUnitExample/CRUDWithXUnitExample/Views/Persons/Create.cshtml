@@ -23,6 +23,10 @@
             </div>
             <div class="flex-1">
                 <input asp-for="PersonName" class="form-input" />
+                @*Megjelenítjük a validáció error üzenetét, amit
+                  az objektumnál definiáltunk az attribútumban.
+                *@
+                <span asp-validation-for="PersonName" class="text-red"></span>
             </div>
         </div>
 
@@ -34,6 +38,7 @@
             </div>
             <div class="flex-1">
                 <input asp-for="Email" class="form-input" />
+                <span asp-validation-for="Email" class="text-red"></span>
             </div>
         </div>
 
@@ -102,5 +107,15 @@
             </div>
         </div>
         <button type="submit" class="button button-green-back">Submit</button>
+        @*Vedd észre hogy a summary csak div-ben lehet, míg a 
+          validation-for csak span tag-en.         
+        *@
+        <div asp-validation-summary="All" class="text-red"></div>
     </form>
 </div>
+@*Itt láthatod a kimásolt scripteket. Az oldal linkjét keresd 
+  "Linke.txt"-ben.
+*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
