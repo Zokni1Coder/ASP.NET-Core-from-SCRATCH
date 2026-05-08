@@ -23,5 +23,10 @@
             @RenderBody()
         </div>
     </div>
+    @*Itt fogjuk meghívni a View-ban létrehozott section-t.
+      A required arra szolgál, hogy kötelező legyen egy megjelenítendő
+      View-nak rendelkeznie egy ilyen section-nel vagy sem.
+    *@
+    @RenderSection("validators", required: false);
 </body>
 </html>
