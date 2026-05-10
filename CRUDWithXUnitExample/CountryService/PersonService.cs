@@ -183,8 +183,19 @@ namespace Services
             //Validation
             ValidationHelper.PersonServiceValidations(requestPerson);
 
+
             Person? targetPerson = this._persons.FirstOrDefault(person => person.PersonId == requestPerson.PersonId);
-            targetPerson = requestPerson.ToPerson();
+
+            if (targetPerson == null)
+                return null;
+
+            targetPerson.Gender = requestPerson?.Gender.ToString();
+            targetPerson.Address = requestPerson.Address;
+            targetPerson.DateOfBirth = requestPerson.DateOfBirth;
+            targetPerson.CountryId = requestPerson.CountryId;
+            targetPerson.Email = requestPerson.Email;
+            targetPerson.ReceiveNewsLetter = requestPerson.ReceiveNewsLetter;
+            targetPerson.PersonName = requestPerson.PersonName;
 
             return targetPerson.ToPersonResponse();
         }

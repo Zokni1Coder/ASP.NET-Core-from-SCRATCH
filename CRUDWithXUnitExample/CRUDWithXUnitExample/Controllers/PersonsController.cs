@@ -79,7 +79,7 @@ namespace CRUDWithXUnitExample.Controllers
         //Efféle model binding esetén fontos hogy a html-ben szereplő elem "name" azonos legyen az objektum property nevével. Pl: <input name="PersonName"/> DTO prop: string PersonName.
         public IActionResult Create(PersonAddRequest personAddRequest)
         {
-            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();            
+            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();
 
             if (!ModelState.IsValid)
             {
@@ -96,6 +96,40 @@ namespace CRUDWithXUnitExample.Controllers
         public IActionResult Delete(Guid personId)
         {
             bool isSuccess = this._personService.DeletePerson(personId);
+            return RedirectToAction("index", "persons");
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult Update(Guid personId)
+        {
+            List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+            ViewBag.Countries = countries_to_View;
+
+            ViewBag.Countries = countries_to_View.Select(country => new SelectListItem() { Text = country.Name, Value = country.CountryID.ToString() });
+
+            ViewBag.Genders = Enum.GetNames(typeof(Gender));
+
+            PersonUpdateRequest personUpdateRequest = this._personService.GetPersonById(personId).ToPersonUpdateRequest();            
+
+            return View(personUpdateRequest);
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult Update(PersonUpdateRequest personUpdateRequest)
+        {
+            PersonResponse personResponse = this._personService.UpdatePerson(personUpdateRequest);
+
+            if (personResponse is null)
+            {
+                List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+                ViewBag.Countries = countries_to_View;
+
+                ViewBag.Countries = countries_to_View.Select(country => new SelectListItem() { Text = country.Name, Value = country.CountryID.ToString() });
+
+                ViewBag.Genders = Enum.GetNames(typeof(Gender));
+                return View();
+            }
+
             return RedirectToAction("index", "persons");
         }
     }

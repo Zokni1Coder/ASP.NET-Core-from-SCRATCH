@@ -36,6 +36,7 @@
     <tbody>
         @foreach (PersonResponse person in Model)
         {
+            
             <tr>
                 <td>@person.PersonName</td>
                 <td>@person.Email</td>
@@ -46,11 +47,12 @@
                 <td>@person.Address</td>
                 <td>@person.ReceiveNewsLetter</td>
                 <td>
-                    <form method="post" action="~/persons/delete">
-                        <button type="submit" class="button button-green-back" value="@person.PersonId" name="personId">Delete</button>
+                    <form>
+                    <button type="submit" class="button button-green-back" formmethod="post" asp-controller="persons" asp-action="delete" value="@person.PersonId" name="personId">Delete</button>
                     </form>
+                    <a asp-action="update" asp-controller="persons" asp-route-personId="@person.PersonId">Update</a>   
                 </td>
-            </tr>
+            </tr>            
         }
     </tbody>
 </table>

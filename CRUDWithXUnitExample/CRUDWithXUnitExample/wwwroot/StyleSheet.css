@@ -13,6 +13,11 @@
     transition: box-shadow 0.2s;
 }
 
+.center-box{
+    width: 70%;
+    margin: auto;
+}
+
 .form-label {
     display: inline-block;
 }
