@@ -1,0 +1,20 @@
+﻿﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/StyleSheet.css" />
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="/stock/index">Trade</a></li>
+            <li><a href="/trade/orders">Orders</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+﻿using Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ServiceContract.DTOs
+{
+    public class ResponseBuyOrder
+    {
+        public Guid id { get; set; }
+        public string? stockName { get; set; }
+        public string? stockSymbol { get; set; }
+        public int shares { get; set; }
+        public double price { get; set; }
+        public string? date { get; set; }
+        public double tradeAmount { get; set; }
+
+        public override string ToString()
+        {
+            return $"RBuyOrder: id: {this.id}, stockName: {this.stockName}, stockSymbol: {this.stockSymbol}, shares: {this.shares}, price: {this.price}, date: {this.date}, tradeAmount: {this.tradeAmount}";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj != null && obj is ResponseBuyOrder)
+            {
+                ResponseBuyOrder temp = (ResponseBuyOrder)obj;
+                return (this.id == temp.id);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public static class BuyOrderExtension
+    {
+        public static ResponseBuyOrder toBuyOrderResponse(this BuyOrder buyOrder)
+        {
+            return new ResponseBuyOrder()
+            {
+                date = buyOrder.date.ToString("MM/dd/yyyy hh:mm tt"),
+                price = Math.Round(buyOrder.price, 2),
+                id = buyOrder.Id,
+                stockName = buyOrder.stockName,
+                stockSymbol = buyOrder.stockSymbol,
+                shares = buyOrder.shares,
+                tradeAmount = Math.Round(buyOrder.price * buyOrder.shares, 2)
+            };
+        }
+    }
+}
