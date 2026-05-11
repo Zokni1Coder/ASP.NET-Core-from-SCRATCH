@@ -1,21 +1,11 @@
-﻿@model PersonAddRequest //Ha asp-for", akkor strongly typed //
+﻿@model PersonUpdateRequest
 
 <a asp-controller="persons" asp-action="index" class="link-hover">Back to Person List</a>
-<h1>Create Person</h1>
+<h1>Update Person</h1>
 
-@if (ViewBag.Errors != null)
-{
-    @foreach (string error in ViewBag.Errors)
-    {
-        <div class="alert">
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-            <strong>Attention!</strong> @error
-        </div>
-    }
-}
 <div class="center-box">
-    <form asp-controller="persons" asp-action="create" method="post">
-
+    <form asp-controller="persons" asp-action="update" method="post">
+        <input type="hidden" asp-for="@Model.PersonId"/>
         @*PersonName*@
         <div class="flex form-field">
             <div class="w-25">
@@ -75,14 +65,6 @@
                     *@
                     <select class="form-input" asp-for="CountryId"
                             asp-items="@ViewBag.Countries">
-                        <option value="">Please Select</option>
-                        @*
-                        //Foreach helyett csak megjelöljük a ViewBag-et.
-                        
-                        @foreach (CountryResponse country in ViewBag.Countries)
-                        {
-                            <option value="@country.CountryID">@country.Name</option>
-                        }*@
                     </select>
                 </div>
             </div>
@@ -102,41 +84,28 @@
             <div class="w-25">
             </div>
             <div class="flex-1">
-                <input asp-for="ReceiveNewsLetter" value="true" />
+                <input asp-for="ReceiveNewsLetter" />
                 <label asp-for="ReceiveNewsLetter" class="form-label"></label>
             </div>
         </div>
-        <button type="submit" class="button button-green-back">Submit</button>
+        <button type="submit" class="button button-green-back">Update</button>
         @*Vedd észre hogy a summary csak div-ben lehet, míg a 
           validation-for csak span tag-en.         
         *@
         <div asp-validation-summary="All" class="text-red"></div>
     </form>
 </div>
-@*Itt láthatod a kimásolt scripteket. Az oldal linkjét keresd 
-  "Linke.txt"-ben. Minden script-et láss el egy "asp-fallback-src"
-  és "asp-fallback-test" attribútummal.
-
-  asp-fallback-src: ha a megadott link nem működik, akkor ez a fájl
-                    lesz futtatva.
-
-  asp-fallback-test: ezzel adjuk meg, hogy miként kezelje a kapott
-                     fájlt.
-
-  Töltsd le ezeket a fájlokat, amiket a script-ben meghívunk! Azok 
-  lesznek a fall-back fájlok.
-*@
 
 @section validators {
     <script src="https://cdnjs.cloudflarecom/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"
-    asp-fallback-src="~/jquery.min.js" 
-    asp-fallback-test="window.jQuery"></script>
-    
-    <script asp-fallback-src="~/jquery.validate.min.js" 
-    asp-fallback-test="window.jQuery.validator" 
-    src="https://cdnjscloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    
-    <script asp-fallback-src="~/jquery.validate.unobtrusive.min.js" 
-    asp-fallback-test="window.jQuery.validator.unobtrusive" 
-    src="https://cdnjs.cloudflarecom/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            asp-fallback-src="~/jquery.min.js"
+            asp-fallback-test="window.jQuery"></script>
+
+    <script asp-fallback-src="~/jquery.validate.min.js"
+            asp-fallback-test="window.jQuery.validator"
+            src="https://cdnjscloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js" integrity="sha512-KFHXdr2oObHKI9w4Hv1XPKc898mE4kgYx58oqsc/JqqdLMDI4YjOLzom+EMlW8HFUd0QfjfAvxSL6sEq/a42fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script asp-fallback-src="~/jquery.validate.unobtrusive.min.js"
+            asp-fallback-test="window.jQuery.validator.unobtrusive"
+            src="https://cdnjs.cloudflarecom/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 }

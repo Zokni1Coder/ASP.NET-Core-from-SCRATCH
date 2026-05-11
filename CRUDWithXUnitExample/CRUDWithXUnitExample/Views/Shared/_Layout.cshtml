@@ -10,11 +10,13 @@
 <body>
     <div class="container">
         <div class="navbar">
-            <div class="navbar-brand">CRUD Demo</div>
+            <div class="navbar-brand">
+                <img src="~/logo.png" width="25px" asp-append-version="true"/>
+            </div>
             <ul>
                 <li>
-                    <a href="~/persons/index">Persons</a>
-                    <a href="~/persons/create">Create Person</a>
+                    <a asp-controller="persons" asp-action="index">Persons</a>
+                    <a asp-controller="persons" asp-action="create">Create Person</a>
                 </li>
             </ul>
         </div>
@@ -23,5 +25,10 @@
             @RenderBody()
         </div>
     </div>
+    @*Itt fogjuk meghívni a View-ban létrehozott section-t.
+      A required arra szolgál, hogy kötelező legyen egy megjelenítendő
+      View-nak rendelkeznie egy ilyen section-nel vagy sem.
+    *@
+    @RenderSection("validators", required: false);
 </body>
 </html>
