@@ -1,0 +1,23 @@
+﻿@model PersonUpdateRequest
+<h1>Delete Person</h1>
+<h1>Are you shure to delete this person?</h1>
+<div class="center-box">
+    <form asp-controller="persons" asp-action="delete" method="post">
+
+        @*PersonName*@
+        <div class="flex form-field">
+            <div class="w-25">
+                <label class="form-label pt" asp-for="PersonName"></label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="PersonName" disabled class="form-input" />
+            </div>
+        </div>
+        <div class="flex form-field">
+            <div class="w-25">
+                <button class="green-back" asp-route-personId="@Model.PersonId" type="submit">Delete</button>
+                <a asp-controller="persons" asp-action="index" class="link-hover">Back to Person List</a>
+            </div>
+        </div>
+    </form>
+</div>

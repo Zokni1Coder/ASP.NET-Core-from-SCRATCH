@@ -48,7 +48,9 @@
                 <td>@person.ReceiveNewsLetter</td>
                 <td>
                     <form>
-                    <button type="submit" class="button button-green-back" formmethod="post" asp-controller="persons" asp-action="delete" value="@person.PersonId" name="personId">Delete</button>
+                        <input type="hidden" asp-for="@person.PersonId" />
+                        <input type="hidden" asp-for="@person.PersonName" />
+                        <button type="submit" class="button button-green-back" formmethod="get" asp-controller="persons" asp asp-action="delete">Delete</button>
                     </form>
                     <a asp-action="update" asp-controller="persons" asp-route-personId="@person.PersonId">Update</a>   
                 </td>

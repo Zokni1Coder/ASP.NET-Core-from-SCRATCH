@@ -92,6 +92,17 @@ namespace CRUDWithXUnitExample.Controllers
             return RedirectToAction("Index", "persons");
         }
 
+        [HttpGet("[action]")]
+        public IActionResult Delete(PersonUpdateRequest person)
+        {
+            if (person is null)
+            {
+                return RedirectToAction("index", "persons");
+            }
+
+            return View(person);
+        }
+
         [HttpPost("[action]")]
         public IActionResult Delete(Guid personId)
         {
