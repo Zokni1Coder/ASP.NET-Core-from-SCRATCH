@@ -1,8 +1,9 @@
-﻿﻿<div class="container flex inline-block">
+﻿@model Trades
+<div class="container flex inline-block">
     <div class="flex-1 w-50">
         <div class="box">
             <h4 class="text-grey">Buy orders</h4>
-            @foreach (ResponseBuyOrder item in ViewBag.BuyOrders)
+            @foreach (ResponseBuyOrder item in Model.buyOrders)
             {
                 <b>@item.stockName</b>
                 <p><b>@item.shares</b> shares at @item.price</p>
@@ -15,7 +16,7 @@
     <div class="flex-1 w-50">
         <div class="box">
             <h4 class="text-grey">Sell orders</h4>
-            @foreach (ResponseSellOrder item in ViewBag.SellOrders)
+            @foreach (ResponseSellOrder item in Model.sellOrders)
             {
                 <b>@item.stockName</b>
                 <p><b>@item.shares</b> shares at @item.price</p>

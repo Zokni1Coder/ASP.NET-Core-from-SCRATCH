@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceContract;
 using ServiceContract.DTOs;
+using StockApp.Models;
 
 namespace StockApp.Controllers
 {
@@ -31,13 +32,14 @@ namespace StockApp.Controllers
         [HttpGet("[action]")]
         public IActionResult Orders()
         {
-            List<ResponseBuyOrder>? buyOrders = this._tradeService.GetBuyOrders();
-            List<ResponseSellOrder>? sellOrders = this._tradeService.GetSellOrders();
+            Trades trades = new Trades()
+            {
+                buyOrders = this._tradeService.GetBuyOrders(),
+                sellOrders = this._tradeService.GetSellOrders()
+                
+            };                       
 
-            ViewBag.BuyOrders = buyOrders;
-            ViewBag.SellOrders = sellOrders;
-
-            return View();
+            return View(trades);
         }
 
 
