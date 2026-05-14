@@ -1,0 +1,129 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\stockapp\\views\\trade\\orders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|solutionrelative:stockapp\\views\\trade\\orders.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\stockapp\\views\\stock\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|solutionrelative:stockapp\\views\\stock\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\stockapp\\controllers\\tradecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|solutionrelative:stockapp\\controllers\\tradecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\stockapp\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|solutionrelative:stockapp\\views\\_viewimports.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{090E0094-D6E3-43D8-A25D-912B05431496}|ServiceContract\\ServiceContract.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\servicecontract\\dtos\\addrequestsellorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{090E0094-D6E3-43D8-A25D-912B05431496}|ServiceContract\\ServiceContract.csproj|solutionrelative:servicecontract\\dtos\\addrequestsellorder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|c:\\users\\erikk\\source\\repos\\asp.net-core-from-scratch\\stockapp\\stockapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{02AC9467-15B0-4D6F-A2BC-CBCF899FCB78}|StockApp\\StockApp.csproj|solutionrelative:stockapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_ViewImports.cshtml",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\_ViewImports.cshtml",
+              "RelativeDocumentMoniker": "StockApp\\Views\\_ViewImports.cshtml",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\_ViewImports.cshtml",
+              "RelativeToolTip": "StockApp\\Views\\_ViewImports.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-12T19:47:20.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AddRequestSellOrder.cs",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\ServiceContract\\DTOs\\AddRequestSellOrder.cs",
+              "RelativeDocumentMoniker": "ServiceContract\\DTOs\\AddRequestSellOrder.cs",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\ServiceContract\\DTOs\\AddRequestSellOrder.cs",
+              "RelativeToolTip": "ServiceContract\\DTOs\\AddRequestSellOrder.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABAAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T21:19:51.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TradeController.cs",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Controllers\\TradeController.cs",
+              "RelativeDocumentMoniker": "StockApp\\Controllers\\TradeController.cs",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Controllers\\TradeController.cs",
+              "RelativeToolTip": "StockApp\\Controllers\\TradeController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAwwCMAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T21:02:10.456Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\Stock\\Index.cshtml",
+              "RelativeDocumentMoniker": "StockApp\\Views\\Stock\\Index.cshtml",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\Stock\\Index.cshtml",
+              "RelativeToolTip": "StockApp\\Views\\Stock\\Index.cshtml",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAwBEAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-11T18:26:55.613Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Orders.cshtml",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\Trade\\Orders.cshtml",
+              "RelativeDocumentMoniker": "StockApp\\Views\\Trade\\Orders.cshtml",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Views\\Trade\\Orders.cshtml",
+              "RelativeToolTip": "StockApp\\Views\\Trade\\Orders.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-05-11T17:58:23.714Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Program.cs",
+              "RelativeDocumentMoniker": "StockApp\\Program.cs",
+              "ToolTip": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockApp\\StockApp\\Program.cs",
+              "RelativeToolTip": "StockApp\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T17:46:07.852Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -8,8 +8,8 @@ namespace Entities
     public class Country
     {
         [Key]
-        public Guid Guid { get; set; }
+        public Guid CountryID { get; set; }
         [StringLength(40)]
-        public string? Name { get; set; }
+        public string? CountryName { get; set; }
     }
 }

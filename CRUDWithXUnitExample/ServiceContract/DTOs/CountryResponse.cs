@@ -42,8 +42,8 @@ namespace ServiceContract.DTOs
         {
             return new CountryResponse()
             {
-                CountryID = country.Guid,
-                Name = country.Name,
+                CountryID = country.CountryID,
+                Name = country.CountryName,
             };
         }
     }

@@ -17,7 +17,7 @@ namespace Services
             //Ha a konstruktorban az érték 1, akkor lefutt az inicializáció és ezzel dolgozik. Ha a tesztben is hozzáadunk újabb objektumokat, akkor az is bele lesz téva a listába. A két helyen inicializált objektumok összeadódnak végén. 
             if (initialization)
             {
-                _countries.AddRange(new List<Country> { new Country() { Guid = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), Name = "Hungary" }, new Country() { Guid = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), Name = "Austria" }, new Country() { Guid = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), Name = "Serbia" }, new Country() { Guid = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), Name = "Germany" }, new Country() { Guid = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), Name = "Italy" }, new Country() { Guid = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), Name = "England" } });
+                _countries.AddRange(new List<Country> { new Country() { CountryID = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), CountryName = "Hungary" }, new Country() { CountryID = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), CountryName = "Austria" }, new Country() { CountryID = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), CountryName = "Serbia" }, new Country() { CountryID = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), CountryName = "Germany" }, new Country() { CountryID = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), CountryName = "Italy" }, new Country() { CountryID = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), CountryName = "England" } });
             }
         }
         public CountryResponse AddCountry(CountryAddRequest? countryRequest)
@@ -33,7 +33,7 @@ namespace Services
                 throw new ArgumentException();
             }
 
-            if (this._countries.Where(x => x.Name == countryRequest.Name).Count() > 0)
+            if (this._countries.Where(x => x.CountryName == countryRequest.Name).Count() > 0)
             {
                 throw new Exception("The given Country name is already exists!");
             }
@@ -42,7 +42,7 @@ namespace Services
             //Átalakítjuk a countryRequest objketumot Country egyeddé
             Country country = countryRequest.ToCountry();
             //Generálunk neki Guid-t
-            country.Guid = Guid.NewGuid();
+            country.CountryID = Guid.NewGuid();
             //Hozzáadjuk a belső listához
             this._countries.Add(country);
 
@@ -66,7 +66,7 @@ namespace Services
             //return this._countries.Where(country => country.Guid == countryId).FirstOrDefault().ToCountryResponse();
 
             //Amint megtalál egy megfelelő elemet, visszaadja.
-            Country? country = this._countries.FirstOrDefault(country => country.Guid == countryId);
+            Country? country = this._countries.FirstOrDefault(country => country.CountryID == countryId);
             if (country is null)
             {
                 return null;

@@ -1,0 +1,2 @@
+C:\Users\erikk\source\repos\ASP.NET-Core-from-SCRATCH\StockApp\StockApp\wwwroot\StyleSheet.css
+wwwroot\StyleSheet.css

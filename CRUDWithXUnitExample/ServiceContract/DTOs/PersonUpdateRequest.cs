@@ -30,14 +30,14 @@ namespace ServiceContract.DTOs
         {
             return new Person()
             {
-                PersonId = this.PersonId,
+                PersonID = this.PersonId,
                 PersonName = this.PersonName,
                 Email = this.Email,
                 DateOfBirth = this.DateOfBirth,
                 Gender = this.Gender.ToString(),
-                CountryId = this.CountryId,
+                CountryID = this.CountryId,
                 Address = this.Address,
-                ReceiveNewsLetter = this.ReceiveNewsLetter
+                ReceiveNewsLetters = this.ReceiveNewsLetter
             };
         }
     }

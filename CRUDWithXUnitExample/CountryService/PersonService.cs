@@ -29,27 +29,27 @@ namespace Services
                 {
                     new Person()
                     {
-                        PersonId = Guid.Parse("7D71DA30-4D11-4895-8DE4-EB6C644B1BF0"), PersonName = "Pate", Email = "pdown0@craigslist.org", DateOfBirth = DateTime.Parse("2010-12-22"), Gender = "Male", ReceiveNewsLetter = false, CountryId = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), Address = "Apt 1247"
+                        PersonID = Guid.Parse("7D71DA30-4D11-4895-8DE4-EB6C644B1BF0"), PersonName = "Pate", Email = "pdown0@craigslist.org", DateOfBirth = DateTime.Parse("2010-12-22"), Gender = "Male", ReceiveNewsLetters = false, CountryID = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), Address = "Apt 1247"
                     },
                     new Person()
                     {
-                        PersonId = Guid.Parse("AD5EE04E-87E2-4DAB-B967-3C25152877DA"), PersonName = "Delphine", Email = "dilymanov1@live.com", DateOfBirth = DateTime.Parse("2009-5-9"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"),Address="Apt 177"
+                        PersonID = Guid.Parse("AD5EE04E-87E2-4DAB-B967-3C25152877DA"), PersonName = "Delphine", Email = "dilymanov1@live.com", DateOfBirth = DateTime.Parse("2009-5-9"), Gender = "Female", ReceiveNewsLetters = true, CountryID = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"),Address="Apt 177"
                     },
                     new Person()
                     {
-                        PersonId = Guid.Parse("B5C12E51-C168-44E9-87C3-3DB7574DE928"), PersonName = "Sharron", Email = "spiscopiello3@zimbio.com", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"),Address="Suite 80"
+                        PersonID = Guid.Parse("B5C12E51-C168-44E9-87C3-3DB7574DE928"), PersonName = "Sharron", Email = "spiscopiello3@zimbio.com", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetters = true, CountryID = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"),Address="Suite 80"
                     },
                     new Person()
                     {
-                        PersonId = Guid.Parse("680AAC5E-AAB0-4603-B836-A0209C3B6D17"), PersonName = "Duffie", Email = "dloades4@house.gov", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), Address="Apt 1503"
+                        PersonID = Guid.Parse("680AAC5E-AAB0-4603-B836-A0209C3B6D17"), PersonName = "Duffie", Email = "dloades4@house.gov", DateOfBirth = DateTime.Parse("1994-7-24"), Gender = "Female", ReceiveNewsLetters = true, CountryID = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), Address="Apt 1503"
                     },
                     new Person()
                     {
-                        PersonId = Guid.Parse("F14082CC-6819-4344-AC77-F17CB3263316"), PersonName = "Buffie", Email = "dcores4@story.rod", DateOfBirth = DateTime.Parse("1993-1-31"), Gender = "Female", ReceiveNewsLetter = true, CountryId = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"),Address="8th Floor"
+                        PersonID = Guid.Parse("F14082CC-6819-4344-AC77-F17CB3263316"), PersonName = "Buffie", Email = "dcores4@story.rod", DateOfBirth = DateTime.Parse("1993-1-31"), Gender = "Female", ReceiveNewsLetters = true, CountryID = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"),Address="8th Floor"
                     },
                     new Person()
                     {
-                        PersonId = Guid.Parse("6ADA3393-F132-4422-B121-3A5ECAF7B277"), PersonName = "Corenda", Email = "cblakeborough5@cbsnews.com", DateOfBirth = DateTime.Parse("2022-3-16"), Gender = "Male", ReceiveNewsLetter = false, CountryId = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"),  Address="6th Floor"
+                        PersonID = Guid.Parse("6ADA3393-F132-4422-B121-3A5ECAF7B277"), PersonName = "Corenda", Email = "cblakeborough5@cbsnews.com", DateOfBirth = DateTime.Parse("2022-3-16"), Gender = "Male", ReceiveNewsLetters = false, CountryID = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"),  Address="6th Floor"
                     }
                 });
             }
@@ -80,7 +80,7 @@ namespace Services
 
 
             Person tempPerson = personRequest.ToPerson();
-            tempPerson.PersonId = Guid.NewGuid();
+            tempPerson.PersonID = Guid.NewGuid();
 
             this._persons?.Add(tempPerson);
 
@@ -103,7 +103,7 @@ namespace Services
                 throw new ArgumentNullException();
             }
 
-            Person? person = this._persons.FirstOrDefault(p => p.PersonId == id);
+            Person? person = this._persons.FirstOrDefault(p => p.PersonID == id);
 
             if (person == null)
             {
@@ -184,7 +184,7 @@ namespace Services
             ValidationHelper.PersonServiceValidations(requestPerson);
 
 
-            Person? targetPerson = this._persons.FirstOrDefault(person => person.PersonId == requestPerson.PersonId);
+            Person? targetPerson = this._persons.FirstOrDefault(person => person.PersonID == requestPerson.PersonId);
 
             if (targetPerson == null)
                 return null;
@@ -192,9 +192,9 @@ namespace Services
             targetPerson.Gender = requestPerson?.Gender.ToString();
             targetPerson.Address = requestPerson.Address;
             targetPerson.DateOfBirth = requestPerson.DateOfBirth;
-            targetPerson.CountryId = requestPerson.CountryId;
+            targetPerson.CountryID = requestPerson.CountryId;
             targetPerson.Email = requestPerson.Email;
-            targetPerson.ReceiveNewsLetter = requestPerson.ReceiveNewsLetter;
+            targetPerson.ReceiveNewsLetters = requestPerson.ReceiveNewsLetter;
             targetPerson.PersonName = requestPerson.PersonName;
 
             return targetPerson.ToPersonResponse();
@@ -202,7 +202,7 @@ namespace Services
 
         public bool DeletePerson(Guid? personId)
         {
-            Person? temp = this._persons?.FirstOrDefault(person => person.PersonId == personId);
+            Person? temp = this._persons?.FirstOrDefault(person => person.PersonID == personId);
             if (temp == null)
                 return false;
 

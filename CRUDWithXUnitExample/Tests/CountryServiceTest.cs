@@ -46,7 +46,7 @@ namespace Tests
             //Act
             Country country = countryAddRequest.ToCountry();
             //Assert
-            Assert.Equal(country.Name, countryAddRequest.Name);
+            Assert.Equal(country.CountryName, countryAddRequest.Name);
         }
 
         //Amikor a CountryName null, akkor throw ArgumentException
