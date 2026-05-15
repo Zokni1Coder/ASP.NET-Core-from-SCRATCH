@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ICountryService, CountryService>();
-builder.Services.AddSingleton<IPersonService, PersonService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 //Megadjuk a IoC Poolba a db kapcsolatot.
 builder.Services.AddDbContext<PersonsDbContext>(options =>
 {
