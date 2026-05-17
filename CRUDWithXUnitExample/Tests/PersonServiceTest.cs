@@ -1,4 +1,6 @@
-﻿using ServiceContract;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
 using Services;
@@ -16,8 +18,9 @@ namespace Tests
         //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            this._personService = new PersonService(false);
-            this._countryService = new CountryService(false);
+            PersonsDbContext personsDbContext = new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options);
+            this._countryService = new CountryService(personsDbContext);
+            this._personService = new PersonService(_countryService, personsDbContext);
             this._testOutputHelper = testOutputHelper;
         }
 
