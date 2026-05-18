@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,54 @@ namespace Entities
 
         public DbSet<Country> Countries { get; set; }
         public DbSet<Person> Persons { get; set; }
+
+        /// <summary>
+        /// Ezzel tudjuk meghívni a c#-ban a procedure-t. Ez lesz a "triggerje".
+        /// </summary>
+        /// <returns>Visszaadja az összes Person objektumot</returns>
+        public List<Person> GetAllPerson()
+        {
+            return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPerson]").ToList();
+        }
+
+        public int UpdatePerson(Person person)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[] {
+            new SqlParameter("@PersonID", person.PersonID),
+            new SqlParameter("@PersonName", person.PersonName),
+            new SqlParameter("@Email", person.Email),
+            new SqlParameter("@DateOfBirth", person.DateOfBirth),
+            new SqlParameter("@Gender", person.Gender),
+            new SqlParameter("@CountryID", person.CountryID),
+            new SqlParameter("@Address", person.Address),
+            new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
+            };
+
+            return Database.ExecuteSqlRaw("EXECUTE [dbo].[UpdatePerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", sqlParameters);
+        }
+
+        public Person? GetPersonByID(Guid? guid)
+        {
+            return (Person)Persons.FromSqlRaw("EXECUTE [dbo].[GetPersonByID] @PersonID", new SqlParameter("@PersonID", guid)).AsEnumerable().FirstOrDefault();
+        }
+
+        public int InsertPerson(Person person)
+        {
+            //Ezek fogják nekünk behelyettesíteni a migrations-ben a "@"-al ellátott paramok értékét.
+            SqlParameter[] sqlParameters = new SqlParameter[] {
+            new SqlParameter("@PersonID", person.PersonID),
+            new SqlParameter("@PersonName", person.PersonName),
+            new SqlParameter("@Email", person.Email),
+            new SqlParameter("@DateOfBirth", person.DateOfBirth),
+            new SqlParameter("@Gender", person.Gender),
+            new SqlParameter("@CountryID", person.CountryID),
+            new SqlParameter("@Address", person.Address),
+            new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
+            };
+
+            //Átadjuk az InsertPerson-nak a paramétereket és futtatjuk.
+            return Database.ExecuteSqlRaw("EXECUTE [dbo].[InsertPersons] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", sqlParameters);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using Azure.Identity;
+using Entities;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -89,8 +90,10 @@ namespace Services
             Person tempPerson = personRequest.ToPerson();
             tempPerson.PersonID = Guid.NewGuid();
 
-            this._personsDbContext.Add(tempPerson);
-            this._personsDbContext.SaveChanges();
+            /*this._personsDbContext.Add(tempPerson);
+           this._personsDbContext.SaveChanges();*/
+            //A fenti ugyanazt teszi csak stored procedure nélkül.
+            this._personsDbContext.InsertPerson(tempPerson);
 
             return ToPersonResponseWithCountry(tempPerson);
         }
@@ -99,10 +102,13 @@ namespace Services
         {
             List<PersonResponse>? persons = new List<PersonResponse>();
             //A foreach-ben a ToList() furán néz ki de kötelező, különben DataReader errort kapunk az EF Core miatt, mivel ToList() nélkül minden egyes Person objektumnál újabb kapcsolatot próbál nyitni a db-vel és hibába fut, mert egyszerre csak egy kapcsolat ajánlott (a multikapcsolatot is be lehet állítani, de vannak hátrányai). ToList() esetén végig egy kapcsolat lesz, mert előtte kiolvassa minden és a listát adja át a foreach-nek.
-            foreach (Person person in this._personsDbContext.Persons.ToList())
-            {
-                persons.Add(ToPersonResponseWithCountry(person));
-            }
+
+            //foreach (Person person in this._personsDbContext.Persons.ToList())
+            //{
+            //    persons.Add(ToPersonResponseWithCountry(person));
+            //}
+
+            persons = this._personsDbContext.GetAllPerson().Select(person => person.ToPersonResponse()).ToList();
             return persons;
         }
         public PersonResponse? GetPersonById(Guid? id)
@@ -112,7 +118,8 @@ namespace Services
                 throw new ArgumentNullException();
             }
 
-            Person? person = this._personsDbContext.Persons.FirstOrDefault(p => p.PersonID == id);
+            //Person? person = this._personsDbContext.Persons.FirstOrDefault(p => p.PersonID == id);
+            Person? person = this._personsDbContext.GetPersonByID(id);
 
             if (person == null)
             {
@@ -193,21 +200,24 @@ namespace Services
             ValidationHelper.PersonServiceValidations(requestPerson);
 
 
-            Person? targetPerson = this._personsDbContext.Persons.FirstOrDefault(person => person.PersonID == requestPerson.PersonId);
+            //Person? targetPerson = this._personsDbContext.Persons.FirstOrDefault(person => person.PersonID == requestPerson.PersonId);
+            int? affectedRows = this._personsDbContext.UpdatePerson(requestPerson.ToPerson());
 
-            if (targetPerson == null)
+            Person? targetPerson = requestPerson.ToPerson();
+
+            if (affectedRows == null)
                 return null;
 
-            targetPerson.Gender = requestPerson?.Gender.ToString();
-            targetPerson.Address = requestPerson?.Address;
-            targetPerson.DateOfBirth = requestPerson?.DateOfBirth;
-            targetPerson.CountryID = requestPerson?.CountryId;
-            targetPerson.Email = requestPerson?.Email;
-            targetPerson.ReceiveNewsLetters = requestPerson.ReceiveNewsLetter;
-            targetPerson.PersonName = requestPerson.PersonName;
+            //targetPerson.Gender = requestPerson?.Gender.ToString();
+            //targetPerson.Address = requestPerson?.Address;
+            //targetPerson.DateOfBirth = requestPerson?.DateOfBirth;
+            //targetPerson.CountryID = requestPerson?.CountryId;
+            //targetPerson.Email = requestPerson?.Email;
+            //targetPerson.ReceiveNewsLetters = requestPerson.ReceiveNewsLetter;
+            //targetPerson.PersonName = requestPerson.PersonName;
 
             //Módosítás esetén nem minden propertyt fog újra frissíteni. Minden propertynek van egy attribútuma ami jelzi ha módosítva lett. Csak azokat fogja módosítani a SaveChanges(), ahol ez az attribútum a "modified" állapotban van.
-            this._personsDbContext.SaveChanges();
+            //this._personsDbContext.SaveChanges();
 
             return targetPerson.ToPersonResponse();
         }
