@@ -73,6 +73,12 @@ namespace Entities
             modelBuilder.Entity<Country>().ToTable("Countries").ToString();
             modelBuilder.Entity<Person>().ToTable("Persons").ToString();
 
+            //Fluent API
+            modelBuilder.Entity<Person>().Property(property => property.TIN).HasColumnName("TaxIdentificationNumber").HasColumnType("varchar(8)").HasDefaultValue("DefualtValue");
+
+            modelBuilder.Entity<Person>().ToTable(t => t.HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8"));
+
+
             //A "15_mappa"-ban megtalálsz két json file-t a person és a country névvel. Ezt húzd be. 
             string? countriesJson = System.IO.File.ReadAllText("countries.json").ToString();
             //Mivel json formátumú, ezért deserializálni kell.

@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    partial class PersonsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519175913_TIN")]
+    partial class TIN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,14 +102,11 @@ namespace Entities.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("varchar(8)")
                         .HasDefaultValue("DefualtValue")
-                        .HasColumnName("TaxIdentificationNumber");
+                        .HasColumnName("TaxIdentificName");
 
                     b.HasKey("PersonID");
 
-                    b.ToTable("Persons", null, t =>
-                        {
-                            t.HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8");
-                        });
+                    b.ToTable("Persons", (string)null);
 
                     b.HasData(
                         new
