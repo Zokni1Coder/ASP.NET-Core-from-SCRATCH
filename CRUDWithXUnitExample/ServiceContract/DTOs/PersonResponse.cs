@@ -8,6 +8,7 @@ using System.Diagnostics.Contracts;
 using ServiceContract.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace ServiceContract.DTOs
 {
@@ -91,7 +92,7 @@ namespace ServiceContract.DTOs
                 CountryId = person.CountryID,
                 Address = person.Address,
                 ReceiveNewsLetter = person.ReceiveNewsLetters,
-                Age = (person.DateOfBirth is not null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null ,
+                Age = (person.DateOfBirth is not null) ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null,
                 Country = person.Country?.CountryName
             };
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ServiceContract;
 using ServiceContract.DTOs;
 using Services;
+using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -20,16 +21,16 @@ namespace Tests
         #region AddCountry
         //Amikor a CountryAddRequest null, akkor throw ArgumentNullException
         [Fact]
-        public void AddCountry_NullCountry()
+        public async Task AddCountry_NullCountry()
         {
             //Arrange
             CountryAddRequest? countryAddRequest = null;
 
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act                              
-                this._countryService.AddCountry(countryAddRequest);
+                await this._countryService.AddCountry(countryAddRequest);
             });
 
             //public CountryResponse AddCountry(CountryAddRequest? countryRequest);
@@ -52,7 +53,7 @@ namespace Tests
 
         //Amikor a CountryName null, akkor throw ArgumentException
         [Fact]
-        public void AddCountry_CountryNameIsNull()
+        public async Task AddCountry_CountryNameIsNull()
         {
             //Arrange
             CountryAddRequest countryAddRequest = new CountryAddRequest()
@@ -60,16 +61,16 @@ namespace Tests
                 Name = null
             };
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._countryService.AddCountry(countryAddRequest);
+                await this._countryService.AddCountry(countryAddRequest);
             });
         }
 
         //Amikor a CountryName dupla, akkor throw ArgumentException
         [Fact]
-        public void AddCountry_DuplicateCountryName()
+        public async Task AddCountry_DuplicateCountryName()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -81,16 +82,16 @@ namespace Tests
                 Name = "Hungary"
             };
             //Assert
-            Assert.Throws<Exception>(() =>
+            await Assert.ThrowsAsync<Exception>(async () =>
             {
-                this._countryService.AddCountry(countryAddRequest1);
-                this._countryService.AddCountry(countryAddRequest2);
+                await this._countryService.AddCountry(countryAddRequest1);
+                await this._countryService.AddCountry(countryAddRequest2);
             });
         }
 
         //Ha megfelelő a CountryName akkor megfelelő property-vel rendelkező CountryAddResponse objetkumot kapunk
         [Fact]
-        public void AddCountry_ProperCountry()
+        public async Task AddCountry_ProperCountry()
         {
             //Arrange
             CountryAddRequest countryAddRequest = new CountryAddRequest()
@@ -98,8 +99,8 @@ namespace Tests
                 Name = "Hungary"
             };
             //Act
-            CountryResponse countryResponse = this._countryService.AddCountry(countryAddRequest);
-            List<CountryResponse> responseList = this._countryService.GetAllCountries();
+            CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
+            List<CountryResponse> responseList = await this._countryService.GetAllCountries();
             //Assert
             Assert.True(countryResponse.CountryID != Guid.Empty);
             //Ahhoz, hogy a Contains(Equal) helyesen máködjön, deklarálni kell hogy a County objektum mikor lesz egyenlő (Equal override) egy másik county objektummal.
@@ -111,17 +112,17 @@ namespace Tests
         #region GetAllCountries
         //Ha nem adunk hozzá Country-t, akkor a lista üres.
         [Fact]
-        public void GetAllCountries_EmptyList()
+        public async Task GetAllCountries_EmptyList()
         {
             //Act
-            List<CountryResponse> acturalCountries = this._countryService.GetAllCountries();
+            List<CountryResponse> acturalCountries = await this._countryService.GetAllCountries();
             //Assert
             Assert.Empty(acturalCountries);
 
         }
 
         [Fact]
-        public void GetAllCountries()
+        public async Task GetAllCountries()
         {
             //Arrange
             List<CountryAddRequest> countryAddRequests = new List<CountryAddRequest>()
@@ -139,10 +140,10 @@ namespace Tests
             List<CountryResponse> countryFromService = new List<CountryResponse>();
             foreach (CountryAddRequest countryAddRequest in countryAddRequests)
             {
-                countryFromService.Add(this._countryService.AddCountry(countryAddRequest));
+                countryFromService.Add(await this._countryService.AddCountry(countryAddRequest));
             }
 
-            List<CountryResponse> actualCountryFromService = this._countryService.GetAllCountries();
+            List<CountryResponse> actualCountryFromService = await this._countryService.GetAllCountries();
 
             //Assert
             foreach (CountryResponse country in countryFromService)
@@ -157,28 +158,28 @@ namespace Tests
         #region GetCountryByCountryId
         //Ha null értéket adunk át paraméterként, akkor null értéket kell kapnunk. 
         [Fact]
-        public void GetCountryByCountryId_CountryIdIsNull()
+        public async Task GetCountryByCountryId_CountryIdIsNullAsync()
         {
             //Arrange
             Guid? guid = null;
             //Act
-            CountryResponse? countryResponse = this._countryService.GetCountryById(guid);
+            CountryResponse? countryResponse = await this._countryService.GetCountryById(guid);
             //Assert
             Assert.Null(countryResponse);
         }
 
         //Ha megfelelő paramétert adunk át, akkor a megfelelőt kell megkapnunk.
         [Fact]
-        public void GetCountryByCountryId_CountryIdIsProper()
+        public async Task GetCountryByCountryId_CountryIdIsProper()
         {
             //Arrange
             CountryAddRequest countryAddRequest = new CountryAddRequest()
             {
                 Name = "Hungary"
             };
-            CountryResponse countryResponse = this._countryService.AddCountry(countryAddRequest);
+            CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
             //Act            
-            CountryResponse? Country_from_GetCountry = this._countryService.GetCountryById(countryResponse.CountryID);
+            CountryResponse? Country_from_GetCountry = await this._countryService.GetCountryById(countryResponse.CountryID);
             //Assert
             Assert.Equal(countryResponse, Country_from_GetCountry);
         }

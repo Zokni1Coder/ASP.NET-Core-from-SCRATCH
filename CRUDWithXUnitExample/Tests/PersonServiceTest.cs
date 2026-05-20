@@ -5,6 +5,7 @@ using ServiceContract.DTOs;
 using ServiceContract.Enums;
 using Services;
 using System;
+using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace Tests
@@ -29,13 +30,13 @@ namespace Tests
         /// Ha null-t adunk át paraméterül, akkor ArgumentNullException kell hogy legyen
         /// </summary>
         [Fact]
-        public void AddPerson_AddNullValue()
+        public async Task AddPerson_AddNullValue()
         {
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act:
-                this._personService.AddPerson(null);
+                await this._personService.AddPerson(null);
             });
         }
 
@@ -43,7 +44,7 @@ namespace Tests
         /// Ha az PersonAddRequest Name értéke null, akkor ArgumentException kell hogy legyen
         /// </summary>
         [Fact]
-        public void AddPerson_PersonAddRequestNameIsNull()
+        public async void AddPerson_PersonAddRequestNameIsNull()
         {
             //Arrange
             PersonAddRequest personAddRequest = new PersonAddRequest()
@@ -51,10 +52,10 @@ namespace Tests
                 PersonName = null
             };
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act:
-                this._personService.AddPerson(personAddRequest);
+                await this._personService.AddPerson(personAddRequest);
             });
         }
 
@@ -62,7 +63,7 @@ namespace Tests
         /// Ha megfelelő Person-t adunk hozzá, akkor bele kell hogy kerüljön a listába és egy PersonResponse objektumot kell hogy visszaadjon az újonnan generált PersonId-val.
         /// </summary>
         [Fact]
-        public void AddPerson_ProperPerson()
+        public async Task AddPerson_ProperPerson()
         {
             //Arrange
             PersonAddRequest personAddRequest = new PersonAddRequest()
@@ -76,13 +77,13 @@ namespace Tests
                 CountryId = Guid.NewGuid()
             };
             //Act
-            PersonResponse personResponse_from_Add = this._personService.AddPerson(personAddRequest);
-            List<PersonResponse> personsList = this._personService.GetAllPersons();
+            PersonResponse personResponse_from_Add = await this._personService.AddPerson(personAddRequest);
+            List<PersonResponse>? personsList = await this._personService.GetAllPersons();
 
             //Asserts
             Assert.True(personResponse_from_Add.PersonId != Guid.Empty);
             //Assert.Equal(personResponse_from_Add.ReceiveNewsLetter, personsList[0].ReceiveNewsLetter);
-            Assert.Contains(personResponse_from_Add, this._personService.GetAllPersons());
+            Assert.Contains(personResponse_from_Add, await this._personService.GetAllPersons());
         }
 
         //Ha helytelen az emailcím, akkor InvalidOperationException kell hogy legyen.
@@ -109,28 +110,28 @@ namespace Tests
         /// Ha null paramétert kap, akkor ArgumentNullException kivétel kell hogy dobódjon
         /// </summary>
         [Fact]
-        public void GetPersonById_EmptyArgument()
+        public async Task GetPersonById_EmptyArgument()
         {
             //Arrange
             Guid? guid = null;
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
-                this._personService.GetPersonById(guid);
+                await this._personService.GetPersonById(guid);
             });
         }
 
         //Ha megfelelő guid-t adunk át, akkor megtalálja és visszaadja PersonResponse objektumként
         [Fact]
-        public void GetPersonById_ProperArgument()
+        public async Task GetPersonById_ProperArgument()
         {
             //Arrange
             CountryAddRequest countryAddRequest = new CountryAddRequest()
             {
                 Name = "Hungary",
             };
-            CountryResponse countryResponse_from_AddCountry = this._countryService.AddCountry(countryAddRequest);
+            CountryResponse countryResponse_from_AddCountry = await this._countryService.AddCountry(countryAddRequest);
 
             PersonAddRequest request = new PersonAddRequest()
             {
@@ -144,8 +145,8 @@ namespace Tests
             };
 
             //Act:
-            PersonResponse person_from_AddPerson = this._personService.AddPerson(request);
-            PersonResponse? person_from_GetPersonById = this._personService.GetPersonById(person_from_AddPerson.PersonId);
+            PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
+            PersonResponse? person_from_GetPersonById = await this._personService.GetPersonById(person_from_AddPerson.PersonId);
 
             //Assert
             Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
@@ -153,7 +154,7 @@ namespace Tests
 
         //Ha olyan id-t adunk meg, ami nem létezik, akkor a visszatérési objektum null lesz.
         [Fact]
-        public void GetPersonById_DoesntExistingGuidInTheListArgument()
+        public async Task GetPersonById_DoesntExistingGuidInTheListArgument()
         {
             //Arrange
             PersonAddRequest request = new PersonAddRequest()
@@ -167,9 +168,9 @@ namespace Tests
                 CountryId = Guid.NewGuid()
             };
             //Act:
-            PersonResponse person_from_AddPerson = this._personService.AddPerson(request);
+            PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
             PersonResponse? person_from_GetPersonById = new PersonResponse();
-            person_from_GetPersonById = this._personService.GetPersonById(Guid.NewGuid());
+            person_from_GetPersonById = await this._personService.GetPersonById(Guid.NewGuid());
 
             //Assert
             Assert.Null(person_from_GetPersonById);
@@ -182,11 +183,11 @@ namespace Tests
         //Az elején üres listát kell hogy visszaadjon.
         //Itt a Mock inicializálás miatt nem fog sikeres lenni.
         [Fact]
-        public void GetAllPersons_EmptyList()
+        public async Task GetAllPersons_EmptyList()
         {
             //Act
             List<PersonResponse>? persons = new List<PersonResponse>();
-            persons = this._personService.GetAllPersons();
+            persons = await this._personService.GetAllPersons();
 
             //Assert
             Assert.Empty(persons);
@@ -194,7 +195,7 @@ namespace Tests
 
         //Megfelelő elemeket ad vissza a lekérdezés.
         [Fact]
-        public void GetAllPersons_ProperElements()
+        public async Task GetAllPersons_ProperElements()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -206,8 +207,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -231,8 +232,8 @@ namespace Tests
             };
 
             //Act
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
 
             //Pont ugyanúgy kell kiíratni a számunkra fontos adatokat, mint Console projektekben.
             //Expected:
@@ -247,7 +248,7 @@ namespace Tests
 
             //Actual:
             this._testOutputHelper.WriteLine("Actual:");
-            List<PersonResponse>? persons_from_GetAllPersons = this._personService.GetAllPersons();
+            List<PersonResponse>? persons_from_GetAllPersons = await this._personService.GetAllPersons();
 
             foreach (PersonResponse person in persons_from_GetAllPersons)
             {
@@ -267,7 +268,7 @@ namespace Tests
 
         //Ha null argumentumokat adunk át keresési értéknek, akkor adja vissza az összeset 
         [Fact]
-        public void GetFilteredPerson_EmptyArgument()
+        public async Task GetFilteredPerson_EmptyArgument()
         {
             //Arrange
             //Arrange
@@ -280,8 +281,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -323,20 +324,20 @@ namespace Tests
                 ReceiveNewsLetter = false,
                 CountryId = countryResponse1.CountryID
             };
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
 
             //Act
-            List<PersonResponse>? person_from_GetAll = this._personService.GetAllPersons();
+            List<PersonResponse>? person_from_GetAll = await this._personService.GetAllPersons();
             this._testOutputHelper.WriteLine("Expected:");
             foreach (PersonResponse person in person_from_GetAll)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
             }
 
-            List<PersonResponse>? persons_from_GetFiltered = this._personService.GetFilteredPerson("CountryId", null);
+            List<PersonResponse>? persons_from_GetFiltered = await this._personService.GetFilteredPerson("CountryId", null);
             this._testOutputHelper.WriteLine("Actual:");
             foreach (PersonResponse person in persons_from_GetFiltered)
             {
@@ -350,7 +351,7 @@ namespace Tests
 
         //Ha megfelelő paramétereket adunk át, akkor visszaadja a megfelelő Objektumokat.
         [Fact]
-        public void GetFilteredPerson_ProperArguments()
+        public async Task GetFilteredPerson_ProperArguments()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -362,8 +363,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -405,19 +406,22 @@ namespace Tests
                 ReceiveNewsLetter = false,
                 CountryId = countryResponse1.CountryID
             };
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
 
             //Act
-            List<PersonResponse> person_from_GetFiltered = this._personService.GetFilteredPerson("CountryId", countryResponse1.CountryID.ToString());
+            List<PersonResponse> person_from_GetFiltered = await this._personService.GetFilteredPerson("CountryId", countryResponse1.CountryID.ToString());
             this._testOutputHelper.WriteLine("Actual");
             foreach (PersonResponse person in person_from_GetFiltered)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
             }
-            List<PersonResponse>? filtered_from_AddPerson = this._personService.GetAllPersons().Where(person => person.CountryId == countryResponse1.CountryID).ToList();
+            List<PersonResponse>? AllPersons = await this._personService.GetAllPersons();
+
+            List<PersonResponse>? filtered_from_AddPerson = AllPersons?.Where(person => person.CountryId == countryResponse1.CountryID).ToList();
+
             this._testOutputHelper.WriteLine("Expected:");
             foreach (PersonResponse person in filtered_from_AddPerson)
             {
@@ -430,7 +434,7 @@ namespace Tests
 
         //Ha megfelelő paramétereket adunk át, akkor visszaadja a megfelelő Objektumokat.
         [Fact]
-        public void GetFilteredPerson_ProperArgumentsName()
+        public async Task GetFilteredPerson_ProperArgumentsName()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -442,8 +446,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -485,19 +489,22 @@ namespace Tests
                 ReceiveNewsLetter = false,
                 CountryId = countryResponse1.CountryID
             };
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
 
             //Act
-            List<PersonResponse> person_from_GetFiltered = this._personService.GetFilteredPerson("PersonName", "2");
+            List<PersonResponse> person_from_GetFiltered = await this._personService.GetFilteredPerson("PersonName", "2");
             this._testOutputHelper.WriteLine("Actual");
             foreach (PersonResponse person in person_from_GetFiltered)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
             }
-            List<PersonResponse>? filtered_from_AddPerson = this._personService.GetAllPersons().Where(person => person.PersonName.Contains("2")).ToList();
+            List<PersonResponse>? AllPerson = await this._personService.GetAllPersons();
+
+            List<PersonResponse>? filtered_from_AddPerson = AllPerson?.Where(person => person.PersonName.Contains("2")).ToList();
+
             this._testOutputHelper.WriteLine("Expected:");
             foreach (PersonResponse person in filtered_from_AddPerson)
             {
@@ -514,7 +521,7 @@ namespace Tests
 
         //Visszaadja a megfelelő attribútum szerint sorbarendezett Person listát.
         [Fact]
-        public void GetSortedPersons_BasedOnName()
+        public async Task GetSortedPersons_BasedOnName()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -526,8 +533,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -569,10 +576,10 @@ namespace Tests
                 ReceiveNewsLetter = false,
                 CountryId = countryResponse1.CountryID
             };
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
 
             //Act
             this._testOutputHelper.WriteLine("Expected:");
@@ -587,7 +594,7 @@ namespace Tests
             }
 
             this._testOutputHelper.WriteLine("Actual:");
-            List<PersonResponse> sortedPersons = this._personService.GetSortedPersons(persons, nameof(PersonResponse.PersonName), SortingOptions.ASC);
+            List<PersonResponse> sortedPersons = await this._personService.GetSortedPersons(persons, nameof(PersonResponse.PersonName), SortingOptions.ASC);
             foreach (PersonResponse person in sortedPersons)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
@@ -601,7 +608,7 @@ namespace Tests
         }
 
         [Fact]
-        public void GetSortedPersons_BasedOnId()
+        public async Task GetSortedPersons_BasedOnId()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -613,8 +620,8 @@ namespace Tests
                 Name = "Austria"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = this._countryService.AddCountry(countryAddRequest2);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -656,10 +663,10 @@ namespace Tests
                 ReceiveNewsLetter = false,
                 CountryId = countryResponse1.CountryID
             };
-            PersonResponse personResponse1 = this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = this._personService.AddPerson(personAddRequest4);
+            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
+            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
+            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
 
             //Act
             this._testOutputHelper.WriteLine("Expected:");
@@ -674,7 +681,7 @@ namespace Tests
             }
 
             this._testOutputHelper.WriteLine("Actual:");
-            List<PersonResponse> sortedPersons = this._personService.GetSortedPersons(persons, nameof(PersonResponse.PersonId), SortingOptions.ASC);
+            List<PersonResponse> sortedPersons = await this._personService.GetSortedPersons(persons, nameof(PersonResponse.PersonId), SortingOptions.ASC);
             foreach (PersonResponse person in sortedPersons)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
@@ -692,7 +699,7 @@ namespace Tests
 
         //Ha megfelelő objektumot adunk át frissítésre, akkor visszaadja a megfelelő értékekkel.
         [Fact]
-        public void PeresonUpdateRequest_ProperPerson()
+        public async Task PeresonUpdateRequest_ProperPersonAsync()
         {
             //Arrange
             CountryAddRequest countryAddRequest1 = new CountryAddRequest()
@@ -700,7 +707,7 @@ namespace Tests
                 Name = "Hungary"
             };
 
-            CountryResponse countryResponse1 = this._countryService.AddCountry(countryAddRequest1);
+            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
 
             PersonAddRequest personAddRequest1 = new PersonAddRequest()
             {
@@ -713,7 +720,7 @@ namespace Tests
                 CountryId = countryResponse1.CountryID
             };
             //Act
-            PersonResponse person_from_AddRequest = this._personService.AddPerson(personAddRequest1);
+            PersonResponse person_from_AddRequest = await this._personService.AddPerson(personAddRequest1);
             this._testOutputHelper.WriteLine($"Original\n{person_from_AddRequest.ToString()}");
 
             person_from_AddRequest.PersonName = "Reka22";
@@ -721,7 +728,7 @@ namespace Tests
             this._testOutputHelper.WriteLine($"Expected\n{person_from_AddRequest.ToString()}");
 
 
-            PersonResponse person_from_UpdateRequest = this._personService.UpdatePerson(person_from_AddRequest.ToPersonUpdateRequest());
+            PersonResponse person_from_UpdateRequest = await this._personService.UpdatePerson(person_from_AddRequest.ToPersonUpdateRequest());
             this._testOutputHelper.WriteLine($"Actual\n{person_from_UpdateRequest.ToString()}");
 
             //Assert
@@ -730,19 +737,19 @@ namespace Tests
 
         //Ha null-t adunk paraméterül, akkor ArgumentNullException
         [Fact]
-        public void PeresonUpdateRequest_NullArgument()
+        public async Task PeresonUpdateRequest_NullArgument()
         {
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
-                this._personService.UpdatePerson(null);
+                await this._personService.UpdatePerson(null);
             });
         }
 
         //Ha rossz Id adatot adunk paraméterül, akkor ArgumentException
         [Fact]
-        public void PeresonUpdateRequest_WrongPersonId()
+        public async Task PeresonUpdateRequest_WrongPersonId()
         {
             //Arrange
             PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
@@ -751,22 +758,22 @@ namespace Tests
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._personService.UpdatePerson(personUpdateRequest);
+                await this._personService.UpdatePerson(personUpdateRequest);
             });
         }
 
         //Ha a PersonName null, akkor ArgumentException
         [Fact]
-        public void PeresonUpdateRequest_NullPersonName()
+        public async Task PeresonUpdateRequest_NullPersonName()
         {
             //Arrange
             CountryAddRequest countryAddRequest = new CountryAddRequest() { Name = "Hu" };
-            CountryResponse countryResponse = this._countryService.AddCountry(countryAddRequest);
+            CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
 
-            PersonResponse personResponse = this._personService.AddPerson(new PersonAddRequest()
+            PersonResponse personResponse = await this._personService.AddPerson(new PersonAddRequest()
             {
                 PersonName = "Reka",
                 Email = "asd@gmail.com",
@@ -782,10 +789,10 @@ namespace Tests
             personResponse.PersonName = null;
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._personService.UpdatePerson(personResponse.ToPersonUpdateRequest());
+                await this._personService.UpdatePerson(personResponse.ToPersonUpdateRequest());
             });
         }
 
@@ -795,7 +802,7 @@ namespace Tests
 
         //Megfelelő id-t átadva törli az elemet és 1 lesz az eredmény.
         [Fact]
-        public void DeletePerson_ProperPersonId()
+        public async Task DeletePerson_ProperPersonId()
         {
             //Arrange
             PersonAddRequest personAddRequest = new PersonAddRequest()
@@ -818,18 +825,18 @@ namespace Tests
                 ReceiveNewsLetter = true,
                 CountryId = Guid.NewGuid()
             };
-            PersonResponse person_from_AddPerson = this._personService.AddPerson(personAddRequest);
-            PersonResponse person_from_AddPerson1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse person_from_AddPerson = await this._personService.AddPerson(personAddRequest);
+            PersonResponse person_from_AddPerson1 = await this._personService.AddPerson(personAddRequest1);
 
             //Act
-            List<PersonResponse>? persons_from_GetAllOriginal = this._personService.GetAllPersons();
+            List<PersonResponse>? persons_from_GetAllOriginal = await this._personService.GetAllPersons();
             this._testOutputHelper.WriteLine("Original");
             foreach (PersonResponse person in persons_from_GetAllOriginal)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
             }
-            bool success = this._personService.DeletePerson(person_from_AddPerson.PersonId);
-            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = this._personService.GetAllPersons();
+            bool success = await this._personService.DeletePerson(person_from_AddPerson.PersonId);
+            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = await this._personService.GetAllPersons();
             this._testOutputHelper.WriteLine("Modified");
             foreach (PersonResponse person in persons_from_GetAll_aftere_Deleting)
             {
@@ -845,7 +852,7 @@ namespace Tests
         //Nem megfelelő id-t átadva nem töröl semmit és 0 lesz az eredményt
         //Arrange
         [Fact]
-        public void DeletePerson_WrongPersonId()
+        public async Task DeletePerson_WrongPersonId()
         {
             PersonAddRequest personAddRequest = new PersonAddRequest()
             {
@@ -867,19 +874,19 @@ namespace Tests
                 ReceiveNewsLetter = true,
                 CountryId = Guid.NewGuid()
             };
-            PersonResponse person_from_AddPerson = this._personService.AddPerson(personAddRequest);
-            PersonResponse person_from_AddPerson1 = this._personService.AddPerson(personAddRequest1);
+            PersonResponse person_from_AddPerson = await this._personService.AddPerson(personAddRequest);
+            PersonResponse person_from_AddPerson1 = await this._personService.AddPerson(personAddRequest1);
 
             //Act
-            List<PersonResponse>? persons_from_GetAllOriginal = this._personService.GetAllPersons();
+            List<PersonResponse>? persons_from_GetAllOriginal = await this._personService.GetAllPersons();
             this._testOutputHelper.WriteLine("Original");
             foreach (PersonResponse person in persons_from_GetAllOriginal)
             {
                 this._testOutputHelper.WriteLine(person.ToString());
             }
 
-            bool success = this._personService.DeletePerson(new Guid());
-            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = this._personService.GetAllPersons();
+            bool success = await this._personService.DeletePerson(new Guid());
+            List<PersonResponse>? persons_from_GetAll_aftere_Deleting = await this._personService.GetAllPersons();
             this._testOutputHelper.WriteLine("Modified");
             foreach (PersonResponse person in persons_from_GetAll_aftere_Deleting)
             {

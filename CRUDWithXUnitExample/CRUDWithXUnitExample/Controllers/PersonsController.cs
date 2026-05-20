@@ -21,7 +21,7 @@ namespace CRUDWithXUnitExample.Controllers
         //[Route("index")] //url: "persons/index"
         [HttpGet("[action]")]
         [Route("/")]   //url: "persons"
-        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortingOptions sortingOptions = SortingOptions.ASC)
+        public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortingOptions sortingOptions = SortingOptions.ASC)
         {
             ViewBag.activeSorting = sortingOptions;
             ViewBag.activeSearchKey = searchBy;
@@ -41,18 +41,18 @@ namespace CRUDWithXUnitExample.Controllers
 
             ViewBag.searchByOptions = searchByOptions;
             //Lekérjük az adatokat
-            List<PersonResponse>? temp_persons = temp_persons = this._personService.GetFilteredPerson(searchBy, searchString);
+            List<PersonResponse>? temp_persons = await this._personService.GetFilteredPerson(searchBy, searchString);
             //Sorbarendezzük az adatokat.
-            temp_persons = this._personService.GetSortedPersons(temp_persons, sortBy, sortingOptions);
+            temp_persons = await this._personService.GetSortedPersons(temp_persons, sortBy, sortingOptions);
 
             return View(temp_persons);
         }
 
         //[Route("create")] //url: "persons/create"
         [HttpGet("[action]")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+            List<CountryResponse> countries_to_View = await _countryService.GetAllCountries();
             ViewBag.Countries = countries_to_View;
 
             //Ezzel a Linq lépéssel minden Country egyed egy SelectListItem lesz a megadott attribútumokkal.
@@ -77,9 +77,9 @@ namespace CRUDWithXUnitExample.Controllers
         [HttpPost("[action]")]
         //[Route("create")]
         //Efféle model binding esetén fontos hogy a html-ben szereplő elem "name" azonos legyen az objektum property nevével. Pl: <input name="PersonName"/> DTO prop: string PersonName.
-        public IActionResult Create(PersonAddRequest personAddRequest)
+        public async Task<IActionResult> Create(PersonAddRequest personAddRequest)
         {
-            List<CountryResponse> countries_to_View = this._countryService.GetAllCountries();
+            List<CountryResponse> countries_to_View = await this._countryService.GetAllCountries();
 
             if (!ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace CRUDWithXUnitExample.Controllers
                 return View();
             }
 
-            PersonResponse personRespons = this._personService.AddPerson(personAddRequest);
+            PersonResponse personRespons = await this._personService.AddPerson(personAddRequest);
 
             return RedirectToAction("Index", "persons");
         }
@@ -104,35 +104,42 @@ namespace CRUDWithXUnitExample.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult Delete(Guid personId)
+        public async Task<IActionResult> Delete(Guid personId)
         {
-            bool isSuccess = this._personService.DeletePerson(personId);
+            bool isSuccess = await this._personService.DeletePerson(personId);
             return RedirectToAction("index", "persons");
         }
 
         [HttpGet("[action]")]
-        public IActionResult Update(Guid personId)
+        public async Task<IActionResult> Update(Guid personId)
         {
-            List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+            List<CountryResponse> countries_to_View = await _countryService.GetAllCountries();
             ViewBag.Countries = countries_to_View;
 
             ViewBag.Countries = countries_to_View.Select(country => new SelectListItem() { Text = country.Name, Value = country.CountryID.ToString() });
 
             ViewBag.Genders = Enum.GetNames(typeof(Gender));
 
-            PersonUpdateRequest personUpdateRequest = this._personService.GetPersonById(personId).ToPersonUpdateRequest();            
+            PersonResponse? personResponse = await this._personService.GetPersonById(personId);
+
+            if (personResponse is null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();           
 
             return View(personUpdateRequest);
         }
 
         [HttpPost("[action]")]
-        public IActionResult Update(PersonUpdateRequest personUpdateRequest)
+        public async Task<IActionResult> Update(PersonUpdateRequest personUpdateRequest)
         {
-            PersonResponse personResponse = this._personService.UpdatePerson(personUpdateRequest);
+            PersonResponse personResponse = await this._personService.UpdatePerson(personUpdateRequest);
 
             if (personResponse is null)
             {
-                List<CountryResponse> countries_to_View = _countryService.GetAllCountries();
+                List<CountryResponse> countries_to_View = await _countryService.GetAllCountries();
                 ViewBag.Countries = countries_to_View;
 
                 ViewBag.Countries = countries_to_View.Select(country => new SelectListItem() { Text = country.Name, Value = country.CountryID.ToString() });
