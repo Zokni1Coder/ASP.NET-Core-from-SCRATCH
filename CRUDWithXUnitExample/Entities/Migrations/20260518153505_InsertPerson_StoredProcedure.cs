@@ -16,9 +16,9 @@ namespace Entities.Migrations
             //a @-al jelölt paraméterek a c#ból jönnek, az anélküliek az adatbázis tábla oszlopainak a nevét.
             //FONTOS, hogy az aktív paramétereket is megjelöljük. Ha az adatázisban PK van, akkor ki kell írni hogy uniqueidentifier vagy ha pl. nvarchar(max), akkor azt is különben update esetén errort kapunk.
             string sp_InsertPerson =
-                @"CREATE PROCEDURE [dbo].[InsertPersons] (@PersonID uniqueidentifier, @PersonName nvarchar(40), @Email nvarchar(max), @DateOfBirth datetime2(7), @Gender nvarchar(10), @CountryID uniqueidentifier, @Address nvarchar(40), @ReceiveNewsLetters bit) AS BEGIN 
-                  INSERT INTO [dbo].[Persons](PersonID, PersonName, Email, DateOfBirth, Gender, CountryID, Address, ReceiveNewsLetters)
-                  VALUES (@PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters)
+                @"ALTER PROCEDURE [dbo].[InsertPersons] (@PersonID uniqueidentifier, @PersonName nvarchar(40), @Email nvarchar(max), @DateOfBirth datetime2(7), @Gender nvarchar(10), @CountryID uniqueidentifier, @Address nvarchar(40), @ReceiveNewsLetters bit, @TaxIdentificationNumber nvarcher(8)) AS BEGIN 
+                  INSERT INTO [dbo].[Persons](PersonID, PersonName, Email, DateOfBirth, Gender, CountryID, Address, ReceiveNewsLetters, TaxIdentificationNumber)
+                  VALUES (@PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters, @TaxIdentificationNumber)
                   END";
 
             migrationBuilder.Sql(sp_InsertPerson);

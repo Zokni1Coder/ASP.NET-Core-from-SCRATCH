@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,5 +31,9 @@ namespace Entities
         public bool ReceiveNewsLetters { get; set; }
         //Ezt adjuk hozzá majd a FluentAPI konfigurációval
         public string? TIN { get; set; }
+        //Mivel megjelöltük a CountryID(FK) ezért az EF Core pontosan tudni fogja hogy melyik objektumot helyezze el a Country property-be. 
+        //FONTOS: Nem mi keressük és mentjük el az objektumot, hanem az EF Core fogja.
+        [ForeignKey("CountryID")]
+        public virtual Country? Country { get; set; }
     }
 }

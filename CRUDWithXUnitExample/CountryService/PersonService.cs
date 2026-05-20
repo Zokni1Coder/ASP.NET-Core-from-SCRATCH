@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,13 +64,13 @@ namespace Services
         //        });
         //    }
         //}
-        private PersonResponse ToPersonResponseWithCountry(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = this._countryService.GetCountryById(personResponse.CountryId)?.Name;
+        //private PersonResponse ToPersonResponseWithCountry(Person person)
+        //{
+        //    PersonResponse personResponse = person.ToPersonResponse();
+        //    personResponse.Country = person.Country?.CountryName;
 
-            return personResponse;
-        }
+        //    return personResponse;
+        //}
 
         public PersonResponse AddPerson(PersonAddRequest? personRequest)
         {
@@ -95,7 +97,7 @@ namespace Services
             //A fenti ugyanazt teszi csak stored procedure nélkül.
             this._personsDbContext.InsertPerson(tempPerson);
 
-            return ToPersonResponseWithCountry(tempPerson);
+            return tempPerson.ToPersonResponse();
         }
 
         public List<PersonResponse>? GetAllPersons()
@@ -107,8 +109,11 @@ namespace Services
             //{
             //    persons.Add(ToPersonResponseWithCountry(person));
             //}
+            //var temp = this._personsDbContext.Persons.Include("Country").ToList();
 
-            persons = this._personsDbContext.GetAllPerson().Select(person => person.ToPersonResponse()).ToList();
+            var tempPersons = this._personsDbContext.Persons.Include("Country").ToList();
+
+            persons = this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToList();
             return persons;
         }
         public PersonResponse? GetPersonById(Guid? id)
@@ -119,7 +124,7 @@ namespace Services
             }
 
             //Person? person = this._personsDbContext.Persons.FirstOrDefault(p => p.PersonID == id);
-            Person? person = this._personsDbContext.GetPersonByID(id);
+            Person? person = this._personsDbContext.Persons.Include("Country").FirstOrDefault(person => person.PersonID == id);
 
             if (person == null)
             {

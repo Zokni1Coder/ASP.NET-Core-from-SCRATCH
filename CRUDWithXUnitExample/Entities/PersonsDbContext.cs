@@ -23,6 +23,7 @@ namespace Entities
         /// <returns>Visszaadja az összes Person objektumot</returns>
         public List<Person> GetAllPerson()
         {
+
             return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPerson]").ToList();
         }
 
@@ -36,10 +37,11 @@ namespace Entities
             new SqlParameter("@Gender", person.Gender),
             new SqlParameter("@CountryID", person.CountryID),
             new SqlParameter("@Address", person.Address),
-            new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
+            new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters),
+            new SqlParameter("@TaxIdentificationNumber", person.TIN)
             };
 
-            return Database.ExecuteSqlRaw("EXECUTE [dbo].[UpdatePerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", sqlParameters);
+            return Database.ExecuteSqlRaw("EXECUTE [dbo].[UpdatePerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters, @TaxIdentificationNumber", sqlParameters);
         }
 
         public Person? GetPersonByID(Guid? guid)
@@ -78,6 +80,14 @@ namespace Entities
 
             modelBuilder.Entity<Person>().ToTable(t => t.HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8"));
 
+
+            //Fluent Api-val a két tábla közötti reláció leírása.
+            //modelBuilder.Entity<Person>(person =>
+            //{
+            //    person.HasOne<Country>(parent => parent.Country)
+            //        .WithMany(child => child.Persons)
+            //        .HasForeignKey(child => child.CountryID);
+            //});
 
             //A "15_mappa"-ban megtalálsz két json file-t a person és a country névvel. Ezt húzd be. 
             string? countriesJson = System.IO.File.ReadAllText("countries.json").ToString();
