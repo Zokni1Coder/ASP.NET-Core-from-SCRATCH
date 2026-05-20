@@ -10,7 +10,7 @@ namespace Services
     {
         //fieldként elmentjük a contextot, hogy a megfelelő adatbázisra tudjunk hivatkozni.
         private readonly PersonsDbContext _dbContext;
-        
+
         public CountryService(PersonsDbContext personsDbContext)
         {
             this._dbContext = personsDbContext;
@@ -28,7 +28,7 @@ namespace Services
         //        _countries.AddRange(new List<Country> { new Country() { CountryID = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), CountryName = "Hungary" }, new Country() { CountryID = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), CountryName = "Austria" }, new Country() { CountryID = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), CountryName = "Serbia" }, new Country() { CountryID = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), CountryName = "Germany" }, new Country() { CountryID = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), CountryName = "Italy" }, new Country() { CountryID = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), CountryName = "England" } });
         //    }
         //}
-        public CountryResponse AddCountry(CountryAddRequest? countryRequest)
+        public async Task<CountryResponse> AddCountry(CountryAddRequest? countryRequest)
         {
             //Ha null a metódus paraméter akkor Exception 
             if (countryRequest is null)
@@ -42,7 +42,7 @@ namespace Services
             }
 
             //Alul meghagyom a korábbi verziót összehasonlításnak.
-            if (this._dbContext.Countries.Count(country => country.CountryName == countryRequest.Name) > 0)
+            if (await this._dbContext.Countries.CountAsync(country => country.CountryName == countryRequest.Name) > 0)
             {
                 throw new Exception("The given Country name is already exists!");
             }
@@ -60,21 +60,21 @@ namespace Services
             //Hozzáadjuk a belső listához
             this._dbContext.Add(country);
             //Mikor insert történik kötelessek vagyunk elmenteni a változtatást.
-            this._dbContext.SaveChanges();
+            await this._dbContext.SaveChangesAsync();
 
             //Azért célszerű nem a Country egyedet visszaadni és inkább csak a Service-en belül hagyni, hogy kívülről ne legyen látható, csak amit engedünk a CountryResponse-zal.            
             return country.ToCountryResponse();
         }
 
-        public List<CountryResponse> GetAllCountries()
+        public async Task<List<CountryResponse>> GetAllCountries()
         {
-            List<CountryResponse> countries = this._dbContext.Countries.Select(country => country.ToCountryResponse()).ToList();
+            List<CountryResponse> countries = await this._dbContext.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
             return countries;
 
             //return (List<CountryResponse>)this._dbContext.Select(x => x.ToCountryResponse()).ToList();
         }
 
-        public CountryResponse? GetCountryById(Guid? countryId)
+        public async Task<CountryResponse?> GetCountryById(Guid? countryId)
         {
             if (countryId is null)
             {
@@ -87,7 +87,7 @@ namespace Services
             //Amint megtalál egy megfelelő elemet, visszaadja.
             //Country? country = this._dbContext.FirstOrDefault(country => country.CountryID == countryId);
 
-            Country? country = this._dbContext.Countries.FirstOrDefault(country => country.CountryID == countryId);
+            Country? country = await this._dbContext.Countries.FirstOrDefaultAsync(country => country.CountryID == countryId);
             if (country is null)
             {
                 return null;

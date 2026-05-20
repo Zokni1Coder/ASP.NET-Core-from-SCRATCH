@@ -21,13 +21,12 @@ namespace Entities
         /// Ezzel tudjuk meghívni a c#-ban a procedure-t. Ez lesz a "triggerje".
         /// </summary>
         /// <returns>Visszaadja az összes Person objektumot</returns>
-        public List<Person> GetAllPerson()
+        public async Task<List<Person>> GetAllPerson()
         {
-
-            return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPerson]").ToList();
+            return await Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPerson]").ToListAsync();
         }
 
-        public int UpdatePerson(Person person)
+        public async Task<int> UpdatePerson(Person person)
         {
             SqlParameter[] sqlParameters = new SqlParameter[] {
             new SqlParameter("@PersonID", person.PersonID),
@@ -41,15 +40,15 @@ namespace Entities
             new SqlParameter("@TaxIdentificationNumber", person.TIN)
             };
 
-            return Database.ExecuteSqlRaw("EXECUTE [dbo].[UpdatePerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters, @TaxIdentificationNumber", sqlParameters);
+            return await Database.ExecuteSqlRawAsync("EXECUTE [dbo].[UpdatePerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters, @TaxIdentificationNumber", sqlParameters);
         }
 
-        public Person? GetPersonByID(Guid? guid)
+        public async Task<Person?> GetPersonByID(Guid? guid)
         {
-            return (Person)Persons.FromSqlRaw("EXECUTE [dbo].[GetPersonByID] @PersonID", new SqlParameter("@PersonID", guid)).AsEnumerable().FirstOrDefault();
+            return await Persons.FromSqlRaw("EXECUTE [dbo].[GetPersonByID] @PersonID", new SqlParameter("@PersonID", guid)).FirstOrDefaultAsync();
         }
 
-        public int InsertPerson(Person person)
+        public async Task<int> InsertPerson(Person person)
         {
             //Ezek fogják nekünk behelyettesíteni a migrations-ben a "@"-al ellátott paramok értékét.
             SqlParameter[] sqlParameters = new SqlParameter[] {
@@ -64,7 +63,7 @@ namespace Entities
             };
 
             //Átadjuk az InsertPerson-nak a paramétereket és futtatjuk.
-            return Database.ExecuteSqlRaw("EXECUTE [dbo].[InsertPersons] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", sqlParameters);
+            return await Database.ExecuteSqlRawAsync("EXECUTE [dbo].[InsertPersons] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", sqlParameters);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

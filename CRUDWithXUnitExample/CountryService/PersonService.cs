@@ -72,7 +72,7 @@ namespace Services
         //    return personResponse;
         //}
 
-        public PersonResponse AddPerson(PersonAddRequest? personRequest)
+        public async Task<PersonResponse> AddPerson(PersonAddRequest? personRequest)
         {
             //Ha null paramétert kap, akkor ArgumentNullException
             //if (personRequest is null)
@@ -95,12 +95,12 @@ namespace Services
             /*this._personsDbContext.Add(tempPerson);
            this._personsDbContext.SaveChanges();*/
             //A fenti ugyanazt teszi csak stored procedure nélkül.
-            this._personsDbContext.InsertPerson(tempPerson);
+            await this._personsDbContext.InsertPerson(tempPerson);
 
             return tempPerson.ToPersonResponse();
         }
 
-        public List<PersonResponse>? GetAllPersons()
+        public async Task<List<PersonResponse>?> GetAllPersons()
         {
             List<PersonResponse>? persons = new List<PersonResponse>();
             //A foreach-ben a ToList() furán néz ki de kötelező, különben DataReader errort kapunk az EF Core miatt, mivel ToList() nélkül minden egyes Person objektumnál újabb kapcsolatot próbál nyitni a db-vel és hibába fut, mert egyszerre csak egy kapcsolat ajánlott (a multikapcsolatot is be lehet állítani, de vannak hátrányai). ToList() esetén végig egy kapcsolat lesz, mert előtte kiolvassa minden és a listát adja át a foreach-nek.
@@ -111,12 +111,12 @@ namespace Services
             //}
             //var temp = this._personsDbContext.Persons.Include("Country").ToList();
 
-            var tempPersons = this._personsDbContext.Persons.Include("Country").ToList();
+            //var tempPersons = await  this._personsDbContext.Persons.Include("Country").ToListAsync();
 
-            persons = this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToList();
+            persons = await this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
             return persons;
         }
-        public PersonResponse? GetPersonById(Guid? id)
+        public async Task<PersonResponse?> GetPersonById(Guid? id)
         {
             if (id is null)
             {
@@ -124,7 +124,7 @@ namespace Services
             }
 
             //Person? person = this._personsDbContext.Persons.FirstOrDefault(p => p.PersonID == id);
-            Person? person = this._personsDbContext.Persons.Include("Country").FirstOrDefault(person => person.PersonID == id);
+            Person? person = await  this._personsDbContext.Persons.Include("Country").FirstOrDefaultAsync(person => person.PersonID == id);
 
             if (person == null)
             {
@@ -134,9 +134,9 @@ namespace Services
             return person.ToPersonResponse();
         }
 
-        public List<PersonResponse> GetFilteredPerson(string searchBy, string? searchString)
+        public async Task<List<PersonResponse>> GetFilteredPerson(string searchBy, string? searchString)
         {
-            List<PersonResponse>? persons_from_GetAll = GetAllPersons();
+            List<PersonResponse>? persons_from_GetAll = await GetAllPersons();
             List<PersonResponse>? filtered_persons = new List<PersonResponse>();
 
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
@@ -168,7 +168,7 @@ namespace Services
             return filtered_persons;
         }
 
-        public List<PersonResponse> GetSortedPersons(List<PersonResponse> persons, string sortBy, SortingOptions sortingoption)
+        public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> persons, string sortBy, SortingOptions sortingoption)
         {
             if (string.IsNullOrEmpty(sortBy))
             {
@@ -191,7 +191,7 @@ namespace Services
             }
         }
 
-        public PersonResponse UpdatePerson(PersonUpdateRequest? requestPerson)
+        public async Task<PersonResponse> UpdatePerson(PersonUpdateRequest? requestPerson)
         {
             //if (requestPerson is null)
             //{
@@ -206,7 +206,9 @@ namespace Services
 
 
             //Person? targetPerson = this._personsDbContext.Persons.FirstOrDefault(person => person.PersonID == requestPerson.PersonId);
-            int? affectedRows = this._personsDbContext.UpdatePerson(requestPerson.ToPerson());
+
+            //Itt most használjuk a stored procedure-t is.
+            int? affectedRows = await this._personsDbContext.UpdatePerson(requestPerson.ToPerson());
 
             Person? targetPerson = requestPerson.ToPerson();
 
@@ -227,14 +229,15 @@ namespace Services
             return targetPerson.ToPersonResponse();
         }
 
-        public bool DeletePerson(Guid? personId)
+        public async Task<bool> DeletePerson(Guid? personId)
         {
-            Person? temp = this._personsDbContext.Persons?.FirstOrDefault(person => person.PersonID == personId);
+            Person? temp = await
+            this._personsDbContext.Persons.FirstOrDefaultAsync(person => person.PersonID == personId);
             if (temp == null)
                 return false;
 
             this._personsDbContext.Persons?.Remove(temp);
-            this._personsDbContext.SaveChanges(); 
+            await this._personsDbContext.SaveChangesAsync(); 
             return true;
         }
     }
