@@ -1,6 +1,9 @@
 ﻿using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using Rotativa.AspNetCore;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -127,7 +130,7 @@ namespace CRUDWithXUnitExample.Controllers
                 return RedirectToAction("Index");
             }
 
-            PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();           
+            PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();
 
             return View(personUpdateRequest);
         }
@@ -149,6 +152,24 @@ namespace CRUDWithXUnitExample.Controllers
             }
 
             return RedirectToAction("index", "persons");
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> PersonToPDF()
+        {
+            List<PersonResponse>? persons = await this._personService.GetAllPersons();
+
+            return new ViewAsPdf("PersonToPDF", persons, ViewData)
+            {
+                //Margót és orientációt állítunk így be.
+                PageMargins = new Rotativa.AspNetCore.Options.Margins()
+                {
+                    Top = 20,
+                    Bottom = 20,
+                    Left = 20,
+                    Right = 20
+                },
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
         }
     }
 }
