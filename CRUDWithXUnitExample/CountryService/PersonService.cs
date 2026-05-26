@@ -1,4 +1,5 @@
 ﻿using Azure.Identity;
+using CsvHelper;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContract;
@@ -8,6 +9,7 @@ using Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -239,6 +241,26 @@ namespace Services
             this._personsDbContext.Persons?.Remove(temp);
             await this._personsDbContext.SaveChangesAsync(); 
             return true;
+        }
+
+        public async Task<MemoryStream> GetPersonsToCSV()
+        {
+            //A MemoryStream azért kell, mert a CSV tartalmát memóriában hozza létre és visszaadja anélkül, hogy valódi fájlt írna a lemezre.
+            MemoryStream memoryStream = new MemoryStream();
+            StreamWriter sw = new StreamWriter(memoryStream);
+            //A CultureInfo azt határozza meg, hogy a CSV írás során milyen nyelvi és regionális szabályok szerint legyenek formázva az adatok (pl. tizedesjel, dátumformátum). Az InvariantCulture egy nyelvfüggetlen, egységes formátum, amit ezért gyakran használnak CSV exportnál.
+            CsvWriter csvWriter = new CsvWriter(sw, leaveOpen: true, culture: CultureInfo.InvariantCulture);
+
+            csvWriter.WriteHeader<PersonResponse>();
+            csvWriter.NextRecord();
+
+            List<PersonResponse> persons = this._personsDbContext.Persons.Select(persons => persons.ToPersonResponse()).ToList();
+
+            await csvWriter.WriteRecordsAsync(persons);
+
+            memoryStream.Position = 0;
+
+            return memoryStream;
         }
     }
 }

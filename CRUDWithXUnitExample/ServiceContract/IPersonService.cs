@@ -56,5 +56,11 @@ namespace ServiceContract
         /// <param name="personId">Ez a paraméter alalpján fogjuk megtalálni a törölni kívánt Person ojektumot.</param>
         /// <returns>Bool értéket ad vissza a törlés sikerességétől függően.</returns>
         public Task<bool> DeletePerson(Guid? personId);
+
+        /// <summary>
+        /// Ezzel fogjuk az adatbázisban lévő adatokat exportálni .csv fájlként.
+        /// </summary>
+        /// <returns>Az átalakított rekordokat.</returns>
+        public Task<MemoryStream> GetPersonsToCSV();
     }
 }
