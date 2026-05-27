@@ -178,5 +178,13 @@ namespace CRUDWithXUnitExample.Controllers
 
             return File(memoryStream, "application/octet-stream", "Persons.csv");
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> PersonsToExcel()
+        {
+           MemoryStream memoryStream = await this._personService.GetPersonsToExcel();
+           
+           //A második attribútum mindig  MIME típusa a fájl kiterejesztésnek.
+           return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Persons.xlsx");
+        }
     }
 }

@@ -62,5 +62,11 @@ namespace ServiceContract
         /// </summary>
         /// <returns>Az átalakított rekordokat.</returns>
         public Task<MemoryStream> GetPersonsToCSV();
+
+        /// <summary>
+        /// Ezzel fogjuk az adatbázisban lévő adatokat exportálni excel fájlként.
+        /// </summary>
+        /// <returns>Az átalakított rekordokat.</returns>
+        public Task<MemoryStream> GetPersonsToExcel();
     }
 }

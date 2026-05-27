@@ -3,6 +3,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -262,9 +263,10 @@ namespace Services
             csvWriter.WriteField(nameof(PersonResponse.PersonName));
             csvWriter.WriteField(nameof(PersonResponse.DateOfBirth));
             csvWriter.WriteField(nameof(PersonResponse.Address));
+            csvWriter.WriteField(nameof(PersonResponse.Country));
             csvWriter.NextRecord();
 
-            List<PersonResponse> persons = this._personsDbContext.Persons.Select(persons => persons.ToPersonResponse()).ToList();
+            List<PersonResponse> persons = this._personsDbContext.Persons.Include("Country").Select(persons => persons.ToPersonResponse()).ToList();
 
             //await csvWriter.WriteRecordsAsync(persons);
 
@@ -279,12 +281,55 @@ namespace Services
                 else
                     csvWriter.WriteField("");
                 csvWriter.WriteField(person.Address);
+                csvWriter.WriteField(person.Country);
                 csvWriter.NextRecord(); //hogy a következő rekord új sorba kerüljön
                 await csvWriter.FlushAsync(); //beleírjuk a rekordot a stream-be
             }
 
             memoryStream.Position = 0;
 
+            return memoryStream;
+        }
+
+        public async Task<MemoryStream> GetPersonsToExcel()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+
+            //Regisztrálni kell EPPlus-ra és a neved írd ide. A linket megtalálod a Linkek.txt-ben. Nekem valamiért az appsettings-ben nem működik.
+            ExcelPackage.License.SetNonCommercialPersonal("Erik Kovacs");
+            using (ExcelPackage excelPackage = new ExcelPackage())
+            {                
+                //Létrehozzuk a WorkSheet-et.
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Persons");
+
+                worksheet.Cells["A1"].Value = "Person Name";
+                worksheet.Cells["B1"].Value = "Email";
+                worksheet.Cells["C1"].Value = "Date of Birth";
+                worksheet.Cells["D1"].Value = "Address";
+                worksheet.Cells["E1"].Value = "Country";
+
+                List<PersonResponse> persons = await this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
+
+                int row = 2;
+                foreach (PersonResponse person in persons)
+                {
+                    worksheet.Cells[row, 1].Value = person.PersonName;
+                    worksheet.Cells[row, 2].Value = person.Email;
+                    if (person.DateOfBirth.HasValue)
+                    {
+                        worksheet.Cells[row, 3].Value = person.DateOfBirth.Value.ToString("yyyy-MM-dd");
+                    }                    
+                    worksheet.Cells[row, 4].Value = person.Address;
+                    worksheet.Cells[row, 5].Value = person.Country;
+                    row++;
+                }
+                //Autómatikus méretet vesz fel a cella.
+                worksheet.Cells[$"A1:E{row-1}"].AutoFitColumns();
+                //Belementjük a stream-be.
+                await excelPackage.SaveAsAsync(memoryStream);               
+            }
+
+            memoryStream.Position = 0;
             return memoryStream;
         }
     }
