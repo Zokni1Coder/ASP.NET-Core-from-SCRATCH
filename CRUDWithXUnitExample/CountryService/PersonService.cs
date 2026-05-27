@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using CsvHelper;
+using CsvHelper.Configuration;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using ServiceContract;
@@ -248,15 +249,39 @@ namespace Services
             //A MemoryStream azért kell, mert a CSV tartalmát memóriában hozza létre és visszaadja anélkül, hogy valódi fájlt írna a lemezre.
             MemoryStream memoryStream = new MemoryStream();
             StreamWriter sw = new StreamWriter(memoryStream);
+
+            //Most nem állítunk be semmit de valójában a Config paramétereit állíttjuk és adjuk át a writernek.
+            CsvConfiguration csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture);
+
             //A CultureInfo azt határozza meg, hogy a CSV írás során milyen nyelvi és regionális szabályok szerint legyenek formázva az adatok (pl. tizedesjel, dátumformátum). Az InvariantCulture egy nyelvfüggetlen, egységes formátum, amit ezért gyakran használnak CSV exportnál.
             CsvWriter csvWriter = new CsvWriter(sw, leaveOpen: true, culture: CultureInfo.InvariantCulture);
 
-            csvWriter.WriteHeader<PersonResponse>();
+            //csvWriter.WriteHeader<PersonResponse>();
+            //Most saját magunk hozzuk létre a Headert és azt a propertyt íratjuk ki amelyiket szeretnénk
+            csvWriter.WriteField(nameof(PersonResponse.PersonId));
+            csvWriter.WriteField(nameof(PersonResponse.PersonName));
+            csvWriter.WriteField(nameof(PersonResponse.DateOfBirth));
+            csvWriter.WriteField(nameof(PersonResponse.Address));
             csvWriter.NextRecord();
 
             List<PersonResponse> persons = this._personsDbContext.Persons.Select(persons => persons.ToPersonResponse()).ToList();
 
-            await csvWriter.WriteRecordsAsync(persons);
+            //await csvWriter.WriteRecordsAsync(persons);
+
+            foreach (PersonResponse person in persons)
+            {
+                csvWriter.WriteField(person.PersonId);
+                csvWriter.WriteField(person.PersonName);
+                if (person.DateOfBirth.HasValue)
+                {
+                    csvWriter.WriteField(person.DateOfBirth.Value.ToString("yyyy-MM-dd"));
+                }
+                else
+                    csvWriter.WriteField("");
+                csvWriter.WriteField(person.Address);
+                csvWriter.NextRecord(); //hogy a következő rekord új sorba kerüljön
+                await csvWriter.FlushAsync(); //beleírjuk a rekordot a stream-be
+            }
 
             memoryStream.Position = 0;
 
