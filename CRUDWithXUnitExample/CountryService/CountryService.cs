@@ -1,5 +1,7 @@
 ﻿using Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using ServiceContract;
 using ServiceContract.DTOs;
 using System.Runtime.InteropServices;
@@ -64,6 +66,48 @@ namespace Services
 
             //Azért célszerű nem a Country egyedet visszaadni és inkább csak a Service-en belül hagyni, hogy kívülről ne legyen látható, csak amit engedünk a CountryResponse-zal.            
             return country.ToCountryResponse();
+        }
+
+        public async Task<int> FromExcelDataUpload(IFormFile formFile)
+        {
+            //Azért kell a MemoryStream, mert az bármilyen adatot tud tárolni.
+            MemoryStream memoryStream = new MemoryStream();
+            //Elhelyezzük a memorystream-be.
+            await formFile.CopyToAsync(memoryStream);
+            int insertedCountry = 0;
+            ExcelPackage.License.SetNonCommercialPersonal("Erik Kovacs");
+            using (ExcelPackage excelPackage = new ExcelPackage(memoryStream))
+            {
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets["Countries"];
+
+                //Összeszámolja sorokat amik nem csak üres cellákat tartalmaz.
+                int row = worksheet.Dimension.Rows;                
+
+                for (int i = 2; i <= row; i++)
+                {
+                    string? countryName = worksheet.Cells[i, 1].Value.ToString();
+
+                    if (!string.IsNullOrEmpty(countryName))
+                    {
+                        List<string?> countryNames = await this._dbContext.Countries.Select(country => country.CountryName).ToListAsync();
+
+                        if (!countryNames.Contains(countryName))
+                        {
+                            CountryAddRequest countryAddRequest = new CountryAddRequest()
+                            {
+                                Name = countryName
+                            };
+                            Country country = countryAddRequest.ToCountry();
+                            await this._dbContext.Countries.AddAsync(country);
+
+                            await this._dbContext.SaveChangesAsync();
+                            insertedCountry++;
+                        }
+                    }               
+                }
+            }
+            ;
+            return insertedCountry;
         }
 
         public async Task<List<CountryResponse>> GetAllCountries()

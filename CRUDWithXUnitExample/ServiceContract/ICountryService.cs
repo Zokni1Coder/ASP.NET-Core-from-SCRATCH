@@ -1,4 +1,5 @@
-﻿using ServiceContract.DTOs;
+﻿using Microsoft.AspNetCore.Http;
+using ServiceContract.DTOs;
 
 namespace ServiceContract
 {
@@ -21,6 +22,13 @@ namespace ServiceContract
         /// </summary>
         /// <param name="countryId">Ez alapján keresünk Counrty-t</param>
         /// <returns>Vissza ad egy Country egyedet a megfelelő ID-vel</returns>
-        public Task<CountryResponse?> GetCountryById(Guid? countryId);        
+        public Task<CountryResponse?> GetCountryById(Guid? countryId);
+
+        /// <summary>
+        /// Excel fájlból érkeznek az adatok az adatbázisba.
+        /// </summary>
+        /// <param name="formFile">Ez lesz az Excel file.</param>
+        /// <returns>vissza adja az adatábzisba bekerült adatok számát.</returns>
+        public Task<int> FromExcelDataUpload(IFormFile formFile);
     }
 }
