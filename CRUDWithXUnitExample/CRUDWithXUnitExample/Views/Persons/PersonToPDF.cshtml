@@ -1,0 +1,50 @@
+﻿@{
+    //A layout-t így kikapcsoljuk ami a Shared miatt rákerülne.
+    Layout = null;
+}
+@model IEnumerable<PersonResponse>
+@{
+    ViewBag.Title = "Persons";
+}
+
+@*Mivel a Rotativa nem fogja tudni elérni a css-t, ezért így külön 
+kell őt meghívni egy url-en keresztül.
+A lentivel ezt kapjuk meg: http://localhost:port/StyleSheet.css
+*@
+<link rel="stylesheet" 
+href="@("http://" + Context.Request.Host.ToString() + 
+"/StyleSheet.css")"/>
+
+
+<h1>Persons</h1>
+<table class="table w-100 margin-top">
+    <thead>
+        <tr>
+            <th>Person Name</th>
+            <th>Email</th>
+            <th>Date Of Birth</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Country</th>
+            <th>Address</th>
+            <th>Receive News Letter</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (PersonResponse person in Model)
+        {
+
+            <tr>
+                <td>@person.PersonName</td>
+                <td>@person.Email</td>
+                <td>@person.DateOfBirth?.ToString("dd MMM yyyy")</td>
+                <td>@person.Age</td>
+                <td>@person.Gender</td>
+                <td>@person.Country</td>
+                <td>@person.Address</td>
+                <td>@person.ReceiveNewsLetter</td>                
+            </tr>
+        }
+    </tbody>
+</table>
+

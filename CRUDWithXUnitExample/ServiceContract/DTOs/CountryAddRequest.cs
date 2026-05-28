@@ -18,7 +18,7 @@ namespace ServiceContract.DTOs
         // Így a beérkező adatot át kell alakítani a belső modellé.
         public Country ToCountry()
         {
-            return new Country { Name = Name };
+            return new Country { CountryName = Name };
         }
     }
 }

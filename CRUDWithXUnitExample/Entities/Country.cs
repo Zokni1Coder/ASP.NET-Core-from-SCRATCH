@@ -1,11 +1,16 @@
-﻿namespace Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entities
 {
     /// <summary>
     /// Ez maga a Country objektum, nem DTO, azaz Entity vagy Domain.
     /// </summary>
     public class Country
     {
-        public Guid Guid { get; set; }
-        public string? Name { get; set; }
+        [Key]
+        public Guid CountryID { get; set; }
+        [StringLength(40)]
+        public string? CountryName { get; set; }        
+        public ICollection<Person>? Persons { get; set; }
     }
 }

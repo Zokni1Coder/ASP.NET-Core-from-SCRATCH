@@ -15,8 +15,12 @@
             </div>
             <ul>
                 <li>
-                    <a asp-controller="persons" asp-action="index">Persons</a>
-                    <a asp-controller="persons" asp-action="create">Create Person</a>
+                    <a asp-controller="persons" class="ml" asp-action="index">Persons</a>
+                    <a asp-controller="persons" class="ml" asp-action="create">Create Person</a>
+                    <a asp-controller="persons" class="ml" asp-action="PersonToPDF">Persons to PDF</a>
+                    <a asp-controller="persons" class="ml" asp-action="PersonsToCSV">Persons to CSV</a>
+                    <a asp-controller="persons" class="ml" asp-action="PersonsToExcel">Persons to Excel</a>
+                    <a asp-controller="countries" class="ml" asp-action="ExcelUpload">Persons from Excel</a>
                 </li>
             </ul>
         </div>
@@ -29,6 +33,6 @@
       A required arra szolgál, hogy kötelező legyen egy megjelenítendő
       View-nak rendelkeznie egy ilyen section-nel vagy sem.
     *@
-    @RenderSection("validators", required: false);
+    @RenderSection("validators", required: false)
 </body>
 </html>

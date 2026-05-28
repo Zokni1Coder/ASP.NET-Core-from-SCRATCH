@@ -1,4 +1,7 @@
 ﻿using Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 using ServiceContract;
 using ServiceContract.DTOs;
 using System.Runtime.InteropServices;
@@ -7,20 +10,27 @@ namespace Services
 {
     public class CountryService : ICountryService
     {
-        private readonly List<Country> _countries;
+        //fieldként elmentjük a contextot, hogy a megfelelő adatbázisra tudjunk hivatkozni.
+        private readonly PersonsDbContext _dbContext;
+
+        public CountryService(PersonsDbContext personsDbContext)
+        {
+            this._dbContext = personsDbContext;
+        }
+
 
         //Így tudsz paraméternek default értéket megadni.
-        public CountryService(bool initialization = true)
-        {
-            this._countries = new List<Country>();
+        //public CountryService(bool initialization = true)
+        //{
+        //    this._countries = new List<Country>();
 
-            //Ha a konstruktorban az érték 1, akkor lefutt az inicializáció és ezzel dolgozik. Ha a tesztben is hozzáadunk újabb objektumokat, akkor az is bele lesz téva a listába. A két helyen inicializált objektumok összeadódnak végén. 
-            if (initialization)
-            {
-                _countries.AddRange(new List<Country> { new Country() { Guid = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), Name = "Hungary" }, new Country() { Guid = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), Name = "Austria" }, new Country() { Guid = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), Name = "Serbia" }, new Country() { Guid = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), Name = "Germany" }, new Country() { Guid = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), Name = "Italy" }, new Country() { Guid = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), Name = "England" } });
-            }
-        }
-        public CountryResponse AddCountry(CountryAddRequest? countryRequest)
+        //    //Ha a konstruktorban az érték 1, akkor lefutt az inicializáció és ezzel dolgozik. Ha a tesztben is hozzáadunk újabb objektumokat, akkor az is bele lesz téva a listába. A két helyen inicializált objektumok összeadódnak végén. 
+        //    if (initialization)
+        //    {
+        //        _countries.AddRange(new List<Country> { new Country() { CountryID = Guid.Parse("11C64D36-EC2D-4ADE-99F6-469F98E380CF"), CountryName = "Hungary" }, new Country() { CountryID = Guid.Parse("456B9BAD-40EA-4A17-85B3-87C2E5555A26"), CountryName = "Austria" }, new Country() { CountryID = Guid.Parse("B4871C6C-6BB8-4CCF-AA16-CF846D036EDF"), CountryName = "Serbia" }, new Country() { CountryID = Guid.Parse("7ED74F84-21D9-4A9A-A5F2-4390DFD0F40F"), CountryName = "Germany" }, new Country() { CountryID = Guid.Parse("C9CCFE13-E61B-485B-ABCB-B953297C6993"), CountryName = "Italy" }, new Country() { CountryID = Guid.Parse("5716D10D-005A-4347-B27D-F0A50D02279A"), CountryName = "England" } });
+        //    }
+        //}
+        public async Task<CountryResponse> AddCountry(CountryAddRequest? countryRequest)
         {
             //Ha null a metódus paraméter akkor Exception 
             if (countryRequest is null)
@@ -33,29 +43,82 @@ namespace Services
                 throw new ArgumentException();
             }
 
-            if (this._countries.Where(x => x.Name == countryRequest.Name).Count() > 0)
+            //Alul meghagyom a korábbi verziót összehasonlításnak.
+            if (await this._dbContext.Countries.CountAsync(country => country.CountryName == countryRequest.Name) > 0)
             {
                 throw new Exception("The given Country name is already exists!");
             }
+
+            //if (this._dbContext.Where(x => x.CountryName == countryRequest.Name).Count() > 0)
+            //{
+            //    throw new Exception("The given Country name is already exists!");
+            //}
 
             //Ahogyláthatod a "Extension" metódus sikeresen hozzá lett addva a Country Entity-hez.
             //Átalakítjuk a countryRequest objketumot Country egyeddé
             Country country = countryRequest.ToCountry();
             //Generálunk neki Guid-t
-            country.Guid = Guid.NewGuid();
+            country.CountryID = Guid.NewGuid();
             //Hozzáadjuk a belső listához
-            this._countries.Add(country);
+            this._dbContext.Add(country);
+            //Mikor insert történik kötelessek vagyunk elmenteni a változtatást.
+            await this._dbContext.SaveChangesAsync();
 
             //Azért célszerű nem a Country egyedet visszaadni és inkább csak a Service-en belül hagyni, hogy kívülről ne legyen látható, csak amit engedünk a CountryResponse-zal.            
             return country.ToCountryResponse();
         }
 
-        public List<CountryResponse> GetAllCountries()
+        public async Task<int> FromExcelDataUpload(IFormFile formFile)
         {
-            return (List<CountryResponse>)this._countries.Select(x => x.ToCountryResponse()).ToList();
+            //Azért kell a MemoryStream, mert az bármilyen adatot tud tárolni.
+            MemoryStream memoryStream = new MemoryStream();
+            //Elhelyezzük a memorystream-be.
+            await formFile.CopyToAsync(memoryStream);
+            int insertedCountry = 0;
+            ExcelPackage.License.SetNonCommercialPersonal("Erik Kovacs");
+            using (ExcelPackage excelPackage = new ExcelPackage(memoryStream))
+            {
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets["Countries"];
+
+                //Összeszámolja sorokat amik nem csak üres cellákat tartalmaz.
+                int row = worksheet.Dimension.Rows;                
+
+                for (int i = 2; i <= row; i++)
+                {
+                    string? countryName = worksheet.Cells[i, 1].Value.ToString();
+
+                    if (!string.IsNullOrEmpty(countryName))
+                    {
+                        List<string?> countryNames = await this._dbContext.Countries.Select(country => country.CountryName).ToListAsync();
+
+                        if (!countryNames.Contains(countryName))
+                        {
+                            CountryAddRequest countryAddRequest = new CountryAddRequest()
+                            {
+                                Name = countryName
+                            };
+                            Country country = countryAddRequest.ToCountry();
+                            await this._dbContext.Countries.AddAsync(country);
+
+                            await this._dbContext.SaveChangesAsync();
+                            insertedCountry++;
+                        }
+                    }               
+                }
+            }
+            ;
+            return insertedCountry;
         }
 
-        public CountryResponse? GetCountryById(Guid? countryId)
+        public async Task<List<CountryResponse>> GetAllCountries()
+        {
+            List<CountryResponse> countries = await this._dbContext.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
+            return countries;
+
+            //return (List<CountryResponse>)this._dbContext.Select(x => x.ToCountryResponse()).ToList();
+        }
+
+        public async Task<CountryResponse?> GetCountryById(Guid? countryId)
         {
             if (countryId is null)
             {
@@ -66,7 +129,9 @@ namespace Services
             //return this._countries.Where(country => country.Guid == countryId).FirstOrDefault().ToCountryResponse();
 
             //Amint megtalál egy megfelelő elemet, visszaadja.
-            Country? country = this._countries.FirstOrDefault(country => country.Guid == countryId);
+            //Country? country = this._dbContext.FirstOrDefault(country => country.CountryID == countryId);
+
+            Country? country = await this._dbContext.Countries.FirstOrDefaultAsync(country => country.CountryID == countryId);
             if (country is null)
             {
                 return null;
