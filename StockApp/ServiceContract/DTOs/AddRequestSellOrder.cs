@@ -26,6 +26,7 @@ namespace ServiceContract.DTOs
         {
             return new SellOrder()
             {
+                Id = Guid.NewGuid(),
                 stockName = stockName,
                 StockSymbol = stockSymbol,
                 shares = shares,

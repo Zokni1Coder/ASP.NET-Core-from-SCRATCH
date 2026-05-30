@@ -1,0 +1,45 @@
+﻿@model Trades
+@{
+    Layout = null;
+}
+
+<link rel="stylesheet"
+      href="@("http://" + Context.Request.Host.ToString() +
+            "/StyleSheet.css")" />
+
+<table class="table w-100 margin-top">
+    <thead>
+        <tr>
+            <th>Date and Time</th>
+            <th>Stock</th>
+            <th>Order Type</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Trade Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ResponseBuyOrder order in Model.buyOrders)
+        {
+            <tr>
+                <td>@order.date?.ToString()</td>
+                <td>@order.stockName</td>
+                <td>Buy</td>
+                <td>@order.shares</td>
+                <td>@order.price</td>
+                <td>@order.tradeAmount</td>
+            </tr>
+        }
+        @foreach (ResponseSellOrder order in Model.sellOrders)
+        {
+            <tr>
+                <td>@order.date</td>
+                <td>@order.stockName</td>
+                <td>Sell</td>
+                <td>@order.shares</td>
+                <td>@order.price</td>
+                <td>@order.tradeAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>

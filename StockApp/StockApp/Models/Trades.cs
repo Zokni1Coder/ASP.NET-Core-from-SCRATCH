@@ -1,4 +1,6 @@
-﻿using ServiceContract.DTOs;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContract.DTOs;
 
 namespace StockApp.Models
 {

@@ -1,4 +1,7 @@
-﻿using ServiceContract;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using ServiceContract;
 using ServiceContract.DTOs;
 using Services;
 using Xunit.Abstractions;
@@ -11,25 +14,25 @@ namespace StockTest
         private readonly ITestOutputHelper _testOutputHelper;
         public StockUnitTest(ITestOutputHelper testOutputHelper)
         {
-            this._tradeService = new TradeService();
+            StockMarketDbContext stockMarketDbContext = new StockMarketDbContext(new DbContextOptionsBuilder<StockMarketDbContext>().Options);
             this._testOutputHelper = testOutputHelper;
         }
 
         #region AddBuyOrder
         [Fact]
-        public void NullParam_AddBuyOrder()
+        public async Task NullParam_AddBuyOrder()
         {
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(null);
+                await this._tradeService.AddBuyOrder(null);
             });
         }
 
 
         [Fact]
-        public void NullQuantity_AddBuyOrder()
+        public async Task NullQuantity_AddBuyOrder()
         {
             //Arrange
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
@@ -40,15 +43,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+                await this._tradeService.AddBuyOrder(addRequestBuyOrder);
             });
         }
 
         [Fact]
-        public void TooMuchQuantity_AddBuyOrder()
+        public async Task TooMuchQuantity_AddBuyOrder()
         {
             //Arrange
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
@@ -59,15 +62,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+                await this._tradeService.AddBuyOrder(addRequestBuyOrder);
             });
         }
 
         [Fact]
-        public void NullPrice_AddBuyOrder()
+        public async Task NullPrice_AddBuyOrder()
         {
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
             {
@@ -77,15 +80,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+                await this._tradeService.AddBuyOrder(addRequestBuyOrder);
             });
         }
 
         [Fact]
-        public void TooHighPrice_AddBuyOrder()
+        public async Task TooHighPrice_AddBuyOrder()
         {
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
             {
@@ -95,15 +98,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+                await this._tradeService.AddBuyOrder(addRequestBuyOrder);
             });
         }
 
         [Fact]
-        public void ProperObject_AddBuyOrder()
+        public async Task ProperObject_AddBuyOrder()
         {
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
             {
@@ -113,7 +116,7 @@ namespace StockTest
             };
 
             //Act
-            ResponseBuyOrder responseBuyOrder = this._tradeService.AddBuyOrder(addRequestBuyOrder);
+            ResponseBuyOrder responseBuyOrder = await this._tradeService.AddBuyOrder(addRequestBuyOrder);
 
             //Assert
             this._testOutputHelper.WriteLine(responseBuyOrder.ToString());
@@ -121,7 +124,7 @@ namespace StockTest
         }
 
         [Fact]
-        public void TooOldDate_AddBuyOrder()
+        public async Task TooOldDate_AddBuyOrder()
         {
             //Arrange
             AddRequestBuyOrder addRequestBuyOrder = new AddRequestBuyOrder()
@@ -133,15 +136,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddBuyOrder(addRequestBuyOrder);
+                await this._tradeService.AddBuyOrder(addRequestBuyOrder);
             });
         }
 
         [Fact]
-        public void GetAllBuyOrder()
+        public async Task GetAllBuyOrder()
         {
             //Arrange
             AddRequestBuyOrder addRequestBuyOrder1 = new AddRequestBuyOrder()
@@ -171,13 +174,13 @@ namespace StockTest
 
             List<ResponseBuyOrder> buyOrders_fromAdding = new List<ResponseBuyOrder>();
 
-            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder1));
-            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder2));
-            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder3));
-            buyOrders_fromAdding.Add(this._tradeService.AddBuyOrder(addRequestBuyOrder4));
+            buyOrders_fromAdding.Add(await this._tradeService.AddBuyOrder(addRequestBuyOrder1));
+            buyOrders_fromAdding.Add(await this._tradeService.AddBuyOrder(addRequestBuyOrder2));
+            buyOrders_fromAdding.Add(await this._tradeService.AddBuyOrder(addRequestBuyOrder3));
+            buyOrders_fromAdding.Add(await this._tradeService.AddBuyOrder(addRequestBuyOrder4));
 
             //Act
-            List<ResponseBuyOrder> buyOrders_form_GetAll = this._tradeService.GetBuyOrders();
+            List<ResponseBuyOrder> buyOrders_form_GetAll = await this._tradeService.GetBuyOrders();
 
             this._testOutputHelper.WriteLine("Actual");
             foreach (ResponseBuyOrder order in buyOrders_fromAdding)
@@ -197,19 +200,19 @@ namespace StockTest
 
         #region AddSellOrder
         [Fact]
-        public void NullParam_AddSellOrder()
+        public async Task NullParam_AddSellOrder()
         {
             //Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(null);
+                await this._tradeService.AddSellOrder(null);
             });
         }
 
 
         [Fact]
-        public void NullQuantity_AddSellOrder()
+        public async Task NullQuantity_AddSellOrder()
         {
             //Arrange
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
@@ -220,15 +223,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(addRequestSellOrder);
+                await this._tradeService.AddSellOrder(addRequestSellOrder);
             });
         }
 
         [Fact]
-        public void TooMuchQuantity_AddSellOrder()
+        public async Task TooMuchQuantity_AddSellOrder()
         {
             //Arrange
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
@@ -239,15 +242,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(addRequestSellOrder);
+                await this._tradeService.AddSellOrder(addRequestSellOrder);
             });
         }
 
         [Fact]
-        public void NullPrice_AddSellOrder()
+        public async Task NullPrice_AddSellOrder()
         {
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
             {
@@ -257,15 +260,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(addRequestSellOrder);
+                await this._tradeService.AddSellOrder(addRequestSellOrder);
             });
         }
 
         [Fact]
-        public void TooHighPrice_AddSellOrder()
+        public async Task TooHighPrice_AddSellOrder()
         {
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
             {
@@ -275,15 +278,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(addRequestSellOrder);
+                await this._tradeService.AddSellOrder(addRequestSellOrder);
             });
         }
 
         [Fact]
-        public void ProperObject_AddSellOrder()
+        public async Task ProperObject_AddSellOrder()
         {
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
             {
@@ -293,7 +296,7 @@ namespace StockTest
             };
 
             //Act
-            ResponseSellOrder responseSellOrder = this._tradeService.AddSellOrder(addRequestSellOrder);
+            ResponseSellOrder responseSellOrder = await this._tradeService.AddSellOrder(addRequestSellOrder);
 
             //Assert
             this._testOutputHelper.WriteLine(addRequestSellOrder.ToString());
@@ -301,7 +304,7 @@ namespace StockTest
         }
 
         [Fact]
-        public void TooOldDate_AddSellOrder()
+        public async Task TooOldDate_AddSellOrder()
         {
             //Arrange
             AddRequestSellOrder addRequestSellOrder = new AddRequestSellOrder()
@@ -313,15 +316,15 @@ namespace StockTest
             };
 
             //Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 //Act
-                this._tradeService.AddSellOrder(addRequestSellOrder);
+                await this._tradeService.AddSellOrder(addRequestSellOrder);
             });
         }
 
         [Fact]
-        public void GetAllSellOrder()
+        public async Task GetAllSellOrder()
         {
             //Arrange
             AddRequestSellOrder addRequestSellOrder1 = new AddRequestSellOrder()
@@ -349,13 +352,13 @@ namespace StockTest
 
             List<ResponseSellOrder> sellOrders_fromAdding = new List<ResponseSellOrder>();
 
-            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder1));
-            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder2));
-            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder3));
-            sellOrders_fromAdding.Add(this._tradeService.AddSellOrder(addRequestSellOrder4));
+            sellOrders_fromAdding.Add(await this._tradeService.AddSellOrder(addRequestSellOrder1));
+            sellOrders_fromAdding.Add(await this._tradeService.AddSellOrder(addRequestSellOrder2));
+            sellOrders_fromAdding.Add(await this._tradeService.AddSellOrder(addRequestSellOrder3));
+            sellOrders_fromAdding.Add(await this._tradeService.AddSellOrder(addRequestSellOrder4));
 
             //Act
-            List<ResponseSellOrder> sellOrders_form_GetAll = this._tradeService.GetSellOrders();
+            List<ResponseSellOrder> sellOrders_form_GetAll = await this._tradeService.GetSellOrders();
 
             this._testOutputHelper.WriteLine("Actual");
             foreach (ResponseSellOrder order in sellOrders_fromAdding)
