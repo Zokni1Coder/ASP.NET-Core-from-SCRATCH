@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace Entities
 {
     //A névben a DbContext végződés nem kötelező, de illendő.
-    public class PersonsDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
         //Miután a ctor-t megírtuk, le kell buildelni és utána futtatni a migrációs parancsot a konzolban.
-        public PersonsDbContext(DbContextOptions options) : base(options) { }
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<Person> Persons { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<Person> Persons { get; set; }
 
         /// <summary>
         /// Ezzel tudjuk meghívni a c#-ban a procedure-t. Ez lesz a "triggerje".

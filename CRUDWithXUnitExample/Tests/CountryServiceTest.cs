@@ -1,5 +1,7 @@
 ﻿using Entities;
+using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using ServiceContract;
 using ServiceContract.DTOs;
 using Services;
@@ -14,8 +16,24 @@ namespace Tests
         //constructor
         public CountryServiceTest()
         {
+            //A Tesztek során használt adatokat (egyedeket) tárolja. DB helyett.
+            var countriesInitial = new List<Country>();
+
+            // Mockolt DbContext létrehozása adatbázis kapcsolat nélkül.
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+                new DbContextOptionsBuilder<ApplicationDbContext>().Options
+                );
+
+            // A mockolt DbContext objektum lekérése.
+            // Ezt használjuk a tesztben a valódi DbContext helyett.
+            ApplicationDbContext DbContext = dbContextMock.Object;
+
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitial);
+
+            _countryService = new CountryService(DbContext);
+
             //Mivel mi azokat az adatokat szeretnénk hasznáni, amit már itt meg is adtunk, ezért nem szeretnénk inicializálni a Mock-oltakat, ezért 0 értéket adunk át.
-            this._countryService = new CountryService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
+            //this._countryService = new CountryService(new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options));
         }
 
         #region AddCountry

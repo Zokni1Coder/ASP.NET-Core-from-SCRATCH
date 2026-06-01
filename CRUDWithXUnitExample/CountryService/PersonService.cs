@@ -24,9 +24,9 @@ namespace Services
     {
         //private readonly List<Person>? _persons;
         private readonly ICountryService _countryService;
-        private readonly PersonsDbContext _personsDbContext;
+        private readonly ApplicationDbContext _personsDbContext;
 
-        public PersonService(ICountryService countryService, PersonsDbContext personsDbContext)
+        public PersonService(ICountryService countryService, ApplicationDbContext personsDbContext)
         {
             this._countryService = countryService;
             this._personsDbContext = personsDbContext;

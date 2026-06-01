@@ -10,7 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 //Megadjuk a IoC Poolba a db kapcsolatot.
-builder.Services.AddDbContext<PersonsDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     //Mivel a DbContext univerzális, ezért megadjuk hogy SqlServer-rel fog együtt dolgozni.
     //Itt adjuk meg a Connection stringet is.

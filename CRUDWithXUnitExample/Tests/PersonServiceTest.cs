@@ -1,4 +1,5 @@
 ﻿using Entities;
+using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
 using ServiceContract;
 using ServiceContract.DTOs;
@@ -19,10 +20,25 @@ namespace Tests
         //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            PersonsDbContext personsDbContext = new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options);
-            this._countryService = new CountryService(personsDbContext);
-            this._personService = new PersonService(_countryService, personsDbContext);
+            //ApplicationDbContext personsDbContext = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
+            //this._countryService = new CountryService(personsDbContext);
+            //this._personService = new PersonService(_countryService, personsDbContext);
             this._testOutputHelper = testOutputHelper;
+
+            var countriesInitial = new List<Country>();
+            var personsInitial = new List<Person>();
+
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+                new DbContextOptionsBuilder<ApplicationDbContext>().Options
+                );
+
+            ApplicationDbContext DbContext = dbContextMock.Object;
+
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitial);
+            dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitial);
+
+            _countryService = new CountryService(DbContext);
+            _personService = new PersonService(this._countryService, DbContext);
         }
 
         #region AddPerson

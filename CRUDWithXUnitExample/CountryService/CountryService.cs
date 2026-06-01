@@ -11,9 +11,9 @@ namespace Services
     public class CountryService : ICountryService
     {
         //fieldként elmentjük a contextot, hogy a megfelelő adatbázisra tudjunk hivatkozni.
-        private readonly PersonsDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
-        public CountryService(PersonsDbContext personsDbContext)
+        public CountryService(ApplicationDbContext personsDbContext)
         {
             this._dbContext = personsDbContext;
         }
