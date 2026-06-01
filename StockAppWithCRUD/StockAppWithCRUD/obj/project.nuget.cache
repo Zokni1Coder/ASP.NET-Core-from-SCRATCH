@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "CqWefoz2Umk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\erikk\\source\\repos\\ASP.NET-Core-from-SCRATCH\\StockAppWithCRUD\\StockAppWithCRUD\\StockAppWithCRUD.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.7\\microsoft.extensions.configuration.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.7\\microsoft.extensions.configuration.abstractions.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.configuration.binder\\10.0.7\\microsoft.extensions.configuration.binder.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\10.0.7\\microsoft.extensions.dependencyinjection.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.7\\microsoft.extensions.dependencyinjection.abstractions.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.diagnostics\\10.0.7\\microsoft.extensions.diagnostics.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\10.0.7\\microsoft.extensions.diagnostics.abstractions.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.http\\10.0.7\\microsoft.extensions.http.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.logging\\10.0.7\\microsoft.extensions.logging.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.7\\microsoft.extensions.logging.abstractions.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.options\\10.0.7\\microsoft.extensions.options.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\10.0.7\\microsoft.extensions.options.configurationextensions.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.7\\microsoft.extensions.primitives.10.0.7.nupkg.sha512",
+    "C:\\Users\\erikk\\.nuget\\packages\\system.diagnostics.diagnosticsource\\10.0.7\\system.diagnostics.diagnosticsource.10.0.7.nupkg.sha512"
+  ],
+  "logs": []
+}

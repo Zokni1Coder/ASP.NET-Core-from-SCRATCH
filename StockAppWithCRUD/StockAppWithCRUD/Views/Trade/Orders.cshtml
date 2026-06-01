@@ -1,0 +1,29 @@
+﻿<div class="container flex inline-block">
+    <div class="flex-1 w-50">
+        <div class="box">
+            <h4 class="text-grey">Buy orders</h4>
+            @foreach (ResponseBuyOrder item in ViewBag.BuyOrders)
+            {
+                <b>@item.companyName</b>
+                <p><b>@item.shares</b> shares at @item.price</p>
+                <p><span class="text-grey">Trade Amount:</span> $@item.tradeAmount</p>
+                <p class="text-grey">@item.date</p>
+                <hr />
+            }
+        </div>
+    </div>
+    <div class="flex-1 w-50">
+        <div class="box">
+            <h4 class="text-grey">Sell orders</h4>
+            @foreach (ResponseSellOrder item in ViewBag.SellOrders)
+            {
+                <b>@item.companyName</b>
+                <p><b>@item.shares</b> shares at @item.price</p>
+                <p><span class="text-grey">Trade Amount:</span> $@item.tradeAmount</p>
+                <p class="text-grey">@item.date</p>
+                <hr />
+            }
+        </div>
+    </div>
+    <div class="flex-1"></div>
+</div>
