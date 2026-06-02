@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using AutoFixture;
+using Entities;
 using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
 using ServiceContract;
@@ -16,6 +17,7 @@ namespace Tests
         private readonly IPersonService _personService;
         private readonly ICountryService _countryService;
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly IFixture _fixture;
 
         //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
@@ -23,6 +25,7 @@ namespace Tests
             //ApplicationDbContext personsDbContext = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
             //this._countryService = new CountryService(personsDbContext);
             //this._personService = new PersonService(_countryService, personsDbContext);
+             _fixture = new Fixture();
             this._testOutputHelper = testOutputHelper;
 
             var countriesInitial = new List<Country>();
@@ -82,16 +85,22 @@ namespace Tests
         public async Task AddPerson_ProperPerson()
         {
             //Arrange
-            PersonAddRequest personAddRequest = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
+            //PersonAddRequest personAddRequest = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+
+            //A fenti manuális teszt objektum létrehozását kiváltjuk a generálással. Azért kell a .Build().With(), mert validáláskor errort kapunk ha ezt nem alkalmazzuk. Miért?
+            //Mert ezek nélkül az Email (string) az valahogy így nézne ki és nem passzolna a sablonunkhoz: "Email1235-as12-asd5-qwer6-qwer5"
+            //Ha nem lenne email, akkor simán csak a Create() kell a Build().With() nélkül.
+            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(person => person.Email, "someone@gmail.com").Create();
+
             //Act
             PersonResponse personResponse_from_Add = await this._personService.AddPerson(personAddRequest);
             List<PersonResponse>? personsList = await this._personService.GetAllPersons();
