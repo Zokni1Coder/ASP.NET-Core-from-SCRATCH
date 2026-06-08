@@ -66,10 +66,11 @@ namespace Tests
         public async void AddPerson_PersonAddRequestNameIsNull()
         {
             //Arrange
-            PersonAddRequest personAddRequest = new PersonAddRequest()
-            {
-                PersonName = null
-            };
+            //PersonAddRequest personAddRequest = new PersonAddRequest()
+            //{
+            //    PersonName = null
+            //};
+            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.PersonName, null as string).Create();
             //Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
@@ -152,22 +153,25 @@ namespace Tests
         public async Task GetPersonById_ProperArgument()
         {
             //Arrange
-            CountryAddRequest countryAddRequest = new CountryAddRequest()
-            {
-                Name = "Hungary",
-            };
+            //CountryAddRequest countryAddRequest = new CountryAddRequest()
+            //{
+            //    Name = "Hungary",
+            //};
+            CountryAddRequest countryAddRequest = this._fixture.Create<CountryAddRequest>();
+
             CountryResponse countryResponse_from_AddCountry = await this._countryService.AddCountry(countryAddRequest);
 
-            PersonAddRequest request = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = DateTime.Parse("2005-05-18"),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse_from_AddCountry.CountryID
-            };
+            //PersonAddRequest request = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = DateTime.Parse("2005-05-18"),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse_from_AddCountry.CountryID
+            //};
+            PersonAddRequest request = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse_from_AddCountry.CountryID).Create();
 
             //Act:
             PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
@@ -182,16 +186,17 @@ namespace Tests
         public async Task GetPersonById_DoesntExistingGuidInTheListArgument()
         {
             //Arrange
-            PersonAddRequest request = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
+            //PersonAddRequest request = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+            PersonAddRequest request = this._fixture.Create<PersonAddRequest>();
             //Act:
             PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
             PersonResponse? person_from_GetPersonById = new PersonResponse();
@@ -223,38 +228,42 @@ namespace Tests
         public async Task GetAllPersons_ProperElements()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();   
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            PersonAddRequest  personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest  personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
 
             //Act
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
@@ -296,59 +305,65 @@ namespace Tests
         public async Task GetFilteredPerson_EmptyArgument()
         {
             //Arrange
-            //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            {
-                PersonName = "Reka3",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1996, 09, 17),
-                Gender = Gender.Female,
-                Address = "asd 30.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            {
-                PersonName = "Reka4",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1971, 12, 05),
-                Gender = Gender.Male,
-                Address = "asd 50.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka3",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1996, 09, 17),
+            //    Gender = Gender.Female,
+            //    Address = "asd 30.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka4",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1971, 12, 05),
+            //    Gender = Gender.Male,
+            //    Address = "asd 50.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
             PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
@@ -379,58 +394,65 @@ namespace Tests
         public async Task GetFilteredPerson_ProperArguments()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            {
-                PersonName = "Reka3",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1996, 09, 17),
-                Gender = Gender.Female,
-                Address = "asd 30.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            {
-                PersonName = "Reka4",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1971, 12, 05),
-                Gender = Gender.Male,
-                Address = "asd 50.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka3",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1996, 09, 17),
+            //    Gender = Gender.Female,
+            //    Address = "asd 30.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka4",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1971, 12, 05),
+            //    Gender = Gender.Male,
+            //    Address = "asd 50.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
             PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
@@ -462,58 +484,66 @@ namespace Tests
         public async Task GetFilteredPerson_ProperArgumentsName()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            {
-                PersonName = "Reka3",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1996, 09, 17),
-                Gender = Gender.Female,
-                Address = "asd 30.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            {
-                PersonName = "Reka4",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1971, 12, 05),
-                Gender = Gender.Male,
-                Address = "asd 50.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka3",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1996, 09, 17),
+            //    Gender = Gender.Female,
+            //    Address = "asd 30.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka4",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1971, 12, 05),
+            //    Gender = Gender.Male,
+            //    Address = "asd 50.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
             PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
@@ -549,58 +579,65 @@ namespace Tests
         public async Task GetSortedPersons_BasedOnName()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Erik",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            {
-                PersonName = "Niki",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1996, 09, 17),
-                Gender = Gender.Female,
-                Address = "asd 30.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            {
-                PersonName = "Monika",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1971, 12, 05),
-                Gender = Gender.Male,
-                Address = "asd 50.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Erik",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            //{
+            //    PersonName = "Niki",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1996, 09, 17),
+            //    Gender = Gender.Female,
+            //    Address = "asd 30.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            //{
+            //    PersonName = "Monika",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1971, 12, 05),
+            //    Gender = Gender.Male,
+            //    Address = "asd 50.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
             PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
@@ -636,58 +673,65 @@ namespace Tests
         public async Task GetSortedPersons_BasedOnId()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Austria"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
+            //{
+            //    Name = "Austria"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
+            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
             CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
-            PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            {
-                PersonName = "Erik",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(2000, 09, 22),
-                Gender = Gender.Male,
-                Address = "asd 22.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            {
-                PersonName = "Niki",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1996, 09, 17),
-                Gender = Gender.Female,
-                Address = "asd 30.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse2.CountryID
-            };
-            PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            {
-                PersonName = "Monika",
-                Email = "asd2@gmail.com",
-                DateOfBirth = new DateTime(1971, 12, 05),
-                Gender = Gender.Male,
-                Address = "asd 50.",
-                ReceiveNewsLetter = false,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
+            //{
+            //    PersonName = "Erik",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(2000, 09, 22),
+            //    Gender = Gender.Male,
+            //    Address = "asd 22.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
+            //{
+            //    PersonName = "Niki",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1996, 09, 17),
+            //    Gender = Gender.Female,
+            //    Address = "asd 30.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse2.CountryID
+            //};
+            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
+            //{
+            //    PersonName = "Monika",
+            //    Email = "asd2@gmail.com",
+            //    DateOfBirth = new DateTime(1971, 12, 05),
+            //    Gender = Gender.Male,
+            //    Address = "asd 50.",
+            //    ReceiveNewsLetter = false,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
             PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
             PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
@@ -727,23 +771,26 @@ namespace Tests
         public async Task PeresonUpdateRequest_ProperPersonAsync()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
+            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            //{
+            //    Name = "Hungary"
+            //};
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
 
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse1.CountryID
-            };
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse1.CountryID
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop=>prop.CountryId, countryResponse1.CountryID).Create();
+
             //Act
             PersonResponse person_from_AddRequest = await this._personService.AddPerson(personAddRequest1);
             this._testOutputHelper.WriteLine($"Original\n{person_from_AddRequest.ToString()}");
@@ -777,10 +824,11 @@ namespace Tests
         public async Task PeresonUpdateRequest_WrongPersonId()
         {
             //Arrange
-            PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
-            {
-                PersonId = new Guid()
-            };
+            //PersonUpdateRequest personUpdateRequest = new PersonUpdateRequest()
+            //{
+            //    PersonId = new Guid()
+            //};
+            PersonUpdateRequest personUpdateRequest = this._fixture.Build<PersonUpdateRequest>().With(prop=>prop.PersonId, new Guid()).Create();
 
             //Assert
             await Assert.ThrowsAsync<ArgumentException>(async () =>
@@ -795,19 +843,22 @@ namespace Tests
         public async Task PeresonUpdateRequest_NullPersonName()
         {
             //Arrange
-            CountryAddRequest countryAddRequest = new CountryAddRequest() { Name = "Hu" };
+            //CountryAddRequest countryAddRequest = new CountryAddRequest() { Name = "Hu" };
+            CountryAddRequest countryAddRequest = this._fixture.Create<CountryAddRequest>();
+            
             CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
 
-            PersonResponse personResponse = await this._personService.AddPerson(new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Female,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = countryResponse.CountryID
-            });
+            //PersonResponse personResponse = await this._personService.AddPerson(new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Female,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = countryResponse.CountryID
+            //});
+            PersonResponse personResponse = this._fixture.Create<PersonResponse>();
 
             //PersonUpdateRequest personUpdateRequest = personResponse.ToPersonUpdateRequest();
             //personUpdateRequest.PersonName = string.Empty;
@@ -830,26 +881,29 @@ namespace Tests
         public async Task DeletePerson_ProperPersonId()
         {
             //Arrange
-            PersonAddRequest personAddRequest = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
+            //PersonAddRequest personAddRequest = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();
+            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();            
+
             PersonResponse person_from_AddPerson = await this._personService.AddPerson(personAddRequest);
             PersonResponse person_from_AddPerson1 = await this._personService.AddPerson(personAddRequest1);
 
@@ -879,26 +933,29 @@ namespace Tests
         [Fact]
         public async Task DeletePerson_WrongPersonId()
         {
-            PersonAddRequest personAddRequest = new PersonAddRequest()
-            {
-                PersonName = "Reka",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
-            PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            {
-                PersonName = "Reka2",
-                Email = "asd@gmail.com",
-                DateOfBirth = new DateTime(2005, 05, 18),
-                Gender = Gender.Male,
-                Address = "asd 11.",
-                ReceiveNewsLetter = true,
-                CountryId = Guid.NewGuid()
-            };
+            //PersonAddRequest personAddRequest = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
+            //{
+            //    PersonName = "Reka2",
+            //    Email = "asd@gmail.com",
+            //    DateOfBirth = new DateTime(2005, 05, 18),
+            //    Gender = Gender.Male,
+            //    Address = "asd 11.",
+            //    ReceiveNewsLetter = true,
+            //    CountryId = Guid.NewGuid()
+            //};
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();
+            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();
+
             PersonResponse person_from_AddPerson = await this._personService.AddPerson(personAddRequest);
             PersonResponse person_from_AddPerson1 = await this._personService.AddPerson(personAddRequest1);
 
