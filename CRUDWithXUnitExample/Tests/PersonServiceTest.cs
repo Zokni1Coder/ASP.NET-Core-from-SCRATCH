@@ -9,6 +9,8 @@ using Services;
 using System;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
+using FluentAssertions;
+using FluentAssertions.Specialized;
 
 namespace Tests
 {
@@ -25,7 +27,7 @@ namespace Tests
             //ApplicationDbContext personsDbContext = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
             //this._countryService = new CountryService(personsDbContext);
             //this._personService = new PersonService(_countryService, personsDbContext);
-             _fixture = new Fixture();
+            _fixture = new Fixture();
             this._testOutputHelper = testOutputHelper;
 
             var countriesInitial = new List<Country>();
@@ -51,12 +53,13 @@ namespace Tests
         [Fact]
         public async Task AddPerson_AddNullValue()
         {
-            //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            //Act
+            Func<Task> action = async () =>
             {
-                //Act:
                 await this._personService.AddPerson(null);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         /// <summary>
@@ -72,11 +75,18 @@ namespace Tests
             //};
             PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.PersonName, null as string).Create();
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //{
+            //    //Act:
+            //    await this._personService.AddPerson(personAddRequest);
+            //});
+
+            Func<Task> action = async () =>
             {
-                //Act:
                 await this._personService.AddPerson(personAddRequest);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         /// <summary>
@@ -107,9 +117,12 @@ namespace Tests
             List<PersonResponse>? personsList = await this._personService.GetAllPersons();
 
             //Asserts
-            Assert.True(personResponse_from_Add.PersonId != Guid.Empty);
+            //Assert.True(personResponse_from_Add.PersonId != Guid.Empty);
+            personResponse_from_Add.PersonId.Should().NotBe(Guid.Empty);
+
             //Assert.Equal(personResponse_from_Add.ReceiveNewsLetter, personsList[0].ReceiveNewsLetter);
-            Assert.Contains(personResponse_from_Add, await this._personService.GetAllPersons());
+            //Assert.Contains(personResponse_from_Add, await this._personService.GetAllPersons());
+            personsList.Should().Contain(personResponse_from_Add);
         }
 
         //Ha helytelen az emailcím, akkor InvalidOperationException kell hogy legyen.
@@ -141,11 +154,18 @@ namespace Tests
             //Arrange
             Guid? guid = null;
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            //await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            //{
+            //    //Act
+            //    await this._personService.GetPersonById(guid);
+            //});
+
+            Func<Task> action = async () =>
             {
-                //Act
                 await this._personService.GetPersonById(guid);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         //Ha megfelelő guid-t adunk át, akkor megtalálja és visszaadja PersonResponse objektumként
@@ -178,7 +198,8 @@ namespace Tests
             PersonResponse? person_from_GetPersonById = await this._personService.GetPersonById(person_from_AddPerson.PersonId);
 
             //Assert
-            Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
+            //Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
+            person_from_GetPersonById.Should().Be(person_from_AddPerson);
         }
 
         //Ha olyan id-t adunk meg, ami nem létezik, akkor a visszatérési objektum null lesz.
@@ -203,7 +224,8 @@ namespace Tests
             person_from_GetPersonById = await this._personService.GetPersonById(Guid.NewGuid());
 
             //Assert
-            Assert.Null(person_from_GetPersonById);
+            //Assert.Null(person_from_GetPersonById);
+            person_from_GetPersonById.Should().BeNull();
         }
 
         #endregion
@@ -220,7 +242,8 @@ namespace Tests
             persons = await this._personService.GetAllPersons();
 
             //Assert
-            Assert.Empty(persons);
+            //Assert.Empty(persons);
+            persons.Should().BeEmpty();
         }
 
         //Megfelelő elemeket ad vissza a lekérdezés.
@@ -236,7 +259,7 @@ namespace Tests
             //{
             //    Name = "Austria"
             //};
-            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();   
+            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
             CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
 
             CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
@@ -262,8 +285,8 @@ namespace Tests
             //    ReceiveNewsLetter = false,
             //    CountryId = countryResponse2.CountryID
             //};
-            PersonAddRequest  personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
-            PersonAddRequest  personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
 
             //Act
             PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
@@ -292,7 +315,8 @@ namespace Tests
             //Asssert
             foreach (PersonResponse person in person_From_AddPerson)
             {
-                Assert.Contains(person, persons_from_GetAllPersons);
+                //Assert.Contains(person, persons_from_GetAllPersons);
+                persons_from_GetAllPersons.Should().Contain(person);
             }
         }
 
@@ -385,7 +409,8 @@ namespace Tests
             }
 
             //Assert
-            Assert.Equal(person_from_GetAll, persons_from_GetFiltered);
+            //Assert.Equal(person_from_GetAll, persons_from_GetFiltered);
+            persons_from_GetFiltered.Should().BeEqualTo(person_from_GetAll);
         }
 
 
@@ -476,7 +501,8 @@ namespace Tests
             }
 
             //Assert
-            Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+            //Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+            filtered_from_AddPerson.Should().BeEqualTo(person_from_GetFiltered);
         }
 
         //Ha megfelelő paramétereket adunk át, akkor visszaadja a megfelelő Objektumokat.
@@ -567,7 +593,8 @@ namespace Tests
             }
 
             //Assert
-            Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+            //Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
+            filtered_from_AddPerson.Should().BeEqualTo(person_from_GetFiltered);
         }
 
         #endregion
@@ -663,10 +690,11 @@ namespace Tests
             }
 
             //Assert
-            for (int i = 0; i < persons.Count; i++)
-            {
-                Assert.Equal(persons[i], sortedPersons[i]);
-            }
+            //for (int i = 0; i < persons.Count; i++)
+            //{
+            //    Assert.Equal(persons[i], sortedPersons[i]);
+            //}
+            persons.Should().BeEqualTo(sortedPersons);
         }
 
         [Fact]
@@ -757,10 +785,11 @@ namespace Tests
             }
 
             //Assert
-            for (int i = 0; i < persons.Count; i++)
-            {
-                Assert.Equal(persons[i], sortedPersons[i]);
-            }
+            //for (int i = 0; i < persons.Count; i++)
+            //{
+            //    Assert.Equal(persons[i], sortedPersons[i]);
+            //}
+            persons.Should().BeEqualTo(sortedPersons);
         }
         #endregion
 
@@ -789,7 +818,7 @@ namespace Tests
             //    ReceiveNewsLetter = true,
             //    CountryId = countryResponse1.CountryID
             //};
-            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop=>prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
 
             //Act
             PersonResponse person_from_AddRequest = await this._personService.AddPerson(personAddRequest1);
@@ -804,7 +833,8 @@ namespace Tests
             this._testOutputHelper.WriteLine($"Actual\n{person_from_UpdateRequest.ToString()}");
 
             //Assert
-            Assert.Equal(person_from_AddRequest, person_from_UpdateRequest);
+            //Assert.Equal(person_from_AddRequest, person_from_UpdateRequest);
+            person_from_AddRequest.Should().Be(person_from_UpdateRequest);
         }
 
         //Ha null-t adunk paraméterül, akkor ArgumentNullException
@@ -812,11 +842,17 @@ namespace Tests
         public async Task PeresonUpdateRequest_NullArgument()
         {
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            //await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            //{
+            //    //Act
+            //    await this._personService.UpdatePerson(null);
+            //});
+            Func<Task> action = async () =>
             {
-                //Act
                 await this._personService.UpdatePerson(null);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentNullException>();
         }
 
         //Ha rossz Id adatot adunk paraméterül, akkor ArgumentException
@@ -828,14 +864,21 @@ namespace Tests
             //{
             //    PersonId = new Guid()
             //};
-            PersonUpdateRequest personUpdateRequest = this._fixture.Build<PersonUpdateRequest>().With(prop=>prop.PersonId, new Guid()).Create();
+            PersonUpdateRequest personUpdateRequest = this._fixture.Build<PersonUpdateRequest>().With(prop => prop.PersonId, new Guid()).Create();
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //{
+            //    //Act
+            //    await this._personService.UpdatePerson(personUpdateRequest);
+            //});
+
+            Func<Task> action = async () =>
             {
-                //Act
                 await this._personService.UpdatePerson(personUpdateRequest);
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         //Ha a PersonName null, akkor ArgumentException
@@ -845,7 +888,7 @@ namespace Tests
             //Arrange
             //CountryAddRequest countryAddRequest = new CountryAddRequest() { Name = "Hu" };
             CountryAddRequest countryAddRequest = this._fixture.Create<CountryAddRequest>();
-            
+
             CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
 
             //PersonResponse personResponse = await this._personService.AddPerson(new PersonAddRequest()
@@ -865,11 +908,18 @@ namespace Tests
             personResponse.PersonName = null;
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //{
+            //    //Act
+            //    await this._personService.UpdatePerson(personResponse.ToPersonUpdateRequest());
+            //});
+            Func<Task> action = async () =>
             {
-                //Act
                 await this._personService.UpdatePerson(personResponse.ToPersonUpdateRequest());
-            });
+            };
+
+            await action.Should().ThrowAsync<ArgumentException>();
+
         }
 
         #endregion
@@ -902,7 +952,7 @@ namespace Tests
             //    CountryId = Guid.NewGuid()
             //};
             PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();
-            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();            
+            PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, new Guid()).Create();
 
             PersonResponse person_from_AddPerson = await this._personService.AddPerson(personAddRequest);
             PersonResponse person_from_AddPerson1 = await this._personService.AddPerson(personAddRequest1);
@@ -923,9 +973,12 @@ namespace Tests
             }
 
             //Assert
-            Assert.True(success);
-            Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 1);
-            Assert.DoesNotContain(person_from_AddPerson, persons_from_GetAll_aftere_Deleting);
+            //Assert.True(success);
+            success.Should().BeTrue();  
+            //Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 1);
+            persons_from_GetAll_aftere_Deleting.Should().HaveCount(1);
+            //Assert.DoesNotContain(person_from_AddPerson, persons_from_GetAll_aftere_Deleting);
+            persons_from_GetAll_aftere_Deleting.Should().NotContain(person_from_AddPerson);
         }
 
         //Nem megfelelő id-t átadva nem töröl semmit és 0 lesz az eredményt
@@ -976,8 +1029,10 @@ namespace Tests
             }
 
             //Assert
-            Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 2);
-            Assert.False(success);
+            //Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 2);
+            persons_from_GetAll_aftere_Deleting.Should().HaveCount(2);
+            //Assert.False(success);
+            success.Should().BeFalse();
         }
 
         #endregion
