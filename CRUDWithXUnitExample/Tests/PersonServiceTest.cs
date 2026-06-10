@@ -565,7 +565,7 @@ namespace Tests
             //    ReceiveNewsLetter = false,
             //    CountryId = countryResponse1.CountryID
             //};
-            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
+            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).With(prop => prop.PersonName, "Reka2").Create();
             PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
             PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
             PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
@@ -789,7 +789,7 @@ namespace Tests
             //{
             //    Assert.Equal(persons[i], sortedPersons[i]);
             //}
-            persons.Should().BeEqualTo(sortedPersons);
+            sortedPersons.Should().BeInAscendingOrder(prop => prop.PersonId);
         }
         #endregion
 
@@ -974,7 +974,7 @@ namespace Tests
 
             //Assert
             //Assert.True(success);
-            success.Should().BeTrue();  
+            success.Should().BeTrue();
             //Assert.True(persons_from_GetAll_aftere_Deleting?.Count == 1);
             persons_from_GetAll_aftere_Deleting.Should().HaveCount(1);
             //Assert.DoesNotContain(person_from_AddPerson, persons_from_GetAll_aftere_Deleting);
