@@ -4,6 +4,7 @@ using CsvHelper.Configuration;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using RepositoryContracts;
 using ServiceContract;
 using ServiceContract.DTOs;
 using ServiceContract.Enums;
@@ -24,12 +25,12 @@ namespace Services
     {
         //private readonly List<Person>? _persons;
         private readonly ICountryService _countryService;
-        private readonly ApplicationDbContext _personsDbContext;
+        private readonly IPersonsRepository _personsRepository;
 
-        public PersonService(ICountryService countryService, ApplicationDbContext personsDbContext)
+        public PersonService(ICountryService countryService, IPersonsRepository personsRepository)
         {
             this._countryService = countryService;
-            this._personsDbContext = personsDbContext;
+            this._personsRepository = personsRepository;
         }
 
         //public PersonService(bool initialization = true)
@@ -99,7 +100,8 @@ namespace Services
             /*this._personsDbContext.Add(tempPerson);
            this._personsDbContext.SaveChanges();*/
             //A fenti ugyanazt teszi csak stored procedure nélkül.
-            await this._personsDbContext.InsertPerson(tempPerson);
+            //await this._personsRepository.InsertPerson(tempPerson);
+            await this._personsRepository.AddPerson(tempPerson);
 
             return tempPerson.ToPersonResponse();
         }
@@ -117,7 +119,9 @@ namespace Services
 
             //var tempPersons = await  this._personsDbContext.Persons.Include("Country").ToListAsync();
 
-            persons = await this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
+            //persons = await this._personsRepository.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
+
+            persons = (await this._personsRepository.GetAllPersons()).Select(person => person.ToPersonResponse()).ToList();
             return persons;
         }
         public async Task<PersonResponse?> GetPersonById(Guid? id)
@@ -128,7 +132,8 @@ namespace Services
             }
 
             //Person? person = this._personsDbContext.Persons.FirstOrDefault(p => p.PersonID == id);
-            Person? person = await  this._personsDbContext.Persons.Include("Country").FirstOrDefaultAsync(person => person.PersonID == id);
+            //Person? person = await  this._personsRepository.Persons.Include("Country").FirstOrDefaultAsync(person => person.PersonID == id);
+            Person? person = await this._personsRepository.GetPersonById(id.Value); 
 
             if (person == null)
             {
@@ -212,12 +217,14 @@ namespace Services
             //Person? targetPerson = this._personsDbContext.Persons.FirstOrDefault(person => person.PersonID == requestPerson.PersonId);
 
             //Itt most használjuk a stored procedure-t is.
-            int? affectedRows = await this._personsDbContext.UpdatePerson(requestPerson.ToPerson());
+            //int? affectedRows = await this._personsRepository.UpdatePerson(requestPerson.ToPerson());
 
-            Person? targetPerson = requestPerson.ToPerson();
 
-            if (affectedRows == null)
-                return null;
+
+            Person? targetPerson = await this._personsRepository.UpdatePerson(requestPerson.ToPerson());
+
+            if (targetPerson == null)
+                throw new ArgumentException("The given person doesn't exist.");
 
             //targetPerson.Gender = requestPerson?.Gender.ToString();
             //targetPerson.Address = requestPerson?.Address;
@@ -230,19 +237,20 @@ namespace Services
             //Módosítás esetén nem minden propertyt fog újra frissíteni. Minden propertynek van egy attribútuma ami jelzi ha módosítva lett. Csak azokat fogja módosítani a SaveChanges(), ahol ez az attribútum a "modified" állapotban van.
             //this._personsDbContext.SaveChanges();
 
-            return targetPerson.ToPersonResponse();
+            return targetPerson.ToPersonResponse();   
         }
 
         public async Task<bool> DeletePerson(Guid? personId)
         {
-            Person? temp = await
-            this._personsDbContext.Persons.FirstOrDefaultAsync(person => person.PersonID == personId);
-            if (temp == null)
-                return false;
+            //Person? temp = await          this._personsRepository.Persons.FirstOrDefaultAsync(person => person.PersonID == personId);
+            //Person? temp = (await this._personsRepository.GetPersonById(personId.Value));
 
-            this._personsDbContext.Persons?.Remove(temp);
-            await this._personsDbContext.SaveChangesAsync(); 
-            return true;
+            //if (temp == null)
+                //return false;
+
+            //this._personsRepository.Persons?.Remove(temp);
+            //await this._personsRepository.SaveChangesAsync(); 
+            return await this._personsRepository.DeletePerson(personId.Value);
         }
 
         public async Task<MemoryStream> GetPersonsToCSV()
@@ -266,7 +274,8 @@ namespace Services
             csvWriter.WriteField(nameof(PersonResponse.Country));
             csvWriter.NextRecord();
 
-            List<PersonResponse> persons = this._personsDbContext.Persons.Include("Country").Select(persons => persons.ToPersonResponse()).ToList();
+            //List<PersonResponse> persons = this._personsRepository.Persons.Include("Country").Select(persons => persons.ToPersonResponse()).ToList();
+            List<PersonResponse> persons = (await this._personsRepository.GetAllPersons()).Select(person => person.ToPersonResponse()).ToList();
 
             //await csvWriter.WriteRecordsAsync(persons);
 
@@ -308,7 +317,8 @@ namespace Services
                 worksheet.Cells["D1"].Value = "Address";
                 worksheet.Cells["E1"].Value = "Country";
 
-                List<PersonResponse> persons = await this._personsDbContext.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
+                //List<PersonResponse> persons = await this._personsRepository.Persons.Include("Country").Select(person => person.ToPersonResponse()).ToListAsync();
+                List<PersonResponse> persons = (await this._personsRepository.GetAllPersons()).Select(person => person.ToPersonResponse()).ToList();
 
                 int row = 2;
                 foreach (PersonResponse person in persons)

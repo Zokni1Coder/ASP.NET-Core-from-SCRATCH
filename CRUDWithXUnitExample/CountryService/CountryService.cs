@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
+using RepositoryContracts;
 using ServiceContract;
 using ServiceContract.DTOs;
 using System.Runtime.InteropServices;
@@ -11,11 +12,11 @@ namespace Services
     public class CountryService : ICountryService
     {
         //fieldként elmentjük a contextot, hogy a megfelelő adatbázisra tudjunk hivatkozni.
-        private readonly ApplicationDbContext _dbContext;
+        private readonly ICountriesRepository _countryRepository;
 
-        public CountryService(ApplicationDbContext personsDbContext)
+        public CountryService(ICountriesRepository countryRepository)
         {
-            this._dbContext = personsDbContext;
+            this._countryRepository = countryRepository;
         }
 
 
@@ -44,7 +45,12 @@ namespace Services
             }
 
             //Alul meghagyom a korábbi verziót összehasonlításnak.
-            if (await this._dbContext.Countries.CountAsync(country => country.CountryName == countryRequest.Name) > 0)
+
+            //if (await this._countryService.GetAllCountries().CountAsync(country => country.CountryName == countryRequest.Name) > 0)
+            //{
+            //    throw new Exception("The given Country name is already exists!");
+            //}
+            if (await this._countryRepository.GetCountryByName(countryRequest.Name) != null)
             {
                 throw new Exception("The given Country name is already exists!");
             }
@@ -60,9 +66,11 @@ namespace Services
             //Generálunk neki Guid-t
             country.CountryID = Guid.NewGuid();
             //Hozzáadjuk a belső listához
-            this._dbContext.Add(country);
+            //this._countryRepository.Add(country);
+            await this._countryRepository.AddCountry(country);
             //Mikor insert történik kötelessek vagyunk elmenteni a változtatást.
-            await this._dbContext.SaveChangesAsync();
+            //Ez a SaveChangesAsync már nem fog kelleni nekünk, mert a CountryRepositoryban meghívjuk.
+            //await this._countryRepository.SaveChangesAsync();
 
             //Azért célszerű nem a Country egyedet visszaadni és inkább csak a Service-en belül hagyni, hogy kívülről ne legyen látható, csak amit engedünk a CountryResponse-zal.            
             return country.ToCountryResponse();
@@ -81,7 +89,7 @@ namespace Services
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets["Countries"];
 
                 //Összeszámolja sorokat amik nem csak üres cellákat tartalmaz.
-                int row = worksheet.Dimension.Rows;                
+                int row = worksheet.Dimension.Rows;
 
                 for (int i = 2; i <= row; i++)
                 {
@@ -89,7 +97,8 @@ namespace Services
 
                     if (!string.IsNullOrEmpty(countryName))
                     {
-                        List<string?> countryNames = await this._dbContext.Countries.Select(country => country.CountryName).ToListAsync();
+                        //List<string?> countryNames = await this._countryRepository.Countries.Select(country => country.CountryName).ToListAsync();
+                        List<string?> countryNames = (await this._countryRepository.GetAllCountries()).Select(country => country.CountryName).ToList();
 
                         if (!countryNames.Contains(countryName))
                         {
@@ -98,12 +107,13 @@ namespace Services
                                 Name = countryName
                             };
                             Country country = countryAddRequest.ToCountry();
-                            await this._dbContext.Countries.AddAsync(country);
+                            //await this._countryRepository.Countries.AddAsync(country);
+                            await this._countryRepository.AddCountry(country);
 
-                            await this._dbContext.SaveChangesAsync();
+                            //await this._countryRepository.SaveChangesAsync();                       
                             insertedCountry++;
                         }
-                    }               
+                    }
                 }
             }
             ;
@@ -112,7 +122,9 @@ namespace Services
 
         public async Task<List<CountryResponse>> GetAllCountries()
         {
-            List<CountryResponse> countries = await this._dbContext.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
+            //List<CountryResponse> countries = await this._countryRepository.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
+            List<CountryResponse> countries = (await this._countryRepository.GetAllCountries()).Select(country => country.ToCountryResponse()).ToList();
+
             return countries;
 
             //return (List<CountryResponse>)this._dbContext.Select(x => x.ToCountryResponse()).ToList();
@@ -131,7 +143,9 @@ namespace Services
             //Amint megtalál egy megfelelő elemet, visszaadja.
             //Country? country = this._dbContext.FirstOrDefault(country => country.CountryID == countryId);
 
-            Country? country = await this._dbContext.Countries.FirstOrDefaultAsync(country => country.CountryID == countryId);
+            //Country? country = await this._countryRepository.Countries.FirstOrDefaultAsync(country => country.CountryID == countryId);
+            Country? country = await this._countryRepository.GetCountryById(countryId.Value);
+
             if (country is null)
             {
                 return null;

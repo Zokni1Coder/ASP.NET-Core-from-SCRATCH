@@ -24,6 +24,8 @@ namespace Tests
                 new DbContextOptionsBuilder<ApplicationDbContext>().Options
                 );
 
+            
+
             // A mockolt DbContext objektum lekérése.
             // Ezt használjuk a tesztben a valódi DbContext helyett.
             ApplicationDbContext DbContext = dbContextMock.Object;
