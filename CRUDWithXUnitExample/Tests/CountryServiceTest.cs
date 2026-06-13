@@ -32,7 +32,7 @@ namespace Tests
 
             dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitial);
 
-            _countryService = new CountryService(DbContext);
+            _countryService = new CountryService(null);
 
             //Mivel mi azokat az adatokat szeretnénk hasznáni, amit már itt meg is adtunk, ezért nem szeretnénk inicializálni a Mock-oltakat, ezért 0 értéket adunk át.
             //this._countryService = new CountryService(new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options));

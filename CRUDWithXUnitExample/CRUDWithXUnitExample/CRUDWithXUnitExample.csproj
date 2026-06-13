@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CountryService\Services.csproj" />
+    <ProjectReference Include="..\Repositories\Repositories.csproj" />
+    <ProjectReference Include="..\RepositoryContracts\RepositoryContracts.csproj" />
     <ProjectReference Include="..\ServiceContract\ServiceContract.csproj" />
   </ItemGroup>
 

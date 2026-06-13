@@ -75,7 +75,7 @@ namespace Entities
             modelBuilder.Entity<Person>().ToTable("Persons").ToString();
 
             //Fluent API
-            modelBuilder.Entity<Person>().Property(property => property.TIN).HasColumnName("TaxIdentificationNumber").HasColumnType("varchar(8)").HasDefaultValue("DefualtValue");
+            modelBuilder.Entity<Person>().Property(property => property.TIN).HasColumnName("TaxIdentificationNumber").HasColumnType("varchar(8)").HasDefaultValue("DefualtV");
 
             modelBuilder.Entity<Person>().ToTable(t => t.HasCheckConstraint("CHK_TIN", "len([TaxIdentificationNumber]) = 8"));
 

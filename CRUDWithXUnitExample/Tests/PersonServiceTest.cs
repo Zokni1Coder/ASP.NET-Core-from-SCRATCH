@@ -42,8 +42,8 @@ namespace Tests
             dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitial);
             dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitial);
 
-            _countryService = new CountryService(DbContext);
-            _personService = new PersonService(this._countryService, DbContext);
+            _countryService = new CountryService(null);
+            _personService = new PersonService(this._countryService, null);
         }
 
         #region AddPerson

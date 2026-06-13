@@ -1,5 +1,7 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
+using RepositoryContracts;
 using Rotativa.AspNetCore;
 using ServiceContract;
 using Services;
@@ -7,6 +9,10 @@ using Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IPersonsRepository, PersonRepository>();
+
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 //Megadjuk a IoC Poolba a db kapcsolatot.

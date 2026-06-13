@@ -4,6 +4,7 @@ using Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entities.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class PersonsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613193236_Modifying_TIN_DefualtValue")]
+    partial class Modifying_TIN_DefualtValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +101,7 @@ namespace Entities.Migrations
                     b.Property<string>("TIN")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("varchar(8)")
-                        .HasDefaultValue("DefualtV")
+                        .HasDefaultValue("DefualtValue")
                         .HasColumnName("TaxIdentificationNumber");
 
                     b.HasKey("PersonID");
