@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Xunit.Abstractions;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using Moq;
+using RepositoryContracts;
 
 namespace Tests
 {
@@ -19,6 +21,8 @@ namespace Tests
         private readonly IPersonService _personService;
         private readonly ICountryService _countryService;
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly Mock<IPersonsRepository> _personsRepositoryMock;
+        private readonly IPersonsRepository _personsRepository;
         private readonly IFixture _fixture;
 
         //Adjuk hozzá a DI-t alkalmazva az ITestOutputHelper Interface-t.
@@ -27,6 +31,9 @@ namespace Tests
             //ApplicationDbContext personsDbContext = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
             //this._countryService = new CountryService(personsDbContext);
             //this._personService = new PersonService(_countryService, personsDbContext);
+            this._personsRepositoryMock = new Mock<IPersonsRepository>();
+            this._personsRepository = this._personsRepositoryMock.Object;
+
             _fixture = new Fixture();
             this._testOutputHelper = testOutputHelper;
 
@@ -43,7 +50,7 @@ namespace Tests
             dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitial);
 
             _countryService = new CountryService(null);
-            _personService = new PersonService(this._countryService, null);
+            _personService = new PersonService(this._countryService, this._personsRepository);
         }
 
         #region AddPerson
@@ -51,8 +58,8 @@ namespace Tests
         /// Ha null-t adunk át paraméterül, akkor ArgumentNullException kell hogy legyen
         /// </summary>
         [Fact]
-        public async Task AddPerson_AddNullValue()
-        {
+        public async Task AddPerson_AddNullValue_ToBeArgumentNullException()
+        {              
             //Act
             Func<Task> action = async () =>
             {
@@ -66,7 +73,7 @@ namespace Tests
         /// Ha az PersonAddRequest Name értéke null, akkor ArgumentException kell hogy legyen
         /// </summary>
         [Fact]
-        public async void AddPerson_PersonAddRequestNameIsNull()
+        public async void AddPerson_PersonAddRequestNameIsNull_ShouldBeArgumentException()
         {
             //Arrange
             //PersonAddRequest personAddRequest = new PersonAddRequest()
@@ -93,7 +100,7 @@ namespace Tests
         /// Ha megfelelő Person-t adunk hozzá, akkor bele kell hogy kerüljön a listába és egy PersonResponse objektumot kell hogy visszaadjon az újonnan generált PersonId-val.
         /// </summary>
         [Fact]
-        public async Task AddPerson_ProperPerson()
+        public async Task AddPerson_ProperPerson_ShouldBeSuccesful()
         {
             //Arrange
             //PersonAddRequest personAddRequest = new PersonAddRequest()
@@ -112,17 +119,29 @@ namespace Tests
             //Ha nem lenne email, akkor simán csak a Create() kell a Build().With() nélkül.
             PersonAddRequest personAddRequest = this._fixture.Build<PersonAddRequest>().With(person => person.Email, "someone@gmail.com").Create();
 
+            Person person = personAddRequest.ToPerson();
+            PersonResponse expected_response = person.ToPersonResponse();
+            
+
+            this._personsRepositoryMock.Setup(prop => prop.AddPerson(It.IsAny<Person>())).ReturnsAsync(person);
+
+
+
             //Act
             PersonResponse personResponse_from_Add = await this._personService.AddPerson(personAddRequest);
-            List<PersonResponse>? personsList = await this._personService.GetAllPersons();
+
+            expected_response.PersonId = personResponse_from_Add.PersonId;
+            //List<PersonResponse>? personsList = await this._personService.GetAllPersons();
 
             //Asserts
             //Assert.True(personResponse_from_Add.PersonId != Guid.Empty);
             personResponse_from_Add.PersonId.Should().NotBe(Guid.Empty);
 
+            personResponse_from_Add.Should().Be(expected_response);
+
             //Assert.Equal(personResponse_from_Add.ReceiveNewsLetter, personsList[0].ReceiveNewsLetter);
             //Assert.Contains(personResponse_from_Add, await this._personService.GetAllPersons());
-            personsList.Should().Contain(personResponse_from_Add);
+            //personsList.Should().Contain(personResponse_from_Add);
         }
 
         //Ha helytelen az emailcím, akkor InvalidOperationException kell hogy legyen.
@@ -149,7 +168,7 @@ namespace Tests
         /// Ha null paramétert kap, akkor ArgumentNullException kivétel kell hogy dobódjon
         /// </summary>
         [Fact]
-        public async Task GetPersonById_EmptyArgument()
+        public async Task GetPersonById_ShouldBeEmptyArgument()
         {
             //Arrange
             Guid? guid = null;
@@ -191,15 +210,20 @@ namespace Tests
             //    ReceiveNewsLetter = true,
             //    CountryId = countryResponse_from_AddCountry.CountryID
             //};
-            PersonAddRequest request = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse_from_AddCountry.CountryID).Create();
+            Person person = this._fixture.Build<Person>().With(prop => prop.CountryID, countryResponse_from_AddCountry.CountryID).Create();
+
+            PersonResponse personResponse_expected = person.ToPersonResponse();
 
             //Act:
-            PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
-            PersonResponse? person_from_GetPersonById = await this._personService.GetPersonById(person_from_AddPerson.PersonId);
+            //PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
+
+            this._personsRepositoryMock.Setup(method => method.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person);
+
+            PersonResponse? person_from_GetPersonById = await this._personService.GetPersonById(person.PersonID);
 
             //Assert
             //Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
-            person_from_GetPersonById.Should().Be(person_from_AddPerson);
+            person_from_GetPersonById.Should().Be(personResponse_expected);
         }
 
         //Ha olyan id-t adunk meg, ami nem létezik, akkor a visszatérési objektum null lesz.
