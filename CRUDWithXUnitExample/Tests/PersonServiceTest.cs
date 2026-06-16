@@ -13,6 +13,7 @@ using FluentAssertions;
 using FluentAssertions.Specialized;
 using Moq;
 using RepositoryContracts;
+using System.Linq.Expressions;
 
 namespace Tests
 {
@@ -59,7 +60,7 @@ namespace Tests
         /// </summary>
         [Fact]
         public async Task AddPerson_AddNullValue_ToBeArgumentNullException()
-        {              
+        {
             //Act
             Func<Task> action = async () =>
             {
@@ -121,7 +122,7 @@ namespace Tests
 
             Person person = personAddRequest.ToPerson();
             PersonResponse expected_response = person.ToPersonResponse();
-            
+
 
             this._personsRepositoryMock.Setup(prop => prop.AddPerson(It.IsAny<Person>())).ReturnsAsync(person);
 
@@ -168,7 +169,7 @@ namespace Tests
         /// Ha null paramétert kap, akkor ArgumentNullException kivétel kell hogy dobódjon
         /// </summary>
         [Fact]
-        public async Task GetPersonById_ShouldBeEmptyArgument()
+        public async Task GetPersonById_NullParam_ShouldBeEmptyArgument()
         {
             //Arrange
             Guid? guid = null;
@@ -190,39 +191,17 @@ namespace Tests
         //Ha megfelelő guid-t adunk át, akkor megtalálja és visszaadja PersonResponse objektumként
         [Fact]
         public async Task GetPersonById_ProperArgument()
-        {
-            //Arrange
-            //CountryAddRequest countryAddRequest = new CountryAddRequest()
-            //{
-            //    Name = "Hungary",
-            //};
-            CountryAddRequest countryAddRequest = this._fixture.Create<CountryAddRequest>();
-
-            CountryResponse countryResponse_from_AddCountry = await this._countryService.AddCountry(countryAddRequest);
-
-            //PersonAddRequest request = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka",
-            //    Email = "asd@gmail.com",
-            //    DateOfBirth = DateTime.Parse("2005-05-18"),
-            //    Gender = Gender.Male,
-            //    Address = "asd 11.",
-            //    ReceiveNewsLetter = true,
-            //    CountryId = countryResponse_from_AddCountry.CountryID
-            //};
-            Person person = this._fixture.Build<Person>().With(prop => prop.CountryID, countryResponse_from_AddCountry.CountryID).Create();
+        {                       
+            Person person = this._fixture.Build<Person>().With(prop => prop.CountryID, new Guid()).Without(prop => prop.Country).Create();
 
             PersonResponse personResponse_expected = person.ToPersonResponse();
 
-            //Act:
-            //PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
-
+            //Act:            
             this._personsRepositoryMock.Setup(method => method.GetPersonById(It.IsAny<Guid>())).ReturnsAsync(person);
 
             PersonResponse? person_from_GetPersonById = await this._personService.GetPersonById(person.PersonID);
 
             //Assert
-            //Assert.Equal(person_from_AddPerson, person_from_GetPersonById);
             person_from_GetPersonById.Should().Be(personResponse_expected);
         }
 
@@ -230,20 +209,10 @@ namespace Tests
         [Fact]
         public async Task GetPersonById_DoesntExistingGuidInTheListArgument()
         {
-            //Arrange
-            //PersonAddRequest request = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka",
-            //    Email = "asd@gmail.com",
-            //    DateOfBirth = new DateTime(2005, 05, 18),
-            //    Gender = Gender.Male,
-            //    Address = "asd 11.",
-            //    ReceiveNewsLetter = true,
-            //    CountryId = Guid.NewGuid()
-            //};
             PersonAddRequest request = this._fixture.Create<PersonAddRequest>();
+            Person person = request.ToPerson();
+
             //Act:
-            PersonResponse person_from_AddPerson = await this._personService.AddPerson(request);
             PersonResponse? person_from_GetPersonById = new PersonResponse();
             person_from_GetPersonById = await this._personService.GetPersonById(Guid.NewGuid());
 
@@ -261,87 +230,36 @@ namespace Tests
         [Fact]
         public async Task GetAllPersons_EmptyList()
         {
+            List<Person> empty_persons = new List<Person>();
+            this._personsRepositoryMock.Setup(method => method.GetAllPersons()).ReturnsAsync(empty_persons);
+
             //Act
             List<PersonResponse>? persons = new List<PersonResponse>();
             persons = await this._personService.GetAllPersons();
 
             //Assert
-            //Assert.Empty(persons);
             persons.Should().BeEmpty();
         }
 
         //Megfelelő elemeket ad vissza a lekérdezés.
         [Fact]
         public async Task GetAllPersons_ProperElements()
-        {
-            //Arrange
-            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            //{
-            //    Name = "Hungary"
-            //};
-            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            //{
-            //    Name = "Austria"
-            //};
-            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
-            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
+        {                                    
+            Person person1 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
+            Person person2 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
 
-            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
+            List<Person> persons = new List<Person>();
+            persons.Add(person1);
+            persons.Add(person2);
 
-            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka",
-            //    Email = "asd@gmail.com",
-            //    DateOfBirth = new DateTime(2005, 05, 18),
-            //    Gender = Gender.Female,
-            //    Address = "asd 11.",
-            //    ReceiveNewsLetter = true,
-            //    CountryId = countryResponse1.CountryID
-            //};
-            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka2",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(2000, 09, 22),
-            //    Gender = Gender.Male,
-            //    Address = "asd 22.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse2.CountryID
-            //};
-            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
-            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
+            List<PersonResponse> expected = persons.Select(person => person.ToPersonResponse()).ToList();
 
-            //Act
-            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
+            this._personsRepositoryMock.Setup(method => method.GetAllPersons()).ReturnsAsync(persons);
 
-            //Pont ugyanúgy kell kiíratni a számunkra fontos adatokat, mint Console projektekben.
-            //Expected:
-            this._testOutputHelper.WriteLine("Expected:");
-            List<PersonResponse> person_From_AddPerson = new List<PersonResponse>() { personResponse1, personResponse2 };
-
-            foreach (PersonResponse person in person_From_AddPerson)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
-
-
-            //Actual:
-            this._testOutputHelper.WriteLine("Actual:");
-            List<PersonResponse>? persons_from_GetAllPersons = await this._personService.GetAllPersons();
-
-            foreach (PersonResponse person in persons_from_GetAllPersons)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
+            List<PersonResponse>? result = await this._personService.GetAllPersons();
 
             //Asssert
-            foreach (PersonResponse person in person_From_AddPerson)
-            {
-                //Assert.Contains(person, persons_from_GetAllPersons);
-                persons_from_GetAllPersons.Should().Contain(person);
-            }
+            result.Should().BeEqualTo(expected);          
         }
 
         #endregion
@@ -353,88 +271,23 @@ namespace Tests
         public async Task GetFilteredPerson_EmptyArgument()
         {
             //Arrange
-            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            //{
-            //    Name = "Hungary"
-            //};
-            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            //{
-            //    Name = "Austria"
-            //};
-            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
-            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
+            List<Person> persons = new List<Person>();
+            Person person1 = this._fixture.Build<Person>().With(prop => prop.Email, "asd@gmail.com").With(prop => prop.Country, null as Country).Create();
+            Person person2 = this._fixture.Build<Person>().With(prop => prop.Email, "asd@gmail.com").With(prop => prop.Country, null as Country).Create();
+            Person person3 = this._fixture.Build<Person>().With(prop => prop.Email, "asd@gmail.com").With(prop => prop.Country, null as Country).Create();
+            persons.Add(person1);
+            persons.Add(person2);
+            persons.Add(person3);
 
-            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
+            List<PersonResponse> expected = persons.Select(person => person.ToPersonResponse()).ToList();
 
-            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka",
-            //    Email = "asd@gmail.com",
-            //    DateOfBirth = new DateTime(2005, 05, 18),
-            //    Gender = Gender.Female,
-            //    Address = "asd 11.",
-            //    ReceiveNewsLetter = true,
-            //    CountryId = countryResponse1.CountryID
-            //};
-            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka2",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(2000, 09, 22),
-            //    Gender = Gender.Male,
-            //    Address = "asd 22.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse2.CountryID
-            //};
-            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka3",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(1996, 09, 17),
-            //    Gender = Gender.Female,
-            //    Address = "asd 30.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse2.CountryID
-            //};
-            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka4",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(1971, 12, 05),
-            //    Gender = Gender.Male,
-            //    Address = "asd 50.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse1.CountryID
-            //};
-            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
-            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
-            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
-            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
-
-            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
+            this._personsRepositoryMock.Setup(method => method.GetAllPersons()).ReturnsAsync(persons);
+            this._personsRepositoryMock.Setup(method => method.GetFilteredPerson(It.IsAny<Expression<Func<Person, bool>>>())).ReturnsAsync(persons);
 
             //Act
-            List<PersonResponse>? person_from_GetAll = await this._personService.GetAllPersons();
-            this._testOutputHelper.WriteLine("Expected:");
-            foreach (PersonResponse person in person_from_GetAll)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
+            List<PersonResponse> result = await this._personService.GetFilteredPerson(nameof(Person.PersonName), "");
 
-            List<PersonResponse>? persons_from_GetFiltered = await this._personService.GetFilteredPerson("CountryId", null);
-            this._testOutputHelper.WriteLine("Actual:");
-            foreach (PersonResponse person in persons_from_GetFiltered)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
-
-            //Assert
-            //Assert.Equal(person_from_GetAll, persons_from_GetFiltered);
-            persons_from_GetFiltered.Should().BeEqualTo(person_from_GetAll);
+            result.Should().BeEqualTo(expected);
         }
 
 
@@ -533,92 +386,27 @@ namespace Tests
         [Fact]
         public async Task GetFilteredPerson_ProperArgumentsName()
         {
-            //Arrange
-            //CountryAddRequest countryAddRequest1 = new CountryAddRequest()
-            //{
-            //    Name = "Hungary"
-            //};
-            //CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            //{
-            //    Name = "Austria"
-            //};
+            
+            Person person1 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
+            Person person2 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
+            Person person3 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
+            Person person4 = this._fixture.Build<Person>().With(prop => prop.Country, null as Country).Create();
 
-            CountryAddRequest countryAddRequest1 = this._fixture.Create<CountryAddRequest>();
-            CountryAddRequest countryAddRequest2 = this._fixture.Create<CountryAddRequest>();
+            List<Person> persons = new List<Person>();
+            persons.Add(person1);
+            persons.Add(person2);
+            persons.Add(person3);
+            persons.Add(person4);
 
-            CountryResponse countryResponse1 = await this._countryService.AddCountry(countryAddRequest1);
-            CountryResponse countryResponse2 = await this._countryService.AddCountry(countryAddRequest2);
-
-            //PersonAddRequest personAddRequest1 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka",
-            //    Email = "asd@gmail.com",
-            //    DateOfBirth = new DateTime(2005, 05, 18),
-            //    Gender = Gender.Female,
-            //    Address = "asd 11.",
-            //    ReceiveNewsLetter = true,
-            //    CountryId = countryResponse1.CountryID
-            //};
-            //PersonAddRequest personAddRequest2 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka2",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(2000, 09, 22),
-            //    Gender = Gender.Male,
-            //    Address = "asd 22.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse2.CountryID
-            //};
-            //PersonAddRequest personAddRequest3 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka3",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(1996, 09, 17),
-            //    Gender = Gender.Female,
-            //    Address = "asd 30.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse2.CountryID
-            //};
-            //PersonAddRequest personAddRequest4 = new PersonAddRequest()
-            //{
-            //    PersonName = "Reka4",
-            //    Email = "asd2@gmail.com",
-            //    DateOfBirth = new DateTime(1971, 12, 05),
-            //    Gender = Gender.Male,
-            //    Address = "asd 50.",
-            //    ReceiveNewsLetter = false,
-            //    CountryId = countryResponse1.CountryID
-            //};
-            PersonAddRequest personAddRequest1 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).With(prop => prop.PersonName, "Reka2").Create();
-            PersonAddRequest personAddRequest2 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse1.CountryID).Create();
-            PersonAddRequest personAddRequest3 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
-            PersonAddRequest personAddRequest4 = this._fixture.Build<PersonAddRequest>().With(prop => prop.CountryId, countryResponse2.CountryID).Create();
-
-            PersonResponse personResponse1 = await this._personService.AddPerson(personAddRequest1);
-            PersonResponse personResponse2 = await this._personService.AddPerson(personAddRequest2);
-            PersonResponse personResponse3 = await this._personService.AddPerson(personAddRequest3);
-            PersonResponse personResponse4 = await this._personService.AddPerson(personAddRequest4);
+            List<PersonResponse> expected = persons.Select(person => person.ToPersonResponse()).ToList();
 
             //Act
-            List<PersonResponse> person_from_GetFiltered = await this._personService.GetFilteredPerson("PersonName", "2");
-            this._testOutputHelper.WriteLine("Actual");
-            foreach (PersonResponse person in person_from_GetFiltered)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
-            List<PersonResponse>? AllPerson = await this._personService.GetAllPersons();
+            this._personsRepositoryMock.Setup(method => method.GetAllPersons()).ReturnsAsync(persons);
+            this._personsRepositoryMock.Setup(method => method.GetFilteredPerson(It.IsAny<Expression<Func<Person, bool>>>())).ReturnsAsync(persons);
 
-            List<PersonResponse>? filtered_from_AddPerson = AllPerson?.Where(person => person.PersonName.Contains("2")).ToList();
+            List<PersonResponse> result = await this._personService.GetFilteredPerson(nameof(Person.PersonName), "ads");
 
-            this._testOutputHelper.WriteLine("Expected:");
-            foreach (PersonResponse person in filtered_from_AddPerson)
-            {
-                this._testOutputHelper.WriteLine(person.ToString());
-            }
-
-            //Assert
-            //Assert.Equal(filtered_from_AddPerson, person_from_GetFiltered);
-            filtered_from_AddPerson.Should().BeEqualTo(person_from_GetFiltered);
+            result.Count.Should().Be(expected.Count);
         }
 
         #endregion
