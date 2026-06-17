@@ -1,6 +1,8 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
+using ServiceContract.DTOs;
+using ServiceContract.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

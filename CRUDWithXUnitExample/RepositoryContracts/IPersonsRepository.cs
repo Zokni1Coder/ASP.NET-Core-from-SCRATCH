@@ -1,4 +1,6 @@
 ﻿using Entities;
+using ServiceContract.DTOs;
+using ServiceContract.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,5 @@ namespace RepositoryContracts
         Task<List<Person>> GetFilteredPerson(Expression<Func<Person, bool>> predicate);
         Task<Person> UpdatePerson(Person requestPerson);
         Task<bool> DeletePerson(Guid? personId);
-
     }
 }
