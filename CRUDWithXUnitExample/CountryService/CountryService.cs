@@ -52,7 +52,7 @@ namespace Services
             //}
             if (await this._countryRepository.GetCountryByName(countryRequest.Name) != null)
             {
-                throw new Exception("The given Country name is already exists!");
+                throw new ArgumentException("The given Country name is already exists!");
             }
 
             //if (this._dbContext.Where(x => x.CountryName == countryRequest.Name).Count() > 0)

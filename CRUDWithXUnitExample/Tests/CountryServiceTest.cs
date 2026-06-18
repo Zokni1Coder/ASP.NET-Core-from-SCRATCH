@@ -1,7 +1,11 @@
-﻿using Entities;
+﻿using AutoFixture;
+using Entities;
 using EntityFrameworkCoreMock;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using Moq;
+using RepositoryContracts;
 using ServiceContract;
 using ServiceContract.DTOs;
 using Services;
@@ -12,6 +16,9 @@ namespace Tests
     public class CountryServiceTest
     {
         private readonly ICountryService _countryService;
+        private readonly Mock<ICountriesRepository> _countriesRepositoryMock;
+        private readonly ICountriesRepository _countriesRepository;
+        private readonly IFixture _fixture;
 
         //constructor
         public CountryServiceTest()
@@ -19,20 +26,18 @@ namespace Tests
             //A Tesztek során használt adatokat (egyedeket) tárolja. DB helyett.
             var countriesInitial = new List<Country>();
 
+            this._fixture = new Fixture();
+
             // Mockolt DbContext létrehozása adatbázis kapcsolat nélkül.
             DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
                 new DbContextOptionsBuilder<ApplicationDbContext>().Options
                 );
 
-            
+            this._countriesRepositoryMock = new Mock<ICountriesRepository>();
 
-            // A mockolt DbContext objektum lekérése.
-            // Ezt használjuk a tesztben a valódi DbContext helyett.
-            ApplicationDbContext DbContext = dbContextMock.Object;
+            this._countriesRepository = this._countriesRepositoryMock.Object;
 
-            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitial);
-
-            _countryService = new CountryService(null);
+            _countryService = new CountryService(this._countriesRepository);
 
             //Mivel mi azokat az adatokat szeretnénk hasznáni, amit már itt meg is adtunk, ezért nem szeretnénk inicializálni a Mock-oltakat, ezért 0 értéket adunk át.
             //this._countryService = new CountryService(new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options));
@@ -44,16 +49,14 @@ namespace Tests
         public async Task AddCountry_NullCountry()
         {
             //Arrange
-            CountryAddRequest? countryAddRequest = null;
+            //CountryAddRequest? countryAddRequest = null;
 
             //Assert
             await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
                 //Act                              
-                await this._countryService.AddCountry(countryAddRequest);
+                await this._countryService.AddCountry(null);
             });
-
-            //public CountryResponse AddCountry(CountryAddRequest? countryRequest);
         }
 
         //Helyes átalakítás CountryAddRequest-ről Country egyeddé
@@ -93,20 +96,17 @@ namespace Tests
         public async Task AddCountry_DuplicateCountryName()
         {
             //Arrange
-            CountryAddRequest countryAddRequest1 = new CountryAddRequest()
+            CountryAddRequest country = this._fixture.Build<CountryAddRequest>().Create();
+
+            this._countriesRepositoryMock.Setup(method => method.GetCountryByName(It.IsAny<string>())).ReturnsAsync(country.ToCountry());
+
+            Func<Task> action = async () =>
             {
-                Name = "Hungary"
+                await this._countryService.AddCountry(country);
             };
-            CountryAddRequest countryAddRequest2 = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
+
             //Assert
-            await Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await this._countryService.AddCountry(countryAddRequest1);
-                await this._countryService.AddCountry(countryAddRequest2);
-            });
+            await action.Should().ThrowAsync<ArgumentException>();
         }
 
         //Ha megfelelő a CountryName akkor megfelelő property-vel rendelkező CountryAddResponse objetkumot kapunk
@@ -114,18 +114,16 @@ namespace Tests
         public async Task AddCountry_ProperCountry()
         {
             //Arrange
-            CountryAddRequest countryAddRequest = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
+            CountryAddRequest addRequest = this._fixture.Build<CountryAddRequest>().Create();
+
+            this._countriesRepositoryMock.Setup(method => method.GetCountryByName(It.IsAny<string>())).ReturnsAsync(null as Country);
             //Act
-            CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
-            List<CountryResponse> responseList = await this._countryService.GetAllCountries();
+            CountryResponse result = await this._countryService.AddCountry(addRequest);
+
+            CountryResponse expected = addRequest.ToCountry().ToCountryResponse();
+
             //Assert
-            Assert.True(countryResponse.CountryID != Guid.Empty);
-            //Ahhoz, hogy a Contains(Equal) helyesen máködjön, deklarálni kell hogy a County objektum mikor lesz egyenlő (Equal override) egy másik county objektummal.
-            //Különben referenciát néz.
-            Assert.Contains(countryResponse, responseList);
+            result.Name.Should().Be(expected.Name);
         }
         #endregion
 
@@ -134,44 +132,30 @@ namespace Tests
         [Fact]
         public async Task GetAllCountries_EmptyList()
         {
+            //Arrange
+            this._countriesRepositoryMock.Setup(method => method.GetAllCountries()).ReturnsAsync(new List<Country>());
             //Act
-            List<CountryResponse> acturalCountries = await this._countryService.GetAllCountries();
+            List<CountryResponse> result = await this._countryService.GetAllCountries();
             //Assert
-            Assert.Empty(acturalCountries);
-
+            result.Should().BeEmpty();
         }
 
         [Fact]
         public async Task GetAllCountries()
         {
             //Arrange
-            List<CountryAddRequest> countryAddRequests = new List<CountryAddRequest>()
-            {
-                new CountryAddRequest()
-                {
-                    Name = "Hungary"
-                },
-                new CountryAddRequest()
-                {
-                    Name = "Austria"
-                }
-            };
-            //Act
-            List<CountryResponse> countryFromService = new List<CountryResponse>();
-            foreach (CountryAddRequest countryAddRequest in countryAddRequests)
-            {
-                countryFromService.Add(await this._countryService.AddCountry(countryAddRequest));
-            }
+            List<Country> countries = new List<Country>();
+            countries.Add(this._fixture.Build<Country>().Without(prop => prop.Persons).Create());
+            countries.Add(this._fixture.Build<Country>().Without(prop => prop.Persons).Create());
+            countries.Add(this._fixture.Build<Country>().Without(prop => prop.Persons).Create());
 
-            List<CountryResponse> actualCountryFromService = await this._countryService.GetAllCountries();
+            this._countriesRepositoryMock.Setup(method => method.GetAllCountries()).ReturnsAsync(countries);
+            List<CountryResponse> expected = countries.Select(country => country.ToCountryResponse()).ToList();
+            //Act
+            List<CountryResponse> result = await this._countryService.GetAllCountries();
 
             //Assert
-            foreach (CountryResponse country in countryFromService)
-            {
-                //Ahhoz, hogy a Contains(Equal) helyesen máködjön, deklarálni kell hogy a County objektum mikor lesz egyenlő (Equal override) egy másik county objektummal.
-                //Különben referenciát néz.
-                Assert.Contains(country, actualCountryFromService);
-            }
+            result.Should().BeEqualTo(expected);
         }
         #endregion
 
@@ -193,15 +177,15 @@ namespace Tests
         public async Task GetCountryByCountryId_CountryIdIsProper()
         {
             //Arrange
-            CountryAddRequest countryAddRequest = new CountryAddRequest()
-            {
-                Name = "Hungary"
-            };
-            CountryResponse countryResponse = await this._countryService.AddCountry(countryAddRequest);
+            Country country = this._fixture.Build<Country>().Without(prop => prop.Persons).Create();
+
+            CountryResponse expected = country.ToCountryResponse();
+
+            this._countriesRepositoryMock.Setup(method => method.GetCountryById(It.IsAny<Guid>())).ReturnsAsync(country);
             //Act            
-            CountryResponse? Country_from_GetCountry = await this._countryService.GetCountryById(countryResponse.CountryID);
+            CountryResponse? result = await this._countryService.GetCountryById(country.CountryID);
             //Assert
-            Assert.Equal(countryResponse, Country_from_GetCountry);
+            result.Should().Be(expected);
         }
         #endregion
     }
