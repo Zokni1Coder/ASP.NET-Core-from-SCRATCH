@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CountryService\Services.csproj" />
+    <ProjectReference Include="..\CRUDWithXUnitExample\CRUDWithXUnitExample.csproj" />
     <ProjectReference Include="..\ServiceContract\ServiceContract.csproj" />
   </ItemGroup>
 

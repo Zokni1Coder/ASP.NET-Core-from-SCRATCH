@@ -16,28 +16,32 @@ namespace Tests
     public class CountryServiceTest
     {
         private readonly ICountryService _countryService;
+        //Létrehozunk egy Mock mezőt
         private readonly Mock<ICountriesRepository> _countriesRepositoryMock;
         private readonly ICountriesRepository _countriesRepository;
         private readonly IFixture _fixture;
 
         //constructor
         public CountryServiceTest()
-        {
-            //A Tesztek során használt adatokat (egyedeket) tárolja. DB helyett.
-            var countriesInitial = new List<Country>();
-
+        {                        
             this._fixture = new Fixture();
 
-            // Mockolt DbContext létrehozása adatbázis kapcsolat nélkül.
-            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
-                new DbContextOptionsBuilder<ApplicationDbContext>().Options
-                );
-
+            //Példányosítjuk a fenti mezőt
             this._countriesRepositoryMock = new Mock<ICountriesRepository>();
 
+            //Mock objektummal létrehozunk egy nem valódi Repót
             this._countriesRepository = this._countriesRepositoryMock.Object;
 
+            //Ezt a nem valódi repót fogjuk átadni a service-nek
             _countryService = new CountryService(this._countriesRepository);
+
+            //A Tesztek során használt adatokat (egyedeket) tárolja. DB helyett.
+            //var countriesInitial = new List<Country>();            
+
+            // Mockolt DbContext létrehozása adatbázis kapcsolat nélkül.
+            //DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+            //    new DbContextOptionsBuilder<ApplicationDbContext>().Options
+            //    );
 
             //Mivel mi azokat az adatokat szeretnénk hasznáni, amit már itt meg is adtunk, ezért nem szeretnénk inicializálni a Mock-oltakat, ezért 0 értéket adunk át.
             //this._countryService = new CountryService(new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options));
@@ -93,11 +97,12 @@ namespace Tests
 
         //Amikor a CountryName dupla, akkor throw ArgumentException
         [Fact]
-        public async Task AddCountry_DuplicateCountryName()
+        public async Task AddCountry_DuplicateCountryName_ShouldBeTrue()
         {
             //Arrange
             CountryAddRequest country = this._fixture.Build<CountryAddRequest>().Create();
 
+            //Beállítjuk hogy a repository GetCountryByName metódusa milyen fix értéket adjon vissza mindig. Itt nem a repó metódusának a működését ellenőrizzük, hanem a Service működését. Pontosan ezért adjuk meg mi hogy mit adjon vissza a repó, mert csak az a fontos hogy a Service hogyan működik és egyáltalán meghívja-e.
             this._countriesRepositoryMock.Setup(method => method.GetCountryByName(It.IsAny<string>())).ReturnsAsync(country.ToCountry());
 
             Func<Task> action = async () =>
