@@ -76,6 +76,7 @@ namespace Tests
 
             PersonsController controller = new PersonsController(this._countryService, this._personService);
 
+            //Így tudunk modell validációt, hamisra állítani.
             controller.ModelState.AddModelError("PersonName", "Person should not be null");
 
             //Act
@@ -107,7 +108,20 @@ namespace Tests
             redirectResult.ControllerName.Should().Be("persons");
 
         }
+        [Fact]
+        public async Task Create_ShouldBeSuccessful()
+        {
+            //Arrange
+            PersonsController controller = new PersonsController(this._countryService, this._personService);
+            List<CountryResponse> countries = this._fixture.Create<List<CountryResponse>>();
+            this._countryServiceMock.Setup(method => method.GetAllCountries()).ReturnsAsync(countries);
 
+            //Act
+            IActionResult actionResult = await controller.Create();
+
+            //Assert
+            ViewResult result = Assert.IsType<ViewResult>(actionResult);
+        }
         #endregion
     }
 }
